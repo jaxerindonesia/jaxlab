@@ -1,0 +1,265 @@
+/* =====================
+   HERO - Desktop Base
+   ===================== */
+.hero {
+    background: radial-gradient(circle at 30% 50%, #1f4d2b, #133b27);
+    color: var(--text-white);
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Gradient overlay to blend image edges into the background */
+.hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* Left fade + top fade + bottom fade — blends image into bg */
+    background:
+        linear-gradient(to right, #1f4d2b 0%, transparent 38%),
+        linear-gradient(to bottom, #133b27 0%, transparent 20%),
+        linear-gradient(to top, #0f2b1d 0%, transparent 20%);
+    pointer-events: none;
+    z-index: 3;
+}
+
+.hero .container.hero-container {
+    max-width: 100%;
+    margin: 0;
+    padding: 0 0 0 20px;
+}
+
+.hero-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 4;
+}
+
+.hero-content {
+    flex: 1;
+    max-width: 600px;
+    padding-left: 20px;
+    z-index: 5;
+    text-align: left;
+}
+
+/* Paragraph text left-aligned on desktop */
+.hero-content p {
+    text-align: left;
+}
+
+/* Tag pill */
+.tag {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    margin-bottom: 1.2rem;
+}
+
+/* Hero heading */
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.2rem;
+}
+
+/* Hero paragraph */
+.hero-content>p {
+    font-size: 1rem;
+    opacity: 0.85;
+    margin-bottom: 2rem;
+    max-width: 480px;
+}
+
+/* Search bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 999px;
+    padding: 0.3rem 0.3rem 0.3rem 1rem;
+    gap: 0.5rem;
+    max-width: 480px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.search-input-wrapper {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 0.5rem;
+}
+
+.search-icon {
+    color: #888;
+    flex-shrink: 0;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    font-size: 0.95rem;
+    color: #333;
+    background: transparent;
+    width: 100%;
+}
+
+.search-btn {
+    background-color: var(--primary-green);
+    color: white;
+    border: none;
+    padding: 0.65rem 1.8rem;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.3s;
+}
+
+.search-btn:hover {
+    background-color: var(--secondary-green);
+}
+
+/* =====================
+   HERO IMAGE (Desktop)
+   ===================== */
+.hero-image {
+    flex: 1.2;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+    height: 100vh;
+    overflow: visible;
+}
+
+.product-image {
+    width: auto;
+    max-width: 100%;
+    height: 120vh;
+    max-height: 120vh;
+    object-fit: contain;
+    object-position: center bottom;
+    border-radius: 0;
+    position: relative;
+    z-index: 2;
+
+    /* Multi-directional mask: fade from left, top, and bottom */
+    -webkit-mask-image:
+        linear-gradient(to right, transparent 0%, black 20%),
+        linear-gradient(to bottom, transparent 0%, black 15%),
+        linear-gradient(to top, transparent 0%, black 15%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+        linear-gradient(to right, transparent 0%, black 20%),
+        linear-gradient(to bottom, transparent 0%, black 15%),
+        linear-gradient(to top, transparent 0%, black 15%);
+    mask-composite: intersect;
+
+    transform: translateX(0%);
+}
+
+/* Mobile background image layer - hidden on desktop */
+.hero-bg-mobile {
+    display: none;
+}
+
+/* =====================
+   RESPONSIVE: Tablet & Half-screen (≤ 1024px)
+   ===================== */
+@media (max-width: 1024px) {
+    .hero {
+        /* Keep dark gradient, image shows through bg layer */
+        min-height: 100vh;
+        align-items: flex-end;
+        padding-bottom: 4rem;
+    }
+
+    /* Show the background product image */
+    .hero-bg-mobile {
+        display: block;
+        position: absolute;
+        inset: 0;
+        background-position: center top;
+        background-size: cover;
+        background-repeat: no-repeat;
+        /* Dark green overlay on top of the image */
+        filter: brightness(0.45) saturate(1.2);
+        z-index: 0;
+    }
+
+    .hero-container {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-end;
+        padding: 0 1.5rem;
+        z-index: 2;
+        position: relative;
+    }
+
+    /* Hide the floating product image - background handles it */
+    .hero-image {
+        display: none;
+    }
+
+    .hero-content {
+        max-width: 100%;
+        padding-left: 0;
+        text-align: left;
+    }
+
+    /* No centering on tablet: text stays left-aligned like the screenshot */
+    .hero-content p {
+        text-align: left;
+    }
+
+    .hero h1 {
+        font-size: 2.4rem;
+        line-height: 1.2;
+    }
+
+    .search-bar {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+/* =====================
+   RESPONSIVE: Mobile (≤ 600px)
+   ===================== */
+@media (max-width: 600px) {
+    .hero {
+        padding-bottom: 3rem;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero-content>p {
+        font-size: 0.95rem;
+    }
+
+    .search-bar {
+        padding: 0.25rem 0.25rem 0.25rem 0.8rem;
+    }
+
+    .search-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}

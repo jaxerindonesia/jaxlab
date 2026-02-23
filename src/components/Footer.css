@@ -1,0 +1,153 @@
+.footer {
+    background-color: #1f4d2b;
+    /* Very dark green */
+    color: var(--text-white);
+    padding: 6rem 0 2rem;
+    font-size: 0.9rem;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 4rem;
+    margin-bottom: 4rem;
+}
+
+.footer-brand {
+    flex: 1;
+    min-width: 250px;
+}
+
+.footer-brand .logo h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    letter-spacing: 1px;
+}
+
+.footer-brand .logo img {
+    max-height: 50px;
+    margin-bottom: 1rem;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+}
+
+.footer-desc {
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    font-size: 0.88rem;
+    max-width: 280px;
+}
+
+.certifications {
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    opacity: 0.7;
+}
+
+.social-links {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.social-links a {
+    color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.1);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.social-links a:hover {
+    background-color: var(--accent-green);
+    color: white;
+}
+
+.footer-links {
+    flex: 2;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.link-column h4 {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    color: var(--accent-green);
+}
+
+.link-column ul li {
+    margin-bottom: 0.8rem;
+}
+
+.link-column a {
+    color: rgba(255, 255, 255, 0.7);
+    transition: color 0.3s;
+}
+
+.link-column a:hover {
+    color: var(--text-white);
+}
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 2rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+}
+
+.footer-bottom a {
+    color: rgba(255, 255, 255, 0.5);
+    transition: color 0.3s;
+    margin: 0 0.25rem;
+}
+
+.footer-bottom a:hover {
+    color: var(--accent-green);
+}
+
+/* Contact list with icons */
+.contact-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.8rem;
+    font-size: 0.85rem;
+}
+
+.contact-list li svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--accent-green);
+}
+
+.contact-list a {
+    color: rgba(255, 255, 255, 0.7);
+    transition: color 0.3s;
+}
+
+.contact-list a:hover {
+    color: white;
+}
+
+@media (max-width: 1024px) {
+    .footer-container {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

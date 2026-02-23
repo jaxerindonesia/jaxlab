@@ -1,0 +1,238 @@
+/* About Page Styles */
+
+/* Common */
+/* Base styles */
+
+/* Hero Section */
+.about-hero {
+    height: 80vh;
+    background: linear-gradient(rgba(15, 90, 45, 0.8), rgba(26, 77, 46, 0.9)),
+        url('/img/logo-jaxlab.png') center/cover no-repeat;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.hero-content-wrapper {
+    max-width: 1000px;
+}
+
+.about-hero-text h1 {
+    font-size: 3.5rem;
+    line-height: 1.2;
+    margin: 1.5rem 0;
+    font-weight: 700;
+}
+
+.about-hero-text p {
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn-white {
+    background: white;
+    color: var(--primary-green);
+    padding: 0.8rem 2rem;
+    border-radius: 999px;
+    font-weight: 600;
+    border: none;
+    transition: transform 0.2s;
+}
+
+.btn-outline {
+    background: transparent;
+    color: white;
+    padding: 0.8rem 2rem;
+    border-radius: 999px;
+    font-weight: 600;
+    border: 1px solid white;
+}
+
+.pill-tag {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    backdrop-filter: blur(5px);
+}
+
+/* Values Section (Founders) */
+.values-section {
+    padding: 6rem 0;
+    background: white;
+}
+
+.values-container {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+}
+
+.values-image {
+    flex: 1;
+}
+
+.values-image img {
+    width: 100%;
+    border-radius: 12px;
+    /* Simulate the cutout look if requested later, for now standard image */
+}
+
+.values-content {
+    flex: 1;
+}
+
+.pill-tag-light {
+    background: rgba(26, 77, 46, 0.1);
+    color: var(--primary-green);
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.values-content h2 {
+    font-size: 2.5rem;
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.values-content p {
+    color: #555;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+/* Mission Section (Green Clean) */
+.mission-section {
+    background-color: var(--primary-green);
+    color: white;
+    padding: 5rem 0;
+    text-align: center;
+}
+
+.small-subtitle {
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.8rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.mission-section h2 {
+    font-size: 2.2rem;
+    margin-bottom: 4rem;
+}
+
+.mission-grid {
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    flex-wrap: wrap;
+}
+
+.mission-item {
+    max-width: 250px;
+}
+
+.icon-wrapper {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--accent-green);
+}
+
+.mission-item h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.mission-item p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Commitment Section (Building) */
+.commitment-section {
+    padding: 6rem 0;
+    background: #f9f9f9;
+}
+
+.commitment-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+}
+
+.commitment-text {
+    flex: 1;
+    max-width: 450px;
+}
+
+.commitment-text h2 {
+    font-size: 2.5rem;
+    color: var(--text-dark);
+    margin: 1rem 0;
+}
+
+.commitment-image {
+    flex: 1.2;
+}
+
+.commitment-image img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* CTA Bottom */
+.cta-bottom {
+    background-color: var(--primary-green);
+    color: white;
+    padding: 5rem 0;
+    text-align: center;
+}
+
+.cta-bottom h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.btn-white-pill {
+    background: white;
+    color: var(--primary-green);
+    padding: 1rem 2.5rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    transition: transform 0.2s;
+}
+
+.btn-white-pill:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 1024px) {
+
+    .values-container,
+    .commitment-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-hero-text h1 {
+        font-size: 2.5rem;
+    }
+}

@@ -1,0 +1,317 @@
+.product-section {
+    padding: 6rem 0;
+    background-color: #f8f9fa;
+    /* Light grey background */
+}
+
+.section-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.title-green {
+    font-size: 2.5rem;
+    color: var(--primary-green);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.section-header .subtitle {
+    font-size: 1rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Search & Filter Container */
+.search-filter-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.search-input-box {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+}
+
+.search-input-box input {
+    width: 100%;
+    padding: 0.8rem 2.5rem 0.8rem 1.5rem;
+    border-radius: 50px;
+    border: 1px solid #ddd;
+    outline: none;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.3s;
+}
+
+.search-input-box input:focus {
+    border-color: var(--primary-green);
+}
+
+.search-icon-input {
+    position: absolute;
+    right: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    pointer-events: none;
+}
+
+/* Filter Pills */
+.filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    justify-content: center;
+}
+
+.filter-pill {
+    padding: 0.5rem 1.2rem;
+    border-radius: 50px;
+    border: 1px solid #ddd;
+    background-color: white;
+    color: #555;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-pill:hover {
+    border-color: var(--primary-green);
+    color: var(--primary-green);
+}
+
+.filter-pill.active {
+    background-color: var(--primary-green);
+    color: white;
+    border-color: var(--primary-green);
+}
+
+/* Product Grid */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.product-card {
+    background-color: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Product Badge (Best Seller / New / Sale) */
+.product-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 0.25rem 0.7rem;
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 2;
+}
+
+.badge-best-seller {
+    background-color: #4a7c59;
+    color: white;
+}
+
+.badge-new {
+    background-color: #2196F3;
+    color: white;
+}
+
+.badge-sale {
+    background-color: #FF5722;
+    color: white;
+}
+
+/* Category Tag on card */
+.product-category-tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #4a7c59;
+    background-color: #e8f5e9;
+    padding: 0.2rem 0.7rem;
+    border-radius: 50px;
+    margin-bottom: 0.4rem;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+/* Price Group – price + strikethrough original */
+.price-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.product-price-original {
+    font-size: 0.82rem;
+    color: #aaa;
+    text-decoration: line-through;
+}
+
+/* Stock Indicator */
+.stock-indicator {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    margin-bottom: 0.8rem;
+    display: inline-block;
+}
+
+.stock-indicator[data-status="Tersedia"] {
+    color: #2e7d32;
+    background-color: #e8f5e9;
+}
+
+.stock-indicator[data-status="Terbatas"] {
+    color: #e65100;
+    background-color: #fff3e0;
+}
+
+.stock-indicator[data-status="Habis"] {
+    color: #c62828;
+    background-color: #ffebee;
+}
+
+/* No Results State */
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem 1rem;
+    color: #888;
+    font-size: 1.05rem;
+}
+
+.product-image-wrapper {
+    width: 100%;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.product-image-wrapper img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.product-info h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+    color: var(--text-dark);
+}
+
+.product-desc {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 1rem;
+}
+
+.product-price {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+}
+
+.details-btn-outlined {
+    background-color: transparent;
+    border: 1px solid var(--primary-green);
+    color: var(--primary-green);
+    padding: 0.4rem 1.2rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.details-btn-outlined:hover {
+    background-color: var(--primary-green);
+    color: white;
+}
+
+/* Pagination */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.page-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    /* Square with slight radius like screenshot */
+    border: none;
+    background-color: white;
+    color: #555;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+}
+
+.page-btn.active {
+    background-color: #007bff;
+    /* Screenshot showed Blue */
+    color: white;
+}
+
+.page-btn:hover:not(.active) {
+    background-color: #f0f0f0;
+}
+
+/* Load More */
+.load-more-container {
+    margin-top: 2rem;
+}
+
+.load-more-btn {
+    padding: 0.8rem 2.5rem;
+    background-color: var(--primary-green);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.load-more-btn:hover {
+    background-color: #3a6347;
+    transform: scale(1.03);
+}

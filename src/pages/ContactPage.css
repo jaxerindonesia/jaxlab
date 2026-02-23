@@ -1,0 +1,135 @@
+/* Contact Page */
+.contact-page {
+    /* To offset the footer and header */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 0;
+    /* Use a light background color, possibly white or very light gray */
+    background-color: var(--background-light);
+}
+
+.contact-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* Align to top to match screenshot flow */
+    gap: 4rem;
+    width: 100%;
+}
+
+/* Contact Info (Left) */
+.contact-info {
+    flex: 1;
+    max-width: 400px;
+    padding-top: 1rem;
+    /* Slight offset to align with map top visually */
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 2.5rem;
+    /* More spacing between items */
+}
+
+.icon-circle {
+    color: #db2777;
+    /* Pink/Magenta color from screenshot */
+    margin-right: 1.5rem;
+    margin-top: 0.2rem;
+    /* Optional: if you want a circle bg */
+    /* background: rgba(219, 39, 119, 0.1); 
+       padding: 10px; 
+       border-radius: 50%; */
+}
+
+.info-text h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    color: var(--text-dark);
+}
+
+.info-text p {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* Map (Right) */
+.contact-map {
+    flex: 1.5;
+    height: 450px;
+    background-color: #f0f0f0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.map-frame {
+    width: 100%;
+    height: 100%;
+}
+
+.map-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    /* Remove inline spacing */
+}
+
+@media (max-width: 1024px) {
+    .contact-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 3rem;
+    }
+
+    .contact-map {
+        width: 100%;
+        height: 400px;
+        order: -1;
+        /* Make map appear on top if desired, or remove to keep info on top. The previous code had column-reverse which put Map on top. I'll use order to be explicit. */
+    }
+
+    .contact-info {
+        width: 100%;
+        max-width: 100%;
+        text-align: center;
+        /* Center text for tablets/mobile */
+        padding-top: 0;
+    }
+
+    .info-item {
+        justify-content: center;
+        /* Center items */
+    }
+}
+
+@media (max-width: 600px) {
+    .contact-main {
+        padding: 2rem 0;
+    }
+
+    .contact-map {
+        height: 300px;
+    }
+
+    .contact-info {
+        text-align: left;
+        /* Revert to left align for easier reading on small mobile */
+    }
+
+    .info-item {
+        justify-content: flex-start;
+    }
+}

@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary-green: #1a4d2e;
+  --secondary-green: #4f7942;
+  /* Olivia/Moss green */
+  --accent-green: #d1f2eb;
+  --text-white: #ffffff;
+  --text-dark: #333333;
+  --background-light: #f9f9f9;
+  --card-bg: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--background-light);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+section {
+  scroll-margin-top: 100px;
+}
+
+footer {
+  scroll-margin-top: 100px;
+}
+
+/* Utilities */
+.flex {
+  display: flex;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.grid {
+  display: grid;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+/* Components specific if needed globally */
+.btn-primary {
+  background-color: transparent;
+  border: 1px solid var(--text-white);
+  color: var(--text-white);
+  padding: 0.5rem 1.5rem;
+  border-radius: 999px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--text-white);
+  color: var(--primary-green);
+}
+
+.btn-secondary {
+  background-color: var(--primary-green);
+  color: var(--text-white);
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+}

@@ -1,0 +1,120 @@
+.testimonials {
+    padding: 6rem 0;
+    background-color: #fff;
+    text-align: center;
+}
+
+.testimonials .section-header {
+    margin-bottom: 4rem;
+}
+
+.subtitle-text {
+    margin-top: 1rem;
+    color: #666;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.testimonial-card {
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    height: 450px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.card-content {
+    background-color: var(--primary-green);
+    color: var(--text-white);
+    padding: 1.5rem;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    border-radius: 12px;
+    text-align: left;
+    backdrop-filter: blur(5px);
+    opacity: 0.95;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-content h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.2rem;
+    font-weight: 600;
+}
+
+.role {
+    font-size: 0.8rem;
+    color: var(--accent-green);
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.quote {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    font-style: italic;
+    opacity: 0.9;
+    flex-grow: 1;
+}
+
+.next-btn {
+    align-self: flex-start;
+    background-color: var(--text-white);
+    color: var(--primary-green);
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: auto;
+}
+
+/* Star rating in testimonial */
+.testimonial-stars {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 0.6rem;
+}
+
+/* Re-order card-content children: stars first, then quote, then name/role */
+.card-content {
+    background-color: var(--primary-green);
+    color: var(--text-white);
+    padding: 1.5rem;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    border-radius: 12px;
+    text-align: left;
+    backdrop-filter: blur(5px);
+    opacity: 0.95;
+    display: flex;
+    flex-direction: column;
+}
