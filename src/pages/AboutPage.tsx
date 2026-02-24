@@ -20,7 +20,15 @@ const AboutPage: React.FC = () => {
                             bagian dari upaya sederhana mendukung hidup sehat sejak dini.
                         </p>
                         <div className="hero-buttons">
-                            <button className="btn-white">Join Healthy Partner</button>
+                            <a
+                                href="https://wa.me/6281234567890?text=saya%20ingin%20menjadi%20parther"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn-white"
+                                style={{ textDecoration: 'none', display: 'inline-block' }}
+                            >
+                                Join Healthy Partner
+                            </a>
                             <button className="btn-outline">Pilih Produk JaxLab</button>
                         </div>
                     </div>
@@ -97,7 +105,15 @@ const AboutPage: React.FC = () => {
             <section className="cta-bottom">
                 <div className="container text-center">
                     <h2>Bersama JaxLab,<br />Bangun Hidup Sehat Alami</h2>
-                    <button className="btn-white-pill">Join Healthy Partner</button>
+                    <a
+                        href="https://wa.me/6281234567890?text=saya%20ingin%20menjaDI%20parther"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-white-pill"
+                        style={{ textDecoration: 'none', display: 'inline-block' }}
+                    >
+                        Join Healthy Partner
+                    </a>
                 </div>
             </section>
 

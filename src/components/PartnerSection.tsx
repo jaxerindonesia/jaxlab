@@ -38,7 +38,7 @@ const PartnerSection: React.FC = () => {
                             kualitas, kepercayaan, dan nilai jangka panjang.
                         </p>
                         <a
-                            href={`https://wa.me/${companyInfo.whatsapp}?text=Halo%20JaxLab%2C%20saya%20ingin%20menjadi%20Healthy%20Partner`}
+                            href={`https://wa.me/${companyInfo.whatsapp}?text=saya%20ingin%20menjadi%20parther`}
                             target="_blank"
                             rel="noreferrer"
                             className="join-partner-btn"

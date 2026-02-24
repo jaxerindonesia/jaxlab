@@ -41,12 +41,28 @@ const Header: React.FC = () => {
                     {/* Updated Link */}
                     <a onClick={() => handleNavigation('/contact')} style={{ cursor: 'pointer' }}>Hubungi Kami</a>
                     <div className="mobile-only" style={{ marginTop: '20px' }}>
-                        <button className="join-btn">Join Healthy Partner</button>
+                        <a
+                            href="https://wa.me/6281234567890?text=saya%20ingin%20menjadi%20parther"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="join-btn"
+                            style={{ textDecoration: 'none', display: 'inline-block' }}
+                        >
+                            Join Healthy Partner
+                        </a>
                     </div>
                     <button onClick={() => setIsMenuOpen(false)} className="close-menu"><X /></button>
                 </nav>
                 <div className="header-actions">
-                    <button className="join-btn desktop-only">Join Healthy Partner</button>
+                    <a
+                        href="https://wa.me/6281234567890?text=saya%20ingin%20menjaDI%20parther"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="join-btn desktop-only"
+                        style={{ textDecoration: 'none', display: 'inline-block' }}
+                    >
+                        Join Healthy Partner
+                    </a>
                     <button className="menu-btn" onClick={() => setIsMenuOpen(true)}>
                         <Menu color="white" />
                     </button>
