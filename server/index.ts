@@ -77,14 +77,14 @@ async function ensureCategoryIdByName(name: string | undefined): Promise<string 
   const trimmed = name?.trim();
   if (!trimmed) return null;
 
-  const existing = await prisma.category.findFirst({
-    where: { name: trimmed, deletedAt: null },
+  const category = await prisma.category.upsert({
+    where: { name: trimmed },
+    update: { deletedAt: null },
+    create: { name: trimmed },
     select: { id: true },
   });
-  if (existing) return existing.id;
 
-  const created = await prisma.category.create({ data: { name: trimmed } });
-  return created.id;
+  return category.id;
 }
 
 async function resetAndSeed(): Promise<void> {
@@ -264,6 +264,8 @@ app.post('/api/products', async (req, res) => {
   if (!name) return res.status(400).json({ error: 'name is required' });
   if (typeof p.price !== 'number' || p.price <= 0) return res.status(400).json({ error: 'price must be > 0' });
 
+  const price = p.price as number;
+
   const categoryId = await ensureCategoryIdByName(p.category);
 
   const created = await prisma.$transaction(async (tx) => {
@@ -272,7 +274,7 @@ app.post('/api/products', async (req, res) => {
         name,
         categoryId,
         shortDescription: String(p.description ?? ''),
-        sellPrice: p.price,
+        sellPrice: price,
         strikeThroughPrice: typeof p.originalPrice === 'number' ? p.originalPrice : null,
         purchasePrice: null,
       },
@@ -327,6 +329,8 @@ app.put('/api/products/:id', async (req, res) => {
   if (!name) return res.status(400).json({ error: 'name is required' });
   if (typeof p.price !== 'number' || p.price <= 0) return res.status(400).json({ error: 'price must be > 0' });
 
+  const price = p.price as number;
+
   const categoryId = await ensureCategoryIdByName(p.category);
 
   await prisma.$transaction(async (tx) => {
@@ -336,7 +340,7 @@ app.put('/api/products/:id', async (req, res) => {
         name,
         categoryId,
         shortDescription: String(p.description ?? ''),
-        sellPrice: p.price,
+        sellPrice: price,
         strikeThroughPrice: typeof p.originalPrice === 'number' ? p.originalPrice : null,
       },
     });
