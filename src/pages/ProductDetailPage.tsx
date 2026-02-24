@@ -1,22 +1,45 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import './ProductDetailPage.css';
 import { Star, ArrowLeft } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
-import { getProductById, formatRupiah } from '../database/db';
+import { type Product, formatRupiah, getProductById } from '../database/db';
 
 const ProductDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [selectedImage, setSelectedImage] = useState(0);
     const [quantity, setQuantity] = useState(1);
 
-    // Get product from database using ID from URL
-    const productId = id ? parseInt(id, 10) : null;
-    const product = productId ? getProductById(productId) : null;
+    const [product, setProduct] = useState<Product | null>(null);
+    const [loadedId, setLoadedId] = useState<string | null>(null);
+    const loading = Boolean(id) && loadedId !== id;
+
+    useEffect(() => {
+        let cancelled = false;
+        if (!id) return () => { cancelled = true; };
+
+        getProductById(id)
+            .then((p) => {
+                if (cancelled) return;
+                setProduct(p);
+                setLoadedId(id);
+                setSelectedImage(0);
+                setQuantity(1);
+            })
+            .catch(() => {
+                if (cancelled) return;
+                setProduct(null);
+                setLoadedId(id);
+                setSelectedImage(0);
+                setQuantity(1);
+            });
+
+        return () => { cancelled = true; };
+    }, [id]);
 
     // If product not found, show error message
-    if (!product) {
+    if (id && !loading && !product) {
         return (
             <div className="product-detail-page">
                 <Header />
@@ -42,18 +65,25 @@ const ProductDetailPage: React.FC = () => {
 
             <main className="detail-main">
                 <div className="container detail-container">
-                    {/* Breadcrumbs */}
-                    <div className="breadcrumbs">
-                        <Link to="/">Home</Link> &gt;
-                        <Link to="/products">Produk</Link> &gt;
-                        <span>{product.name}</span>
-                    </div>
+                    {loading && (
+                        <div style={{ textAlign: 'center', padding: '3rem' }}>
+                            <p>Memuat detail produk...</p>
+                        </div>
+                    )}
+                    {!loading && product && (
+                    <>
+                        {/* Breadcrumbs */}
+                        <div className="breadcrumbs">
+                            <Link to="/">Home</Link> &gt;
+                            <Link to="/products">Produk</Link> &gt;
+                            <span>{product.name}</span>
+                        </div>
 
-                    <Link to="/products" className="back-link">
-                        <ArrowLeft size={16} /> Kembali ke semua produk
-                    </Link>
+                        <Link to="/products" className="back-link">
+                            <ArrowLeft size={16} /> Kembali ke semua produk
+                        </Link>
 
-                    <div className="product-layout">
+                        <div className="product-layout">
                         {/* Gallery */}
                         <div className="product-gallery">
                             <div className="thumbnail-list">
@@ -169,6 +199,8 @@ const ProductDetailPage: React.FC = () => {
                             </ul>
                         </div>
                     </div>
+                    </>
+                    )}
                 </div>
             </main>
 

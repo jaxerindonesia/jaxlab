@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Footer.css';
 import { Instagram, Facebook, Youtube, Phone, Mail, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getCompanyInfo, getCategories } from '../database/db';
 
 const Footer: React.FC = () => {
-    // Dipanggil di DALAM komponen — DB sudah siap saat ini
     const companyInfo = getCompanyInfo();
-    const categories = getCategories();
+    const [categories, setCategories] = useState<string[]>([]);
+
+    useEffect(() => {
+        let cancelled = false;
+        getCategories()
+            .then((cats) => { if (!cancelled) setCategories(cats); })
+            .catch(() => { if (!cancelled) setCategories([]); });
+        return () => { cancelled = true; };
+    }, []);
 
     return (
         <footer className="footer">

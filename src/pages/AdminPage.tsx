@@ -9,7 +9,6 @@ import {
     addProduct,
     updateProduct,
     deleteProduct,
-    getNextProductId,
     addCategory,
     deleteCategory,
     resetToDefaults,
@@ -63,17 +62,25 @@ const AdminPage: React.FC = () => {
 
     // ─── State ───────────────────────────────────────────────────
     const [tab, setTab] = useState<Tab>('products');
-    const [products, setProducts] = useState<Product[]>(getAllProducts());
-    const [categories, setCategoriesState] = useState<string[]>(getCategories());
+    const [products, setProducts] = useState<Product[]>([]);
+    const [categories, setCategoriesState] = useState<string[]>([]);
     const [editing, setEditing] = useState<Product | null>(null);
     const [creating, setCreating] = useState(false);
     const [newCat, setNewCat] = useState('');
 
     // Force-refresh from db
-    const refresh = useCallback(() => {
-        setProducts(getAllProducts());
-        setCategoriesState(getCategories());
+    const refresh = useCallback(async () => {
+        const [p, c] = await Promise.all([getAllProducts(), getCategories()]);
+        setProducts(p);
+        setCategoriesState(c);
     }, []);
+
+    React.useEffect(() => {
+        refresh().catch(() => {
+            setProducts([]);
+            setCategoriesState([]);
+        });
+    }, [refresh]);
 
     // ─── Form state ──────────────────────────────────────────────
     const [form, setForm] = useState<Omit<Product, 'id'>>(blankProduct());
@@ -110,13 +117,12 @@ const AdminPage: React.FC = () => {
         setEditing(null);
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!form.name.trim()) { alert('Nama produk harus diisi'); return; }
         if (form.price <= 0) { alert('Harga harus lebih dari 0'); return; }
 
         // Clean up empty entries
-        const cleaned: Product = {
-            id: editing ? editing.id : getNextProductId(),
+        const cleaned = {
             ...form,
             images: form.images.filter(i => i.trim() !== ''),
             specs: form.specs.filter(s => s.label.trim() !== '' || s.value.trim() !== ''),
@@ -126,38 +132,38 @@ const AdminPage: React.FC = () => {
         };
 
         if (editing) {
-            updateProduct(cleaned);
+            await updateProduct({ id: editing.id, ...cleaned });
         } else {
-            addProduct(cleaned);
+            await addProduct(cleaned);
         }
-        refresh();
+        await refresh();
         closeForm();
     };
 
-    const handleDelete = (id: number) => {
+    const handleDelete = async (id: string) => {
         if (!confirm('Yakin ingin menghapus produk ini?')) return;
-        deleteProduct(id);
-        refresh();
+        await deleteProduct(id);
+        await refresh();
     };
 
-    const handleReset = () => {
+    const handleReset = async () => {
         if (!confirm('Reset semua data ke default? Perubahan Anda akan hilang.')) return;
-        resetToDefaults();
-        refresh();
+        await resetToDefaults();
+        await refresh();
         closeForm();
     };
 
-    const handleAddCategory = () => {
+    const handleAddCategory = async () => {
         if (!newCat.trim()) return;
-        addCategory(newCat.trim());
+        await addCategory(newCat.trim());
         setNewCat('');
-        refresh();
+        await refresh();
     };
 
-    const handleDeleteCategory = (name: string) => {
+    const handleDeleteCategory = async (name: string) => {
         if (!confirm(`Hapus kategori "${name}"?`)) return;
-        deleteCategory(name);
-        refresh();
+        await deleteCategory(name);
+        await refresh();
     };
 
     // ─── Form field helpers ──────────────────────────────────────

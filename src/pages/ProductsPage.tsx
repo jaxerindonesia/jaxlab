@@ -1,31 +1,51 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import '../components/ProductSection.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { getAllProducts, getCategories, formatRupiah } from '../database/db';
+import { type Product, formatRupiah, getAllProducts, getCategories } from '../database/db';
 
 const ProductsPage: React.FC = () => {
     const navigate = useNavigate();
 
-    // Dipanggil di DALAM komponen — DB sudah siap saat ini
-    const allProducts = getAllProducts();
-    const dbCategories = getCategories();
-    const productCategories = ['All', ...dbCategories];
+    const [allProducts, setAllProducts] = useState<Product[] | null>(null);
+    const [dbCategories, setDbCategories] = useState<string[] | null>(null);
+    const loading = allProducts === null || dbCategories === null;
 
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6;
 
-    const filteredProducts = allProducts.filter(product => {
-        const matchesSearch =
-            product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            product.description.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
-        return matchesSearch && matchesCategory;
-    });
+    useEffect(() => {
+        let cancelled = false;
+        Promise.all([getAllProducts(), getCategories()])
+            .then(([products, categories]) => {
+                if (cancelled) return;
+                setAllProducts(products);
+                setDbCategories(categories);
+            })
+            .catch(() => {
+                if (cancelled) return;
+                setAllProducts([]);
+                setDbCategories([]);
+            });
+        return () => { cancelled = true; };
+    }, []);
+
+    const productCategories = useMemo(() => ['All', ...(dbCategories ?? [])], [dbCategories]);
+
+    const filteredProducts = useMemo(() => {
+        const products = allProducts ?? [];
+        return products.filter(product => {
+            const matchesSearch =
+                product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                product.description.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
+            return matchesSearch && matchesCategory;
+        });
+    }, [allProducts, searchTerm, selectedCategory]);
 
     const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
     const paginatedProducts = filteredProducts.slice(
@@ -85,7 +105,11 @@ const ProductsPage: React.FC = () => {
                         </p>
 
                         <div className="product-grid">
-                            {paginatedProducts.length > 0 ? paginatedProducts.map((product) => (
+                            {loading ? (
+                                <div className="no-results">
+                                    <p>Memuat produk...</p>
+                                </div>
+                            ) : paginatedProducts.length > 0 ? paginatedProducts.map((product) => (
                                 <div key={product.id} className="product-card">
                                     {product.badge && (
                                         <span className={`product-badge badge-${product.badge.toLowerCase().replace(/\s/g, '-')}`}>

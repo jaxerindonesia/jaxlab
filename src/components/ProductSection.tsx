@@ -1,18 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ProductSection.css';
-import { getFeaturedProducts, formatRupiah } from '../database/db';
+import { type Product, formatRupiah, getFeaturedProducts } from '../database/db';
 
 const ProductSection: React.FC = () => {
     const navigate = useNavigate();
-    // Dipanggil di DALAM komponen — DB sudah siap saat ini
-    const products = getFeaturedProducts();
+    const [products, setProducts] = useState<Product[]>([]);
+
+    useEffect(() => {
+        let cancelled = false;
+        getFeaturedProducts()
+            .then((p) => { if (!cancelled) setProducts(p); })
+            .catch(() => { if (!cancelled) setProducts([]); });
+        return () => { cancelled = true; };
+    }, []);
 
     return (
         <section className="product-section" id="products">
             <div className="container">
                 <div className="section-header text-center">
-                    <span className="tag-pill">Pilihan Alami untuk Sehari-hari</span>
+                    <span className="tag-pill">Pilihan Alami untuk Sehari-hari </span>
                     <h2>Good Food Starts Here</h2>
                 </div>
 

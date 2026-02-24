@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id                 String    @id @default(uuid())
+  categoryId          String?   @map("category_id")
+  name               String
+  shortDescription    String    @map("short_description")
+  sellPrice           Int       @map("sell_price")
+  strikeThroughPrice  Int?      @map("strike_through_price")
+  purchasePrice       Int?      @map("purchase_price")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+  deletedAt           DateTime? @map("deleted_at")
+
+  category Category?     @relation(fields: [categoryId], references: [id])
+  detail   ProductDetail?
+
+  @@index([categoryId])
+  @@map("products")
+}
+
+model ProductDetail {
+  id               String    @id @default(uuid())
+  productId        String    @unique @map("product_id")
+  description      String
+  specs            Json?
+  marketplaceLinks Json?     @map("marketplace_links")
+  images           Json?
+  benefits         Json?
+  subtitle         String?
+  badge            String?
+  rating           Float     @default(0)
+  reviewCount      Int       @default(0) @map("review_count")
+  stockStatus      String    @default("Tersedia") @map("stock_status")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  deletedAt        DateTime? @map("deleted_at")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_details")
+}
+
