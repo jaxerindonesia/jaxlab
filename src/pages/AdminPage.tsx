@@ -30,7 +30,6 @@ import {
     RefreshCw,
     LogOut,
     Home,
-    Loader2,
     ChevronLeft,
     ChevronRight,
 } from 'lucide-react';
