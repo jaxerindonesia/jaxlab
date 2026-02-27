@@ -53,7 +53,7 @@ const ContactPage: React.FC = () => {
                         <div className="map-frame">
                             {/* Embed Google Maps for Cempaka Putih Tengah XVII No.F33 */}
                             <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.521873330663!2d106.8687396!3d-6.1770258!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f506e761619b%3A0x6c6c49666683832c!2sJl.%20Cempaka%20Putih%20Tengah%20XVII%20No.33%2C%20RT.4%2FRW.8%2C%20Cemp.%20Putih%20Tim.%2C%20Kec.%20Cemp.%20Putih%2C%20Kota%20Jakarta%20Pusat%2C%20Daerah%20Khusus%20Ibukota%20Jakarta%2010510!5e0!3m2!1sen!2sid!4v1700000000000!5m2!1sen!2sid"
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4911.860623627319!2d106.86554557589075!3d-6.174102660503408!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f53c7c13a50d%3A0x325b1492c9f2bda5!2sJaxer%20Indonesia!5e1!3m2!1sen!2sid!4v1772161218573!5m2!1sen!2sid"
                                 width="100%"
                                 height="100%"
                                 style={{ border: 0 }}
