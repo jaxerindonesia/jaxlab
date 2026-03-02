@@ -125,7 +125,11 @@ const AdminPage: React.FC = () => {
     setEditing(null);
   };
 
+  const [saving, setSaving] = useState(false);
+
   const handleSave = async () => {
+    console.log("handleSave called, form:", form);
+    
     if (!form.name.trim()) {
       alert("Nama produk harus diisi");
       return;
@@ -135,24 +139,48 @@ const AdminPage: React.FC = () => {
       return;
     }
 
-    const cleaned = {
-      ...form,
-      images: form.images.filter((i) => i.trim() !== ""),
-      specs: form.specs.filter(
-        (s) => s.label.trim() !== "" || s.value.trim() !== "",
-      ),
-      benefits: form.benefits.filter((b) => b.trim() !== ""),
-      originalPrice: form.originalPrice || undefined,
-      badge: form.badge || undefined,
-    };
+    setSaving(true);
+    
+    try {
+      // Filter images - keep only non-empty strings (including base64)
+      const filteredImages = form.images.filter((img) => {
+        const isEmpty = !img || img.trim() === "";
+        if (isEmpty) console.log("Filtering out empty image:", img);
+        return !isEmpty;
+      });
+      
+      console.log("Filtered images:", filteredImages.length, "images");
+      
+      const cleaned = {
+        ...form,
+        images: filteredImages,
+        specs: form.specs.filter(
+          (s) => s.label.trim() !== "" || s.value.trim() !== "",
+        ),
+        benefits: form.benefits.filter((b) => b.trim() !== ""),
+        originalPrice: form.originalPrice || undefined,
+        badge: form.badge || undefined,
+      };
 
-    if (editing) {
-      await updateProduct({ id: editing.id, ...cleaned });
-    } else {
-      await addProduct(cleaned);
+      console.log("Saving product:", cleaned);
+      console.log("Images to save:", cleaned.images);
+
+      if (editing) {
+        await updateProduct({ id: editing.id, ...cleaned });
+      } else {
+        const result = await addProduct(cleaned);
+        console.log("Add result:", result);
+      }
+      
+      await refresh();
+      closeForm();
+      alert("Produk berhasil disimpan!");
+    } catch (err) {
+      console.error("Save error:", err);
+      alert("Gagal menyimpan produk: " + (err as Error).message);
+    } finally {
+      setSaving(false);
     }
-    await refresh();
-    closeForm();
   };
 
   const handleDelete = async (id: string) => {
@@ -588,33 +616,68 @@ const AdminPage: React.FC = () => {
 
                 {/* Images */}
                 <div className="form-group full-width">
-                  <label>Gambar (URL)</label>
+                  <label>Gambar (Upload File)</label>
                   <div className="dynamic-list">
                     {form.images.map((img, i) => (
-                      <div key={i} className="dynamic-list-item">
-                        <input
-                          value={img}
-                          onChange={(e) => {
-                            const imgs = [...form.images];
-                            imgs[i] = e.target.value;
-                            setField("images", imgs);
-                          }}
-                          placeholder="https://..."
-                        />
-                        <button
-                          className="btn-remove-item"
-                          onClick={() => {
-                            const imgs = form.images.filter(
-                              (_, idx) => idx !== i,
-                            );
-                            setField("images", imgs.length ? imgs : [""]);
-                          }}
-                        >
-                          ✕
-                        </button>
+                      <div key={i} className="dynamic-list-item image-upload-item">
+                        {img.startsWith("data:") ? (
+                          <div className="image-preview">
+                            <img src={img} alt={`Preview ${i + 1}`} />
+                            <button
+                              type="button"
+                              className="btn-remove-item"
+                              onClick={() => {
+                                const imgs = form.images.filter(
+                                  (_, idx) => idx !== i,
+                                );
+                                setField("images", imgs.length ? imgs : [""]);
+                              }}
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ) : img ? (
+                          <div className="image-preview">
+                            <img src={img} alt={`Preview ${i + 1}`} />
+                            <button
+                              type="button"
+                              className="btn-remove-item"
+                              onClick={() => {
+                                const imgs = form.images.filter(
+                                  (_, idx) => idx !== i,
+                                );
+                                setField("images", imgs.length ? imgs : [""]);
+                              }}
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ) : (
+                          <label className="file-upload-label">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  const reader = new FileReader();
+                                  reader.onload = (event) => {
+                                    const result = event.target?.result as string;
+                                    const imgs = [...form.images];
+                                    imgs[i] = result;
+                                    setField("images", imgs);
+                                  };
+                                  reader.readAsDataURL(file);
+                                }
+                              }}
+                            />
+                            <span>+ Upload Gambar</span>
+                          </label>
+                        )}
                       </div>
                     ))}
                     <button
+                      type="button"
                       className="btn-add-item"
                       onClick={() => setField("images", [...form.images, ""])}
                     >
@@ -721,10 +784,10 @@ const AdminPage: React.FC = () => {
                 </div>
 
                 <div className="form-actions">
-                  <button className="btn-save" onClick={handleSave}>
-                    {editing ? "Simpan Perubahan" : "Tambah Produk"}
+                  <button className="btn-save" onClick={handleSave} disabled={saving}>
+                    {saving ? "Menyimpan..." : editing ? "Simpan Perubahan" : "Tambah Produk"}
                   </button>
-                  <button className="btn-cancel" onClick={closeForm}>
+                  <button className="btn-cancel" onClick={closeForm} disabled={saving}>
                     Batal
                   </button>
                 </div>

@@ -9,7 +9,8 @@ const prisma = new PrismaClient();
 const app = express();
 
 app.use(cors());
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 type ApiProduct = {
   id: string;
@@ -261,6 +262,10 @@ app.get('/api/products/:id', async (req, res) => {
 app.post('/api/products', async (req, res) => {
   const p = req.body as Partial<ApiProduct>;
   const name = String(p?.name ?? '').trim();
+  console.log('Received product:', name);
+  console.log('Images received:', p.images?.length || 0, 'images');
+  console.log('First image length:', p.images?.[0]?.length || 0);
+  
   if (!name) return res.status(400).json({ error: 'name is required' });
   if (typeof p.price !== 'number' || p.price <= 0) return res.status(400).json({ error: 'price must be > 0' });
 

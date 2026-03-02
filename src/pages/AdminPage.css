@@ -273,7 +273,7 @@
 .admin-sidebar {
     width: 220px;
     flex-shrink: 0;
-    background: var(--surface);
+    background: #ECECEC;
     border-right: 1px solid var(--border);
     padding: 1.25rem 0.75rem;
     display: flex;
@@ -355,6 +355,7 @@
     min-width: 0;
     padding: 1.75rem 2rem;
     overflow-y: auto;
+    background: #ECECEC;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -369,7 +370,7 @@
 }
 
 .stat-card {
-    background: var(--surface);
+    background: #261CC1;
     border-radius: var(--r);
     border: 1px solid var(--border);
     padding: 1.25rem;
@@ -539,7 +540,7 @@
     align-items: center;
     gap: 0.35rem;
     padding: 0.525rem 1rem;
-    background: var(--ap);
+    background: #261CC1;
     color: #fff;
     border: none;
     border-radius: var(--r-sm);
@@ -777,6 +778,59 @@
     background: var(--as);
     color: #fff;
     border-style: solid;
+}
+
+.image-upload-item {
+    min-height: 80px;
+}
+
+.file-upload-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 80px;
+    border: 2px dashed var(--border);
+    border-radius: var(--r-sm);
+    cursor: pointer;
+    transition: var(--tr);
+    background: var(--bg);
+}
+
+.file-upload-label:hover {
+    border-color: var(--ap);
+    background: var(--ap-l);
+}
+
+.file-upload-label input {
+    display: none;
+}
+
+.file-upload-label span {
+    color: var(--text-2);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.image-preview {
+    position: relative;
+    width: 100%;
+    max-width: 200px;
+    min-height: 80px;
+}
+
+.image-preview img {
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--border);
+}
+
+.image-preview .btn-remove-item {
+    position: absolute;
+    top: -8px;
+    right: -8px;
 }
 
 /* ═══════════════════════════════════════════════════════════════
