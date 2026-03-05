@@ -1,0 +1,32 @@
+buat databases menggunakan prisma!!
+
+data mencangkup 
+
+catagories 
+1. id -> uuidv4 
+2. name ->string
+3. created_at 
+4. update_at
+5. deleted_at
+
+product
+1. id -> uuidv4 
+2. category.id
+3. name
+4. short.description -> text
+5. sell.price
+6. strike_through.price
+7. purchase.price
+8. created.at
+9. update.at
+10.deleted.at
+
+product_details
+1. id ->uuidv4
+2. produid_id
+3. description -> text
+4. specs -> jsonb
+5. marketplace_links -> jsonb
+6. created_at
+7. update_at
+8. deleted_at

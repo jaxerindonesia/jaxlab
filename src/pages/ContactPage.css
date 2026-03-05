@@ -13,7 +13,7 @@
     justify-content: center;
     padding: 4rem 0;
     /* Use a light background color, possibly white or very light gray */
-    background-color: var(--background-light);
+    background-color: #EFE9E3;
 }
 
 .contact-container {

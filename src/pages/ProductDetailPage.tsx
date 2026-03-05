@@ -166,15 +166,15 @@ const ProductDetailPage: React.FC = () => {
                                         </div>
 
                                         <div className="action-buttons">
-                                            <button className="btn-cart" style={{ backgroundColor: '#FF5722', color: 'white' }}>Tambah ke Keranjang</button>
-                                            <button className="btn-buy" style={{ backgroundColor: '#FFC107', color: '#333' }}>Beli Sekarang</button>
+                                            <button className="btn-cart" style={{ backgroundColor: '#1a4d2e', color: 'white' }}>Tambah ke Keranjang</button>
+                                            <button className="btn-buy" style={{ backgroundColor: '#1a4d2e', color: 'white' }}>Beli Sekarang</button>
                                         </div>
 
                                         {/* Benefits */}
                                         {p.benefits.length > 0 && (
                                             <div className="benefits-list">
                                                 <p style={{ fontWeight: '600', marginBottom: '0.5rem' }}>Manfaat Utama:</p>
-                                                <ul>
+                                                <ul>    
                                                     {p.benefits.map((benefit, i) => (
                                                         <li key={i}>✓ {benefit}</li>
                                                     ))}

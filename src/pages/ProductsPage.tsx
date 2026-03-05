@@ -3,17 +3,27 @@ import '../components/ProductSection.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Search } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { type Product, formatRupiah, getAllProducts, getCategories } from '../database/db';
 
 const ProductsPage: React.FC = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
 
     const [allProducts, setAllProducts] = useState<Product[] | null>(null);
     const [dbCategories, setDbCategories] = useState<string[] | null>(null);
     const loading = allProducts === null || dbCategories === null;
 
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+
+    // Sync searchTerm when URL search param changes (e.g. navigating from Hero)
+    useEffect(() => {
+        const urlSearch = searchParams.get('search') || '';
+        if (urlSearch !== searchTerm) {
+            setSearchTerm(urlSearch);
+            setCurrentPage(1);
+        }
+    }, [searchParams]);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6;

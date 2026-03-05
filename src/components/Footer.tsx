@@ -21,7 +21,7 @@ const Footer: React.FC = () => {
             <div className="container footer-container">
                 <div className="footer-brand">
                     <div className="logo">
-                        <img src="/logo-jaxlab.png" alt="JaxLab Logo" />
+                        <img src="/logo-jaxlab.jpg" alt="JaxLab Logo" />
                     </div>
                     <p className="footer-desc">{companyInfo.description}</p>
                     <div className="social-links">
