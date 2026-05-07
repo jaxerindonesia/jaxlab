@@ -241,6 +241,7 @@ app.get('/api/products/featured', async (_req, res) => {
           images: true,
           specs: true,
           benefits: true,
+          marketplaceLinks: true,
         },
       },
     },

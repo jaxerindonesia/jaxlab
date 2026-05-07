@@ -9,7 +9,6 @@ import { type Product, formatRupiah, getProductById } from '../database/db';
 const ProductDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [selectedImage, setSelectedImage] = useState(0);
-    const [quantity, setQuantity] = useState(1);
 
     const [product, setProduct] = useState<Product | null>(null);
     const [loadedId, setLoadedId] = useState<string | null>(null);
@@ -25,14 +24,12 @@ const ProductDetailPage: React.FC = () => {
                 setProduct(p);
                 setLoadedId(id);
                 setSelectedImage(0);
-                setQuantity(1);
             })
             .catch(() => {
                 if (cancelled) return;
                 setProduct(null);
                 setLoadedId(id);
                 setSelectedImage(0);
-                setQuantity(1);
             });
 
         return () => { cancelled = true; };
