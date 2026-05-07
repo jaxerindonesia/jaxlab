@@ -12,17 +12,7 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-// ── DirectLink types ─────────────────────────────────────────────────────────
-type DirectLinkButton = { label: string; url: string };
-type ApiDirectLink = { id: string; name: string; buttons: DirectLinkButton[] };
 
-function toApiDirectLink(row: { id: string; name: string; buttons: unknown }): ApiDirectLink {
-  return {
-    id: row.id,
-    name: row.name,
-    buttons: (Array.isArray(row.buttons) ? row.buttons : []) as DirectLinkButton[],
-  };
-}
 
 type ApiProduct = {
   id: string;
@@ -402,39 +392,7 @@ app.delete('/api/products/:id', async (req, res) => {
   res.json({ ok: true });
 });
 
-// ── Direct Links API ─────────────────────────────────────────────────────────
-app.get('/api/direct-links', async (_req, res) => {
-  const rows = await prisma.directLink.findMany({ orderBy: { name: 'asc' } });
-  res.json(rows.map(toApiDirectLink));
-});
 
-app.post('/api/direct-links', async (req, res) => {
-  const { name, buttons } = req.body as Partial<ApiDirectLink>;
-  if (!name?.trim()) return res.status(400).json({ error: 'name is required' });
-  const existing = await prisma.directLink.findFirst({ where: { name: name.trim() } });
-  if (existing) return res.status(409).json({ error: 'name already exists' });
-  const row = await prisma.directLink.create({
-    data: { name: name.trim(), buttons: Array.isArray(buttons) ? buttons : [] },
-  });
-  res.json(toApiDirectLink(row));
-});
-
-app.put('/api/direct-links/:id', async (req, res) => {
-  const id = String(req.params.id);
-  const { name, buttons } = req.body as Partial<ApiDirectLink>;
-  if (!name?.trim()) return res.status(400).json({ error: 'name is required' });
-  const row = await prisma.directLink.update({
-    where: { id },
-    data: { name: name.trim(), buttons: Array.isArray(buttons) ? buttons : [] },
-  });
-  res.json(toApiDirectLink(row));
-});
-
-app.delete('/api/direct-links/:id', async (req, res) => {
-  const id = String(req.params.id);
-  await prisma.directLink.delete({ where: { id } });
-  res.json({ ok: true });
-});
 
 app.post('/api/admin/reset', async (_req, res) => {
   await resetAndSeed();
