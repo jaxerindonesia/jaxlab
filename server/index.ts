@@ -12,6 +12,18 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
+// ── DirectLink types ─────────────────────────────────────────────────────────
+type DirectLinkButton = { label: string; url: string };
+type ApiDirectLink = { id: string; name: string; buttons: DirectLinkButton[] };
+
+function toApiDirectLink(row: { id: string; name: string; buttons: unknown }): ApiDirectLink {
+  return {
+    id: row.id,
+    name: row.name,
+    buttons: (Array.isArray(row.buttons) ? row.buttons : []) as DirectLinkButton[],
+  };
+}
+
 type ApiProduct = {
   id: string;
   name: string;
@@ -28,6 +40,7 @@ type ApiProduct = {
   images: string[];
   specs: { label: string; value: string }[];
   benefits: string[];
+  marketplaceLinks: { label: string; url: string }[];
 };
 
 function toApiProduct(row: {
@@ -47,12 +60,14 @@ function toApiProduct(row: {
     images: unknown;
     specs: unknown;
     benefits: unknown;
+    marketplaceLinks: unknown;
   } | null;
 }): ApiProduct {
   const detail = row.detail;
   const images = (detail?.images ?? []) as string[];
   const specs = (detail?.specs ?? []) as { label: string; value: string }[];
   const benefits = (detail?.benefits ?? []) as string[];
+  const marketplaceLinks = (detail?.marketplaceLinks ?? []) as { label: string; url: string }[];
   const stockStatus = (detail?.stockStatus ?? 'Tersedia') as ApiProduct['stockStatus'];
 
   return {
@@ -71,6 +86,7 @@ function toApiProduct(row: {
     images,
     specs,
     benefits,
+    marketplaceLinks,
   };
 }
 
@@ -189,6 +205,7 @@ app.get('/api/products', async (_req, res) => {
           images: true,
           specs: true,
           benefits: true,
+          marketplaceLinks: true,
         },
       },
     },
@@ -250,6 +267,7 @@ app.get('/api/products/:id', async (req, res) => {
           images: true,
           specs: true,
           benefits: true,
+          marketplaceLinks: true,
         },
       },
     },
@@ -265,7 +283,7 @@ app.post('/api/products', async (req, res) => {
   console.log('Received product:', name);
   console.log('Images received:', p.images?.length || 0, 'images');
   console.log('First image length:', p.images?.[0]?.length || 0);
-  
+
   if (!name) return res.status(400).json({ error: 'name is required' });
   if (typeof p.price !== 'number' || p.price <= 0) return res.status(400).json({ error: 'price must be > 0' });
 
@@ -290,7 +308,7 @@ app.post('/api/products', async (req, res) => {
         productId: product.id,
         description: String(p.longDescription ?? ''),
         specs: Array.isArray(p.specs) ? p.specs : [],
-        marketplaceLinks: [],
+        marketplaceLinks: Array.isArray(p.marketplaceLinks) ? p.marketplaceLinks : [],
         images: Array.isArray(p.images) ? p.images : [],
         benefits: Array.isArray(p.benefits) ? p.benefits : [],
         subtitle: String(p.subtitle ?? ''),
@@ -319,6 +337,7 @@ app.post('/api/products', async (req, res) => {
           images: true,
           specs: true,
           benefits: true,
+          marketplaceLinks: true,
         },
       },
     },
@@ -355,6 +374,7 @@ app.put('/api/products/:id', async (req, res) => {
       data: {
         description: String(p.longDescription ?? ''),
         specs: Array.isArray(p.specs) ? p.specs : [],
+        marketplaceLinks: Array.isArray(p.marketplaceLinks) ? p.marketplaceLinks : [],
         images: Array.isArray(p.images) ? p.images : [],
         benefits: Array.isArray(p.benefits) ? p.benefits : [],
         subtitle: String(p.subtitle ?? ''),
@@ -378,6 +398,40 @@ app.delete('/api/products/:id', async (req, res) => {
     await tx.productDetail.updateMany({ where: { productId: id, deletedAt: null }, data: { deletedAt: now } });
   });
 
+  res.json({ ok: true });
+});
+
+// ── Direct Links API ─────────────────────────────────────────────────────────
+app.get('/api/direct-links', async (_req, res) => {
+  const rows = await prisma.directLink.findMany({ orderBy: { name: 'asc' } });
+  res.json(rows.map(toApiDirectLink));
+});
+
+app.post('/api/direct-links', async (req, res) => {
+  const { name, buttons } = req.body as Partial<ApiDirectLink>;
+  if (!name?.trim()) return res.status(400).json({ error: 'name is required' });
+  const existing = await prisma.directLink.findFirst({ where: { name: name.trim() } });
+  if (existing) return res.status(409).json({ error: 'name already exists' });
+  const row = await prisma.directLink.create({
+    data: { name: name.trim(), buttons: Array.isArray(buttons) ? buttons : [] },
+  });
+  res.json(toApiDirectLink(row));
+});
+
+app.put('/api/direct-links/:id', async (req, res) => {
+  const id = String(req.params.id);
+  const { name, buttons } = req.body as Partial<ApiDirectLink>;
+  if (!name?.trim()) return res.status(400).json({ error: 'name is required' });
+  const row = await prisma.directLink.update({
+    where: { id },
+    data: { name: name.trim(), buttons: Array.isArray(buttons) ? buttons : [] },
+  });
+  res.json(toApiDirectLink(row));
+});
+
+app.delete('/api/direct-links/:id', async (req, res) => {
+  const id = String(req.params.id);
+  await prisma.directLink.delete({ where: { id } });
   res.json({ ok: true });
 });
 

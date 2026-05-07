@@ -156,25 +156,53 @@ const ProductDetailPage: React.FC = () => {
                                         </div>
 
                                         {/* Quantity Selector */}
-                                        <div className="quantity-row">
+                                        {/* <div className="quantity-row">
                                             <span style={{ fontWeight: '600', marginRight: '1rem' }}>Jumlah:</span>
                                             <div className="quantity-selector">
                                                 <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</button>
                                                 <span>{quantity}</span>
                                                 <button onClick={() => setQuantity(quantity + 1)}>+</button>
                                             </div>
+                                        </div> */}
+
+                                        {/* Action Buttons / Marketplace Links */}
+                                        <div className="action-buttons" style={{ flexWrap: 'wrap' }}>
+                                            {p.marketplaceLinks && p.marketplaceLinks.length > 0 ? (
+                                                p.marketplaceLinks.map((btn, i) => (
+                                                    <a
+                                                        key={i}
+                                                        href={btn.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="btn-buy"
+                                                        style={{
+                                                            backgroundColor: '#1a4d2e',
+                                                            color: 'white',
+                                                            textDecoration: 'none',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            flex: '1 1 auto',
+                                                            minWidth: '150px'
+                                                        }}
+                                                    >
+                                                        {btn.label}
+                                                    </a>
+                                                ))
+                                            ) : (
+                                                <>
+                                                    {/* <button className="btn-cart" style={{ backgroundColor: '#1a4d2e', color: 'white' }}>Tambah ke Keranjang</button> */}
+                                                    {/* <button className="btn-buy" style={{ backgroundColor: '#1a4d2e', color: 'white' }}>Beli Sekarang</button> */}
+                                                </>
+                                            )}
                                         </div>
 
-                                        <div className="action-buttons">
-                                            <button className="btn-cart" style={{ backgroundColor: '#1a4d2e', color: 'white' }}>Tambah ke Keranjang</button>
-                                            <button className="btn-buy" style={{ backgroundColor: '#1a4d2e', color: 'white' }}>Beli Sekarang</button>
-                                        </div>
 
                                         {/* Benefits */}
                                         {p.benefits.length > 0 && (
                                             <div className="benefits-list">
                                                 <p style={{ fontWeight: '600', marginBottom: '0.5rem' }}>Manfaat Utama:</p>
-                                                <ul>    
+                                                <ul>
                                                     {p.benefits.map((benefit, i) => (
                                                         <li key={i}>✓ {benefit}</li>
                                                     ))}

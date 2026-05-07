@@ -326,6 +326,41 @@
     transform: translateY(-2px);
 }
 
+/* Marketplace / Direct Link Buttons */
+.marketplace-links {
+    margin-top: 1.2rem;
+    padding: 1rem 1.2rem;
+    background: #f0f7f4;
+    border-radius: 10px;
+    border: 1px solid #c8e6c9;
+}
+
+.marketplace-btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.marketplace-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1.1rem;
+    background: #1a4d2e;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+}
+
+.marketplace-btn:hover {
+    background: #2e7d52;
+    transform: translateY(-2px);
+}
+
+
 /* Benefits List */
 .benefits-list {
     margin-top: 1.5rem;

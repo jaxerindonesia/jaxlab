@@ -32,6 +32,7 @@ function blankProduct(): Omit<Product, "id"> {
     images: [""],
     specs: [{ label: "", value: "" }],
     benefits: [""],
+    marketplaceLinks: [],
   };
 }
 
@@ -115,6 +116,7 @@ const AdminPage: React.FC = () => {
       images: [...p.images],
       specs: p.specs.map((s) => ({ ...s })),
       benefits: [...p.benefits],
+      marketplaceLinks: p.marketplaceLinks ? [...p.marketplaceLinks] : [],
     });
     setEditing(p);
     setCreating(true);
@@ -779,6 +781,59 @@ const AdminPage: React.FC = () => {
                       }
                     >
                       + Tambah Manfaat
+                    </button>
+                  </div>
+                </div>
+
+                {/* Tombol Marketplace / Direct Links */}
+                <div className="form-group full-width">
+                  <label>🔗 Tombol Beli (Direct Link)</label>
+                  <div className="dynamic-list">
+                    {(form.marketplaceLinks ?? []).map((btn, i) => (
+                      <div key={i} className="dynamic-list-item dl-btn-row">
+                        <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
+                          <input
+                            value={btn.label}
+                            onChange={(e) => {
+                              const links = (form.marketplaceLinks ?? []).map((b, idx) =>
+                                idx === i ? { ...b, label: e.target.value } : b
+                              );
+                              setField("marketplaceLinks", links);
+                            }}
+                            placeholder="Nama Tombol — contoh: Beli di Shopee"
+                          />
+                          <input
+                            value={btn.url}
+                            onChange={(e) => {
+                              const links = (form.marketplaceLinks ?? []).map((b, idx) =>
+                                idx === i ? { ...b, url: e.target.value } : b
+                              );
+                              setField("marketplaceLinks", links);
+                            }}
+                            placeholder="URL Tujuan — contoh: https://shopee.co.id/..."
+                          />
+                        </div>
+                        <button
+                          className="btn-remove-item"
+                          onClick={() => {
+                            const links = (form.marketplaceLinks ?? []).filter((_, idx) => idx !== i);
+                            setField("marketplaceLinks", links);
+                          }}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      className="btn-add-item"
+                      onClick={() =>
+                        setField("marketplaceLinks", [
+                          ...(form.marketplaceLinks ?? []),
+                          { label: "", url: "" },
+                        ])
+                      }
+                    >
+                      + Tambah Tombol Beli
                     </button>
                   </div>
                 </div>

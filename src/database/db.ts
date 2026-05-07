@@ -22,6 +22,7 @@ export interface Product {
   images: string[];
   specs: { label: string; value: string }[];
   benefits: string[];
+  marketplaceLinks: { label: string; url: string }[];
 }
 
 export interface Testimonial {
@@ -65,6 +66,17 @@ export interface Stat {
   id: number;
   value: string;
   label: string;
+}
+
+export interface DirectLinkButton {
+  label: string;
+  url: string;
+}
+
+export interface DirectLink {
+  id: string;
+  name: string;
+  buttons: DirectLinkButton[];
 }
 
 async function api<T>(path: string, init?: RequestInit): Promise<T> {
@@ -277,4 +289,29 @@ export function getStats(): Stat[] {
 /** Helper: format harga ke Rupiah */
 export function formatRupiah(price: number): string {
   return `Rp ${price.toLocaleString('id-ID')}`;
+}
+
+// ── Direct Links ─────────────────────────────────────────────────────────
+export async function getDirectLinks(): Promise<DirectLink[]> {
+  return await api<DirectLink[]>('/api/direct-links');
+}
+
+export async function createDirectLink(data: Omit<DirectLink, 'id'>): Promise<DirectLink> {
+  return await api<DirectLink>('/api/direct-links', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateDirectLink(data: DirectLink): Promise<DirectLink> {
+  return await api<DirectLink>(`/api/direct-links/${encodeURIComponent(data.id)}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteDirectLink(id: string): Promise<void> {
+  await api<{ ok: true }>(`/api/direct-links/${encodeURIComponent(id)}`, { method: 'DELETE' });
 }

@@ -609,9 +609,16 @@
 }
 
 .actions-cell {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.actions-cell button {
+    margin-right: 0.5rem;
+}
+
+.actions-cell button:last-child {
+    margin-right: 0;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -642,10 +649,10 @@
 }
 
 .btn-edit {
-    padding: 0.4rem 0.875rem;
-    background: var(--ad-primary-light);
-    color: var(--ad-primary);
-    border: 1px solid rgba(99, 102, 241, 0.2);
+    padding: 0.5rem 1rem;
+    background: rgba(99, 102, 241, 0.15);
+    color: #818cf8;
+    border: 1px solid rgba(99, 102, 241, 0.4);
     border-radius: var(--ad-r-sm);
     cursor: pointer;
     font-size: 0.775rem;
@@ -659,13 +666,14 @@
     color: #fff;
     border-color: var(--ad-primary);
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--ad-primary-glow);
 }
 
 .btn-delete {
-    padding: 0.4rem 0.875rem;
-    background: var(--ad-danger-bg);
-    color: var(--ad-danger);
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    padding: 0.5rem 1rem;
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.4);
     border-radius: var(--ad-r-sm);
     cursor: pointer;
     font-size: 0.775rem;
@@ -679,6 +687,7 @@
     color: #fff;
     border-color: var(--ad-danger);
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
 }
 
 .btn-save {

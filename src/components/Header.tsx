@@ -42,7 +42,7 @@ const Header: React.FC = () => {
                     <a onClick={() => handleNavigation('/contact')} style={{ cursor: 'pointer' }}>Hubungi Kami</a>
                     <div className="mobile-only" style={{ marginTop: '20px' }}>
                         <a
-                            href="https://wa.me/6281234567890?text=saya%20ingin%20menjadi%20parther"
+                            href={`https://wa.me/6281234567890?text=${encodeURIComponent('Hai! Saya tertarik menjadi Healthy Partner di JaxLab. Boleh minta detail kerjasamanya?')}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="join-btn"
@@ -55,7 +55,7 @@ const Header: React.FC = () => {
                 </nav>
                 <div className="header-actions">
                     <a
-                        href="https://wa.me/6281234567890?text=saya%20ingin%20menjaDI%20parther"
+                        href={`https://wa.me/6281234567890?text=${encodeURIComponent('Hai! Saya tertarik menjadi Healthy Partner di JaxLab. Boleh minta detail kerjasamanya?')}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="join-btn desktop-only"
