@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { seedCategories, seedProducts } from './seed-data.ts';
+import { seedCategories, seedCompanyInfo, seedFeatures, seedProducts, seedStats, seedTestimonials } from './seed-data.ts';
 
 const prisma = new PrismaClient();
 
@@ -7,11 +7,21 @@ async function main() {
   await prisma.productDetail.deleteMany();
   await prisma.product.deleteMany();
   await prisma.category.deleteMany();
+  await prisma.badge.deleteMany();
+  await prisma.testimonial.deleteMany();
+  await prisma.feature.deleteMany();
+  await prisma.stat.deleteMany();
+  await prisma.companyInfo.deleteMany();
 
   const categoryByName = new Map<string, { id: string }>();
   for (const name of seedCategories) {
     const c = await prisma.category.create({ data: { name } });
     categoryByName.set(name, { id: c.id });
+  }
+
+  const seedBadges = Array.from(new Set(seedProducts.map((p) => p.badge).filter(Boolean))) as string[];
+  for (const name of seedBadges) {
+    await prisma.badge.create({ data: { name } });
   }
 
   for (const p of seedProducts) {
@@ -39,10 +49,19 @@ async function main() {
         badge: p.badge ?? null,
         rating: p.rating,
         reviewCount: p.reviewCount,
-        stockStatus: p.stockStatus,
       },
     });
   }
+
+  await prisma.companyInfo.create({
+    data: {
+      ...seedCompanyInfo,
+      socialMedia: seedCompanyInfo.socialMedia,
+    },
+  });
+  await prisma.testimonial.createMany({ data: seedTestimonials.map((t) => ({ ...t })) });
+  await prisma.feature.createMany({ data: seedFeatures.map((f) => ({ ...f })) });
+  await prisma.stat.createMany({ data: seedStats.map((s) => ({ ...s })) });
 }
 
 main()
@@ -54,4 +73,3 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
-

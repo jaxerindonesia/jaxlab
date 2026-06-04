@@ -1,0 +1,13 @@
+import { api } from './client';
+
+export async function loginAdmin(password: string): Promise<void> {
+  await api<{ ok: true }>('/api/admin/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password }),
+  });
+}
+
+export async function resetToDefaults(): Promise<void> {
+  await api<{ ok: true }>('/api/admin/reset', { method: 'POST' });
+}

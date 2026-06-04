@@ -1,63 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './ProductSection.css';
-import { type Product, formatRupiah, getFeaturedProducts } from '../database/db';
+import { type ProductDto, getFeaturedProducts } from '../services/service-api';
+import { PrimaryButton, TagPill } from './ui/site';
+import ProductCard from './ProductCard';
 
 const ProductSection: React.FC = () => {
-    const navigate = useNavigate();
-    const [products, setProducts] = useState<Product[]>([]);
+  const navigate = useNavigate();
+  const [products, setProducts] = useState<ProductDto[]>([]);
 
-    useEffect(() => {
-        let cancelled = false;
-        getFeaturedProducts()
-            .then((p) => { if (!cancelled) setProducts(p); })
-            .catch(() => { if (!cancelled) setProducts([]); });
-        return () => { cancelled = true; };
-    }, []);
+  useEffect(() => {
+    let cancelled = false;
+    getFeaturedProducts().then((p) => !cancelled && setProducts(p)).catch(() => !cancelled && setProducts([]));
+    return () => { cancelled = true; };
+  }, []);
 
-    return (
-        <section className="product-section" id="products">
-            <div className="container">
-                <div className="section-header text-center">
-                    <span className="tag-pill">Pilihan Alami untuk Sehari-hari </span>
-                    <h2>Good Food Starts Here</h2>
-                </div>
+  return (
+    <section className="bg-[#EFE9E3] py-24" id="products">
+      <div className="container">
+        <div className="mb-8 text-center">
+          <TagPill>Pilihan Alami untuk Sehari-hari</TagPill>
+          <h2 className="mt-3 text-4xl font-bold text-[var(--primary-green)]">Good Food Starts Here</h2>
+        </div>
 
-                <div className="product-grid">
-                    {products.map((product) => (
-                        <div key={product.id} className="product-card">
-                            {product.badge && (
-                                <span className={`product-badge badge-${product.badge.toLowerCase().replace(/\s/g, '-')}`}>
-                                    {product.badge}
-                                </span>
-                            )}
-                            <div className="product-image-wrapper">
-                                <img src={product.images[0]} alt={product.name} />
-                            </div>
-                            <div className="product-info">
-                                <span className="product-category-tag">{product.category}</span>
-                                <h3>{product.name}</h3>
-                                <p className="product-desc">{product.description}</p>
-                                <p className="product-price">{formatRupiah(product.price)}</p>
-                                <button
-                                    className="details-btn-outlined"
-                                    onClick={() => navigate(`/products/${product.id}`)}
-                                >
-                                    Lihat Detail
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+        <div className="mb-12 grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-8">
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onPrimaryAction={() => navigate(`/products/${product.id}`)}
+            />
+          ))}
+        </div>
 
-                <div className="load-more-container text-center">
-                    <button className="load-more-btn" onClick={() => navigate('/products')}>
-                        Lihat Semua Produk
-                    </button>
-                </div>
-            </div>
-        </section>
-    );
+        <div className="text-center">
+          <PrimaryButton className="px-7" onClick={() => navigate('/products')}>
+            Lihat Semua Produk
+          </PrimaryButton>
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default ProductSection;
