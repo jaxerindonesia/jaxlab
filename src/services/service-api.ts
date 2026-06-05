@@ -9,6 +9,7 @@ export type { TestimonialDto } from './models/TestimonialDto';
 export { loginAdmin, resetToDefaults } from './api/admin';
 export { loginMember, registerMember } from './api/members';
 export { checkoutOrder } from './api/orders';
+export { getOrderHistory } from './api/order-history';
 export { addBadge, deleteBadge, getBadges } from './api/badges';
 export { addCategory, deleteCategory, getCategories } from './api/categories';
 export { getCompanyInfo, getFeatures, getStats, getTestimonials } from './api/content';

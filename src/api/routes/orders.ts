@@ -104,7 +104,7 @@ router.post('/checkout', async (req, res) => {
       transaction_details: { order_id: externalOrderId, gross_amount: total },
       credit_card: { secure: true },
       callbacks: {
-        finish: `${appBaseUrl}/payment/success`,
+        finish: `${appBaseUrl}/payment/result`,
         error: `${appBaseUrl}/payment/error`,
       },
       customer_details: {
@@ -163,4 +163,41 @@ router.post('/payment-notification', async (req, res) => {
   await prisma.order.updateMany({ where: { paymentRef: orderId }, data: { paymentStatus: nextStatus } });
 
   return res.status(200).json({ ok: true });
+});
+
+router.get('/history', async (req, res) => {
+  const memberId = String(req.header('x-member-id') ?? '').trim();
+  if (!memberId) return res.status(400).json({ error: 'invalid member' });
+
+  const member = await prisma.member.findUnique({ where: { id: memberId } });
+  if (!member) return res.status(401).json({ error: 'member invalid' });
+
+  const orders = await prisma.order.findMany({
+    where: { memberId },
+    orderBy: { createdAt: 'desc' },
+    include: {
+      items: true,
+    },
+  });
+
+  return res.json({
+    orders: orders.map((order) => ({
+      id: order.id,
+      subtotalAmount: order.subtotalAmount,
+      ppnAmount: order.ppnAmount,
+      totalAmount: order.totalAmount,
+      paymentStatus: order.paymentStatus,
+      paymentProvider: order.paymentProvider,
+      paymentRef: order.paymentRef,
+      createdAt: order.createdAt,
+      items: order.items.map((item) => ({
+        id: item.id,
+        productId: item.productId,
+        productName: item.productName,
+        unitPrice: item.unitPrice,
+        quantity: item.quantity,
+        lineTotal: item.lineTotal,
+      })),
+    })),
+  });
 });

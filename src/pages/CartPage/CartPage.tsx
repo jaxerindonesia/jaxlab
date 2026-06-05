@@ -85,7 +85,7 @@ export default function CartPage() {
             <section className="rounded-2xl border border-[#e6dfd7] bg-white p-5 text-center shadow-[0_16px_40px_rgba(26,77,46,0.08)]">
               <h2 className="mt-0 text-[var(--primary-green)]">Silakan Login Dulu</h2>
               <p>Untuk melanjutkan pembelian di website, login membership terlebih dahulu.</p>
-              <button className="mt-3 h-11 w-full max-w-[260px] rounded-xl border-0 bg-[var(--primary-green)] font-bold text-white" onClick={() => nav('/member')}>Login / Register</button>
+              <button className="mt-3 h-11 w-full max-w-[260px] rounded-xl border-0 bg-[var(--primary-green)] font-bold text-white" onClick={() => nav('/member/auth')}>Login / Register</button>
             </section>
           </div>
         </main>

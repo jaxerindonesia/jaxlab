@@ -9,6 +9,9 @@ import CartPage from './pages/CartPage/CartPage';
 import MemberAuthPage from './pages/MemberAuth/MemberAuthPage';
 import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import PaymentErrorPage from './pages/PaymentErrorPage';
+import OrderHistoryPage from './pages/OrderHistoryPage/OrderHistoryPage';
+import AccountPage from './pages/AccountPage/AccountPage';
+import PaymentResultPage from './pages/PaymentResultPage';
 
 function App() {
   return (
@@ -21,10 +24,13 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/admin" element={<AdminPage />} />
-          <Route path="/member" element={<MemberAuthPage />} />
+          <Route path="/member" element={<AccountPage />} />
+          <Route path="/member/auth" element={<MemberAuthPage />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/orders/history" element={<OrderHistoryPage />} />
           <Route path="/payment/success" element={<PaymentSuccessPage />} />
           <Route path="/payment/error" element={<PaymentErrorPage />} />
+          <Route path="/payment/result" element={<PaymentResultPage />} />
         </Routes>
       </div>
     </Router>

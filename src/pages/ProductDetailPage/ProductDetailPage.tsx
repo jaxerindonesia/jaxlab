@@ -85,7 +85,7 @@ const ProductDetailPage: React.FC = () => {
                     <button
                       className="rounded-xl bg-[#1a5b34] px-8 py-4 text-md font-bold text-white max-xl:text-2xl"
                       onClick={() => {
-                        if (!isMemberLoggedIn()) { window.location.href = '/member'; return; }
+                        if (!isMemberLoggedIn()) { window.location.href = '/member/auth'; return; }
                         addToCart(p.id, 1);
                         window.location.href = '/cart';
                       }}

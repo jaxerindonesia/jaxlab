@@ -114,7 +114,7 @@ const ProductsPage: React.FC = () => {
                   secondaryLabel="Beli di Website"
                   onPrimaryAction={() => navigate(`/products/${product.id}`)}
                   onSecondaryAction={() => {
-                    if (!isMemberLoggedIn()) { navigate('/member'); return; }
+                    if (!isMemberLoggedIn()) { navigate('/member/auth'); return; }
                     addToCart(product.id, 1);
                     navigate('/cart');
                   }}
