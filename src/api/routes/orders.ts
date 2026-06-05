@@ -133,6 +133,7 @@ router.post('/checkout', async (req, res) => {
 
   res.json({
     orderId: order.id,
+    paymentRef: externalOrderId,
     snapToken: snapJson.token,
     redirectUrl: snapJson.redirect_url,
     subtotal,

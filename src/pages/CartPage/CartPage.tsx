@@ -6,6 +6,7 @@ import Header from '../../components/Header';
 import { getMember } from '../../services/auth';
 import { clearCart, getCart, setCart } from '../../services/cart';
 import { checkoutOrder, formatRupiah, getAllProducts, type ProductDto } from '../../services/service-api';
+import { savePaymentSession } from '../../services/payment-session';
 
 declare global {
   interface Window {
@@ -54,6 +55,9 @@ export default function CartPage() {
     setLoadingCheckout(true);
     try {
       const res = await checkoutOrder(member.id, { items: cart });
+      savePaymentSession(res);
+      clearCart();
+      setCartState([]);
       if (!window.snap) {
         if (res.redirectUrl) {
           window.location.href = res.redirectUrl;
@@ -64,8 +68,6 @@ export default function CartPage() {
       }
       window.snap.pay(res.snapToken, {
         onSuccess: () => {
-          clearCart();
-          setCartState([]);
           alert('Pembayaran berhasil. Admin akan hubungi Anda via WhatsApp untuk ongkir.');
         },
       });

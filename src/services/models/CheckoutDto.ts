@@ -4,6 +4,7 @@ export interface CheckoutRequestDto {
 
 export interface CheckoutResponseDto {
   orderId: string;
+  paymentRef: string;
   snapToken: string;
   redirectUrl?: string;
   grossAmount: number;

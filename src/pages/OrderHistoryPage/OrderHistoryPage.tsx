@@ -6,6 +6,7 @@ import Footer from '../../components/Footer';
 import { getMember, isMemberLoggedIn } from '../../services/auth';
 import { formatRupiah, getOrderHistory } from '../../services/service-api';
 import type { OrderHistoryDto } from '../../services/models/OrderHistoryDto';
+import { getPaymentSession } from '../../services/payment-session';
 
 const statusConfig = (status: string) => {
   const normalized = status.toLowerCase();
@@ -125,6 +126,33 @@ const OrderHistoryPage: React.FC = () => {
                           {status.label}
                         </div>
                       </div>
+
+                      {order.paymentStatus === 'pending' && (
+                        <div className="mt-3">
+                          <button
+                            type="button"
+                            className="rounded-xl bg-[var(--primary-green)] px-4 py-2 text-sm font-bold text-white"
+                            onClick={() => {
+                              const session = order.paymentRef ? getPaymentSession(order.paymentRef) : null;
+                              if (!session) {
+                                alert('Link pembayaran belum tersedia lagi. Silakan buat order baru dari keranjang.');
+                                return;
+                              }
+                              if (window.snap) {
+                                window.snap.pay(session.snapToken);
+                                return;
+                              }
+                              if (session.redirectUrl) {
+                                window.location.href = session.redirectUrl;
+                                return;
+                              }
+                              alert('Link pembayaran belum tersedia lagi. Silakan buat order baru dari keranjang.');
+                            }}
+                          >
+                            Lanjut Bayar
+                          </button>
+                        </div>
+                      )}
 
                       <div className="mt-5 grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
                         <div className="space-y-3">
