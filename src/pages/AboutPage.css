@@ -37,7 +37,7 @@
 }
 
 .btn-white {
-    background: white;
+    background: #f9f5ec;
     color: var(--primary-green);
     padding: 0.8rem 2rem;
     border-radius: 999px;
@@ -210,7 +210,7 @@
 }
 
 .btn-white-pill {
-    background: white;
+    background: #f9f5ec;
     color: var(--primary-green);
     padding: 1rem 2.5rem;
     border-radius: 999px;

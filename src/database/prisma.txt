@@ -1,4 +1,4 @@
-buat databases menggunakan prisma!!
+git --versionbuat databases menggunakan prisma!!
 
 data mencangkup 
 

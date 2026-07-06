@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import './ProductDetailPage.css';
-import { Star, ArrowLeft } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Star } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { type Product, formatRupiah, getProductById } from '../database/db';
 
@@ -35,14 +35,13 @@ const ProductDetailPage: React.FC = () => {
         return () => { cancelled = true; };
     }, [id]);
 
-    // If product not found, show error message
     if (id && !loading && !product) {
         return (
             <div className="product-detail-page">
                 <Header />
                 <main className="detail-main">
                     <div className="container detail-container">
-                        <div style={{ textAlign: 'center', padding: '3rem' }}>
+                        <div className="detail-empty-state">
                             <h2>Produk tidak ditemukan</h2>
                             <p>Produk yang Anda cari tidak tersedia.</p>
                             <Link to="/products" className="back-link">
@@ -63,42 +62,50 @@ const ProductDetailPage: React.FC = () => {
             <main className="detail-main">
                 <div className="container detail-container">
                     {loading && (
-                        <div style={{ textAlign: 'center', padding: '3rem' }}>
+                        <div className="detail-empty-state">
                             <p>Memuat detail produk...</p>
                         </div>
                     )}
+
                     {!loading && product && (() => {
-                        const p = product as import('../database/db').Product;
+                        const p = product;
+                        const selectedProductImage = p.images[selectedImage] ?? p.images[0];
+
                         return (
                             <>
-                                {/* Breadcrumbs */}
-                                <div className="breadcrumbs">
-                                    <Link to="/">Home</Link> &gt;
-                                    <Link to="/products">Produk</Link> &gt;
-                                    <span>{p.name}</span>
+                                <div className="detail-topline">
+                                    <div className="breadcrumbs">
+                                        <Link to="/">Home</Link>
+                                        <span>/</span>
+                                        <Link to="/products">Produk</Link>
+                                        <span>/</span>
+                                        <span>{p.name}</span>
+                                    </div>
+                                    <Link to="/products" className="back-link">
+                                        <ArrowLeft size={14} /> Kembali ke semua produk
+                                    </Link>
                                 </div>
 
-                                <Link to="/products" className="back-link">
-                                    <ArrowLeft size={16} /> Kembali ke semua produk
-                                </Link>
-
                                 <div className="product-layout">
-                                    {/* Gallery */}
-                                    <div className="product-gallery">
-                                        <div className="thumbnail-list">
-                                            {p.images.map((img, index) => (
-                                                <div
-                                                    key={index}
-                                                    className={`thumb-item ${selectedImage === index ? 'active' : ''}`}
-                                                    onMouseEnter={() => setSelectedImage(index)}
-                                                    onClick={() => setSelectedImage(index)}
-                                                >
-                                                    <img src={img} alt={`Thumbnail ${index + 1}`} />
-                                                </div>
-                                            ))}
-                                        </div>
+                                    <div className={`product-gallery ${p.images.length <= 1 ? 'product-gallery-single' : ''}`}>
+                                        {p.images.length > 1 && (
+                                            <div className="thumbnail-list" aria-label="Pilihan gambar produk">
+                                                {p.images.map((image, index) => (
+                                                    <button
+                                                        key={`${image}-${index}`}
+                                                        type="button"
+                                                        className={`thumb-item ${selectedImage === index ? 'active' : ''}`}
+                                                        onClick={() => setSelectedImage(index)}
+                                                        aria-label={`Lihat gambar produk ${index + 1}`}
+                                                    >
+                                                        <img src={image} alt={`${p.name} ${index + 1}`} />
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+
                                         <div className="main-image">
-                                            <img src={p.images[selectedImage]} alt={p.name} />
+                                            {selectedProductImage && <img src={selectedProductImage} alt={p.name} />}
                                             {p.badge && (
                                                 <span className={`product-badge-detail badge-${p.badge.toLowerCase().replace(/\s/g, '-')}`}>
                                                     {p.badge}
@@ -107,101 +114,73 @@ const ProductDetailPage: React.FC = () => {
                                         </div>
                                     </div>
 
-                                    {/* Product Info */}
                                     <div className="product-details-info">
                                         <span className="detail-category-tag">{p.category}</span>
                                         <h1 className="product-title">{p.name}</h1>
-                                        <p className="product-subtitle">{p.subtitle}</p>
+                                        {p.subtitle && <p className="product-subtitle">{p.subtitle}</p>}
 
                                         <div className="rating-row">
-                                            <div className="stars">
+                                            <div className="stars" aria-label={`Rating ${p.rating} dari 5`}>
                                                 {[...Array(5)].map((_, i) => (
                                                     <Star
                                                         key={i}
-                                                        size={18}
+                                                        size={16}
                                                         fill={i < Math.floor(p.rating) ? '#FFC107' : 'none'}
                                                         color="#FFC107"
                                                     />
                                                 ))}
                                             </div>
-                                            <span className="review-count">{p.rating} ({p.reviewCount} ulasan)</span>
+                                            <span className="review-count">
+                                                {p.rating} ({p.reviewCount} ulasan)
+                                            </span>
                                         </div>
 
                                         <div className="price-row">
                                             <h2>{formatRupiah(p.price)}</h2>
                                             {p.originalPrice && (
-                                                <span className="original-price">{formatRupiah(p.originalPrice)}</span>
-                                            )}
-                                            {p.originalPrice && (
-                                                <span className="discount-badge">
-                                                    -{Math.round((1 - p.price / p.originalPrice) * 100)}%
-                                                </span>
+                                                <>
+                                                    <span className="original-price">{formatRupiah(p.originalPrice)}</span>
+                                                    <span className="discount-badge">
+                                                        -{Math.round((1 - p.price / p.originalPrice) * 100)}%
+                                                    </span>
+                                                </>
                                             )}
                                         </div>
 
                                         <div className="stock-row">
-                                            <span style={{ color: 'black', fontWeight: 'bold' }}>Stok: </span>
+                                            <span className="stock-label">Stok:</span>
                                             <span
-                                                className="stock-status"
-                                                style={{
-                                                    color: p.stockStatus === 'Tersedia' ? 'green'
-                                                        : p.stockStatus === 'Terbatas' ? 'orange' : 'red'
-                                                }}
+                                                className={`stock-status stock-status-${p.stockStatus.toLowerCase()}`}
                                             >
                                                 {p.stockStatus}
                                             </span>
                                         </div>
 
-                                        {/* Quantity Selector */}
-                                        {/* <div className="quantity-row">
-                                            <span style={{ fontWeight: '600', marginRight: '1rem' }}>Jumlah:</span>
-                                            <div className="quantity-selector">
-                                                <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</button>
-                                                <span>{quantity}</span>
-                                                <button onClick={() => setQuantity(quantity + 1)}>+</button>
-                                            </div>
-                                        </div> */}
-
-                                        {/* Action Buttons / Marketplace Links */}
-                                        <div className="action-buttons" style={{ flexWrap: 'wrap' }}>
-                                            {p.marketplaceLinks && p.marketplaceLinks.length > 0 ? (
-                                                p.marketplaceLinks.map((btn, i) => (
+                                        {p.marketplaceLinks && p.marketplaceLinks.length > 0 && (
+                                            <div className="action-buttons">
+                                                {p.marketplaceLinks.map((btn, i) => (
                                                     <a
                                                         key={i}
                                                         href={btn.url}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         className="btn-buy"
-                                                        style={{
-                                                            backgroundColor: '#1a4d2e',
-                                                            color: 'white',
-                                                            textDecoration: 'none',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            flex: '1 1 auto',
-                                                            minWidth: '150px'
-                                                        }}
                                                     >
                                                         {btn.label}
                                                     </a>
-                                                ))
-                                            ) : (
-                                                <>
-                                                    {/* <button className="btn-cart" style={{ backgroundColor: '#1a4d2e', color: 'white' }}>Tambah ke Keranjang</button> */}
-                                                    {/* <button className="btn-buy" style={{ backgroundColor: '#1a4d2e', color: 'white' }}>Beli Sekarang</button> */}
-                                                </>
-                                            )}
-                                        </div>
+                                                ))}
+                                            </div>
+                                        )}
 
-
-                                        {/* Benefits */}
                                         {p.benefits.length > 0 && (
                                             <div className="benefits-list">
-                                                <p style={{ fontWeight: '600', marginBottom: '0.5rem' }}>Manfaat Utama:</p>
+                                                <p>Manfaat Utama:</p>
                                                 <ul>
                                                     {p.benefits.map((benefit, i) => (
-                                                        <li key={i}>✓ {benefit}</li>
+                                                        <li key={i}>
+                                                            <CheckCircle size={14} />
+                                                            <span>{benefit}</span>
+                                                        </li>
                                                     ))}
                                                 </ul>
                                             </div>
@@ -209,18 +188,18 @@ const ProductDetailPage: React.FC = () => {
                                     </div>
                                 </div>
 
-                                {/* Description & Specs */}
                                 <div className="product-description-block">
                                     <div className="desc-section">
                                         <h3>Deskripsi Produk</h3>
                                         <p>{p.longDescription}</p>
                                     </div>
                                     <div className="specs-section">
-                                        <h3>Spesifikasi:</h3>
+                                        <h3>Spesifikasi Produk</h3>
                                         <ul className="specs-list">
                                             {p.specs.map((spec, index) => (
                                                 <li key={index}>
-                                                    • <strong style={{ paddingLeft: '5px' }}>{spec.label} : </strong> {spec.value}
+                                                    <strong>{spec.label}:</strong>
+                                                    <span>{spec.value}</span>
                                                 </li>
                                             ))}
                                         </ul>

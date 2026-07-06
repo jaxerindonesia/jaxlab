@@ -131,7 +131,7 @@ const AdminPage: React.FC = () => {
 
   const handleSave = async () => {
     console.log("handleSave called, form:", form);
-    
+
     if (!form.name.trim()) {
       alert("Nama produk harus diisi");
       return;
@@ -142,7 +142,7 @@ const AdminPage: React.FC = () => {
     }
 
     setSaving(true);
-    
+
     try {
       // Filter images - keep only non-empty strings (including base64)
       const filteredImages = form.images.filter((img) => {
@@ -150,9 +150,9 @@ const AdminPage: React.FC = () => {
         if (isEmpty) console.log("Filtering out empty image:", img);
         return !isEmpty;
       });
-      
+
       console.log("Filtered images:", filteredImages.length, "images");
-      
+
       const cleaned = {
         ...form,
         images: filteredImages,
@@ -173,7 +173,7 @@ const AdminPage: React.FC = () => {
         const result = await addProduct(cleaned);
         console.log("Add result:", result);
       }
-      
+
       await refresh();
       closeForm();
       alert("Produk berhasil disimpan!");
@@ -621,7 +621,10 @@ const AdminPage: React.FC = () => {
                   <label>Gambar (Upload File)</label>
                   <div className="dynamic-list">
                     {form.images.map((img, i) => (
-                      <div key={i} className="dynamic-list-item image-upload-item">
+                      <div
+                        key={i}
+                        className="dynamic-list-item image-upload-item"
+                      >
                         {img.startsWith("data:") ? (
                           <div className="image-preview">
                             <img src={img} alt={`Preview ${i + 1}`} />
@@ -664,7 +667,8 @@ const AdminPage: React.FC = () => {
                                 if (file) {
                                   const reader = new FileReader();
                                   reader.onload = (event) => {
-                                    const result = event.target?.result as string;
+                                    const result = event.target
+                                      ?.result as string;
                                     const imgs = [...form.images];
                                     imgs[i] = result;
                                     setField("images", imgs);
@@ -791,12 +795,22 @@ const AdminPage: React.FC = () => {
                   <div className="dynamic-list">
                     {(form.marketplaceLinks ?? []).map((btn, i) => (
                       <div key={i} className="dynamic-list-item dl-btn-row">
-                        <div style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 6,
+                            flex: 1,
+                          }}
+                        >
                           <input
                             value={btn.label}
                             onChange={(e) => {
-                              const links = (form.marketplaceLinks ?? []).map((b, idx) =>
-                                idx === i ? { ...b, label: e.target.value } : b
+                              const links = (form.marketplaceLinks ?? []).map(
+                                (b, idx) =>
+                                  idx === i
+                                    ? { ...b, label: e.target.value }
+                                    : b,
                               );
                               setField("marketplaceLinks", links);
                             }}
@@ -805,8 +819,9 @@ const AdminPage: React.FC = () => {
                           <input
                             value={btn.url}
                             onChange={(e) => {
-                              const links = (form.marketplaceLinks ?? []).map((b, idx) =>
-                                idx === i ? { ...b, url: e.target.value } : b
+                              const links = (form.marketplaceLinks ?? []).map(
+                                (b, idx) =>
+                                  idx === i ? { ...b, url: e.target.value } : b,
                               );
                               setField("marketplaceLinks", links);
                             }}
@@ -816,7 +831,9 @@ const AdminPage: React.FC = () => {
                         <button
                           className="btn-remove-item"
                           onClick={() => {
-                            const links = (form.marketplaceLinks ?? []).filter((_, idx) => idx !== i);
+                            const links = (form.marketplaceLinks ?? []).filter(
+                              (_, idx) => idx !== i,
+                            );
                             setField("marketplaceLinks", links);
                           }}
                         >
@@ -839,10 +856,22 @@ const AdminPage: React.FC = () => {
                 </div>
 
                 <div className="form-actions">
-                  <button className="btn-save" onClick={handleSave} disabled={saving}>
-                    {saving ? "Menyimpan..." : editing ? "Simpan Perubahan" : "Tambah Produk"}
+                  <button
+                    className="btn-save"
+                    onClick={handleSave}
+                    disabled={saving}
+                  >
+                    {saving
+                      ? "Menyimpan..."
+                      : editing
+                        ? "Simpan Perubahan"
+                        : "Tambah Produk"}
                   </button>
-                  <button className="btn-cancel" onClick={closeForm} disabled={saving}>
+                  <button
+                    className="btn-cancel"
+                    onClick={closeForm}
+                    disabled={saving}
+                  >
                     Batal
                   </button>
                 </div>

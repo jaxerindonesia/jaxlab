@@ -313,23 +313,23 @@ INSERT INTO product_benefits (product_id, benefit, sort_order) VALUES (6, 'Menja
 
 -- ── Testimonials ──────────────────────────────────────────────
 INSERT INTO testimonials (name, role, quote, image, rating) VALUES (
-    'Budi Santoso', 'Pengusaha, Yogyakarta',
-    'Dulu sering merasa lelah dan kurang fokus. Setelah 3 bulan rutin konsumsi Ketone Immuno, energi saya lebih stabil sepanjang hari. Produktivitas kerja meningkat drastis!',
+    'dr. Andi P.', 'Dokter Umum · Bandung',
+    'Saya menyukai pendekatan JaxLab yang berfokus pada edukasi dan perubahan gaya hidup, bukan sekadar mengejar angka di timbangan. Program seperti ini membantu peserta lebih memahami pentingnya kesehatan metabolik dan membangun kebiasaan yang lebih baik.',
     'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80', 5
 );
 INSERT INTO testimonials (name, role, quote, image, rating) VALUES (
-    'Maya Putri', 'Yoga Instructor, Bali',
-    'Jaroliva Olive Oil dengan rosemary jadi favorit saya untuk memasak. Aromanya harum dan rasa masakan jadi lebih premium. Manfaat kesehatannya luar biasa untuk gaya hidup sehat.',
+    'Ibu Rina, 52 Tahun', 'Ibu Rumah Tangga & Entrepreneur · Jakarta',
+    'Awalnya saya ragu mencoba Fat Fasting. Setelah mengikuti panduan dan komunitas JaxLab, saya merasa pola makan saya jadi lebih teratur, energi lebih stabil, dan saya lebih sadar dalam memilih makanan setiap hari.',
     'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80', 5
 );
 INSERT INTO testimonials (name, role, quote, image, rating) VALUES (
-    'Dr. Rudi Hermawan', 'Dokter Keluarga, Semarang',
-    'Saya merekomendasikan produk JaxLab kepada pasien yang ingin meningkatkan kesehatan secara alami. Kualitas bahan dan transparansi proses produksinya sangat bisa dipercaya.',
+    'Bapak Hendra, 41 Tahun', 'Professional IT · Medan',
+    'Yang paling saya suka bukan hanya soal perubahan berat badan, tapi kebiasaan saya ikut berubah. Saya jadi lebih konsisten bergerak, lebih mengontrol porsi makan, dan merasa tubuh lebih ringan untuk beraktivitas',
     'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80', 5
 );
 INSERT INTO testimonials (name, role, quote, image, rating) VALUES (
-    'Sari Rahayu', 'Ibu Rumah Tangga, Jakarta',
-    'Bone Broth JaxLab sudah jadi menu wajib keluarga kami. Anak-anak suka rasanya dan saya tenang karena tahu bahan-bahannya alami dan halal. Terima kasih JaxLab!',
+    'Ibu Vina, 36 Tahun', 'Ibu Rumah Tangga & Guru · Surabaya',
+    'Sebagai ibu yang sibuk mengurus keluarga, saya butuh program yang praktis. Panduan menu dan komunitas JaxLab membuat saya lebih mudah menjalani pola hidup sehat tanpa harus memasak menu yang berbeda setiap hari.',
     'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80', 5
 );
 INSERT INTO testimonials (name, role, quote, image, rating) VALUES (

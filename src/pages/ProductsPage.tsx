@@ -1,178 +1,184 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import '../components/ProductSection.css';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { Search } from 'lucide-react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { type Product, formatRupiah, getAllProducts, getCategories } from '../database/db';
+import '../components/ProductSection.css'; // Reusing the product card styles
+import { ArrowRight, Check } from 'lucide-react';
+import { type Product, formatRupiah, getAllProducts } from '../database/db';
 
 const ProductsPage: React.FC = () => {
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
-
-    const [allProducts, setAllProducts] = useState<Product[] | null>(null);
-    const [dbCategories, setDbCategories] = useState<string[] | null>(null);
-    const loading = allProducts === null || dbCategories === null;
-
-    const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
-
-    // Sync searchTerm when URL search param changes (e.g. navigating from Hero)
-    useEffect(() => {
-        const urlSearch = searchParams.get('search') || '';
-        if (urlSearch !== searchTerm) {
-            setSearchTerm(urlSearch);
-            setCurrentPage(1);
-        }
-    }, [searchParams]);
-    const [selectedCategory, setSelectedCategory] = useState('All');
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 6;
+    const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('Semua');
 
     useEffect(() => {
         let cancelled = false;
-        Promise.all([getAllProducts(), getCategories()])
-            .then(([products, categories]) => {
-                if (cancelled) return;
-                setAllProducts(products);
-                setDbCategories(categories);
+        setLoading(true);
+        getAllProducts()
+            .then((p) => {
+                if (!cancelled) {
+                    setProducts(p);
+                    setLoading(false);
+                }
             })
             .catch(() => {
-                if (cancelled) return;
-                setAllProducts([]);
-                setDbCategories([]);
+                if (!cancelled) {
+                    setProducts([]);
+                    setLoading(false);
+                }
             });
         return () => { cancelled = true; };
     }, []);
 
-    const productCategories = useMemo(() => ['All', ...(dbCategories ?? [])], [dbCategories]);
+    // Extract unique categories
+    const categories = ['Semua', ...Array.from(new Set(products.map(p => p.category)))];
 
-    const filteredProducts = useMemo(() => {
-        const products = allProducts ?? [];
-        return products.filter(product => {
-            const matchesSearch =
-                product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                product.description.toLowerCase().includes(searchTerm.toLowerCase());
-            const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
-            return matchesSearch && matchesCategory;
-        });
-    }, [allProducts, searchTerm, selectedCategory]);
-
-    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-    const paginatedProducts = filteredProducts.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
-
-    const handleCategoryChange = (cat: string) => {
-        setSelectedCategory(cat);
-        setCurrentPage(1);
-    };
+    // Filter products
+    const filteredProducts = products.filter(product => {
+        const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                              product.subtitle.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesCategory = selectedCategory === 'Semua' || product.category === selectedCategory;
+        return matchesSearch && matchesCategory;
+    });
 
     return (
         <div className="products-page">
             <Header />
-            <main style={{ paddingTop: '2rem' }}>
-                <section className="product-section">
-                    <div className="container">
-                        <div className="section-header text-center">
-                            <span className="tag-pill">Produk Alami JaxLab</span>
-                            <h2 className="title-green">Good Food Starts Here</h2>
-                            <p className="subtitle">Pilihan produk alami untuk mendukung gaya hidup sehat Anda.</p>
-                        </div>
-
-                        {/* Search Bar */}
-                        <div className="search-filter-container">
-                            <div className="search-input-box">
-                                <input
-                                    type="text"
-                                    placeholder="Cari produk JaxLab..."
-                                    value={searchTerm}
-                                    onChange={(e) => {
-                                        setSearchTerm(e.target.value);
-                                        setCurrentPage(1);
-                                    }}
-                                />
-                                <Search className="search-icon-input" size={18} />
-                            </div>
-
-                            <div className="filter-pills">
-                                {productCategories.map((category) => (
-                                    <button
-                                        key={category}
-                                        className={`filter-pill ${selectedCategory === category ? 'active' : ''}`}
-                                        onClick={() => handleCategoryChange(category)}
-                                    >
-                                        {category}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <p style={{ textAlign: 'center', color: '#666', marginBottom: '1rem', fontSize: '0.9rem' }}>
-                            Menampilkan <strong>{filteredProducts.length}</strong> produk
-                            {selectedCategory !== 'All' && ` dalam kategori "${selectedCategory}"`}
-                            {searchTerm && ` untuk "${searchTerm}"`}
+            
+            <main className="product-section">
+                <div className="container">
+                    <div className="section-header text-center" style={{ marginTop: '2rem' }}>
+                        <span className="section-subtitle">✦ Katalog Lengkap</span>
+                        <h2>Keseluruhan Produk Kami</h2>
+                        <p className="section-desc">
+                            Temukan semua produk alami berkualitas dari JaxLab yang dirancang khusus untuk mendukung kesehatan dan kesejahteraan Anda.
                         </p>
+                    </div>
 
-                        <div className="product-grid">
-                            {loading ? (
-                                <div className="no-results">
-                                    <p>Memuat produk...</p>
-                                </div>
-                            ) : paginatedProducts.length > 0 ? paginatedProducts.map((product) => (
-                                <div key={product.id} className="product-card">
-                                    {product.badge && (
-                                        <span className={`product-badge badge-${product.badge.toLowerCase().replace(/\s/g, '-')}`}>
-                                            {product.badge}
-                                        </span>
-                                    )}
-                                    <div className="product-image-wrapper">
-                                        <img src={product.images[0]} alt={product.name} />
-                                    </div>
-                                    <div className="product-info">
-                                        <span className="product-category-tag">{product.category}</span>
-                                        <h3>{product.name}</h3>
-                                        <p className="product-desc">{product.description}</p>
-                                        <div className="price-group">
-                                            <p className="product-price">{formatRupiah(product.price)}</p>
-                                            {product.originalPrice && (
-                                                <p className="product-price-original">{formatRupiah(product.originalPrice)}</p>
-                                            )}
-                                        </div>
-                                        <div className="stock-indicator" data-status={product.stockStatus}>
-                                            {product.stockStatus}
-                                        </div>
-                                        <button
-                                            className="details-btn-outlined"
-                                            onClick={() => navigate(`/products/${product.id}`)}
-                                        >
-                                            Lihat Detail
-                                        </button>
-                                    </div>
-                                </div>
-                            )) : (
-                                <div className="no-results">
-                                    <p>Produk tidak ditemukan. Coba kata kunci lain.</p>
-                                </div>
-                            )}
+                    <div className="search-filter-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', marginBottom: '3rem' }}>
+                        {/* Search Input */}
+                        <div style={{ position: 'relative', width: '100%', maxWidth: '500px' }}>
+                            <input 
+                                type="text" 
+                                placeholder="Cari produk JaxLab..." 
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                style={{ 
+                                    width: '100%', 
+                                    padding: '1rem 1.5rem', 
+                                    paddingRight: '3rem',
+                                    borderRadius: '50px', 
+                                    border: '1px solid #ddd', 
+                                    outline: 'none',
+                                    fontSize: '0.95rem'
+                                }}
+                            />
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                width="20" height="20" 
+                                viewBox="0 0 24 24" 
+                                fill="none" 
+                                stroke="#aaa" 
+                                strokeWidth="2" 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round" 
+                                style={{ position: 'absolute', right: '20px', top: '50%', transform: 'translateY(-50%)' }}
+                            >
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
                         </div>
 
-                        {totalPages > 1 && (
-                            <div className="pagination-container text-center">
-                                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        {/* Category Pills */}
+                        <div className="category-pills" style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                            {categories.map((cat, idx) => {
+                                const isSelected = selectedCategory === cat;
+                                return (
                                     <button
-                                        key={page}
-                                        className={`page-btn ${currentPage === page ? 'active' : ''}`}
-                                        onClick={() => setCurrentPage(page)}
+                                        key={idx}
+                                        onClick={() => setSelectedCategory(cat)}
+                                        style={{
+                                            padding: '0.6rem 1.8rem',
+                                            borderRadius: '50px',
+                                            border: isSelected ? '1px solid #1a4d2e' : '1px solid #ddd',
+                                            backgroundColor: isSelected ? '#1a4d2e' : '#f9f5ec',
+                                            color: isSelected ? '#fff' : '#555',
+                                            fontWeight: '500',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s ease',
+                                            fontSize: '0.9rem'
+                                        }}
                                     >
-                                        {page}
+                                        {cat === 'Semua' ? 'All' : cat}
                                     </button>
-                                ))}
-                            </div>
-                        )}
+                                );
+                            })}
+                        </div>
                     </div>
-                </section>
+
+                    {loading ? (
+                        <div className="text-center" style={{ padding: '4rem' }}>Memuat produk...</div>
+                    ) : filteredProducts.length === 0 ? (
+                        <div className="text-center" style={{ padding: '4rem' }}>Tidak ada produk yang sesuai dengan pencarian Anda.</div>
+                    ) : (
+                        <div className="product-grid">
+                            {filteredProducts.map((product) => {
+                                const highlights =
+                                    product.benefits?.length > 0
+                                        ? product.benefits.slice(0, 2)
+                                        : [product.subtitle, product.description].filter(Boolean).slice(0, 2);
+
+                                return (
+                                    <article key={product.id} className="product-card">
+                                        <div className="product-image-wrapper">
+                                            <img src={product.images[0]} alt={product.name} />
+                                        </div>
+                                        <div className="product-info">
+                                            <span className="product-category-tag">{product.badge || product.category}</span>
+                                            <h3>{product.name}</h3>
+
+                                            <ul className="product-benefits">
+                                                {highlights.map((benefit) => (
+                                                    <li key={benefit}>
+                                                        <Check size={20} strokeWidth={2.4} />
+                                                        <span>{benefit}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+
+                                            <div className="product-card-footer">
+                                                <button
+                                                    className="buy-btn-solid"
+                                                    aria-label={`Beli ${product.name}`}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        navigate(`/products/${product.id}`);
+                                                    }}
+                                                >
+                                                    Beli Sekarang
+                                                    <span>·</span>
+                                                    {formatRupiah(product.price)}
+                                                </button>
+                                                <button
+                                                    className="learn-more-link"
+                                                    type="button"
+                                                    onClick={() => navigate(`/products/${product.id}`)}
+                                                >
+                                                    Learn More
+                                                    <ArrowRight size={15} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </article>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
             </main>
+
             <Footer />
         </div>
     );

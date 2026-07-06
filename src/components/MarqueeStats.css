@@ -1,0 +1,139 @@
+.marquee-stats-section {
+    background: #0d1a0f;
+    padding-bottom: 0;
+}
+
+.scrolling-marquee {
+    overflow: hidden;
+    white-space: nowrap;
+    background-color: #063b18;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(74, 222, 128, 0.18);
+    display: flex;
+}
+
+.scrolling-marquee-content {
+    display: inline-flex;
+    align-items: center;
+    animation: scroll-left 30s linear infinite;
+    /* width is enough to hold 2x the items, flex helps but mostly inline-flex handles it */
+}
+
+.marquee-item {
+    color: #68dd7c;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 0 1rem;
+    white-space: nowrap;
+}
+
+.marquee-dot {
+    color: rgba(104, 221, 124, 0.55);
+    font-size: 1rem;
+    padding: 0 1rem;
+}
+
+@keyframes scroll-left {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+.marquee-stats-section .proof-stats-container {
+    text-align: center;
+    max-width: 1260px;
+    padding: 3rem 0px;
+}
+
+.proof-stats-title {
+    color: rgba(74, 222, 128, 0.72);
+    font-size: 0.82rem;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin: 0 0 3.35rem;
+}
+
+.proof-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 6.8rem;
+    row-gap: 3rem;
+    align-items: start;
+}
+
+.proof-stat-item {
+    min-width: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+}
+
+.proof-stat-value {
+    margin: 0 0 0.38rem;
+    color: #45bf62;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(3rem, 2vw, 2rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: 0;
+    white-space: nowrap;
+}
+
+.proof-stat-label {
+    margin: 1rem 0 0.36rem;
+    color: #ffffff;
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.proof-stat-sublabel {
+    margin: 0;
+    color: rgba(125, 181, 136, 0.74);
+    font-size: 0.78rem;
+    line-height: 1.3;
+}
+
+/* =====================
+   RESPONSIVE
+   ===================== */
+@media (max-width: 1024px) {
+    .marquee-stats-section .proof-stats-container {
+        padding-top: 4rem;
+        padding-bottom: 4.4rem;
+    }
+
+    .proof-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem 2.4rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .marquee-stats-section .proof-stats-container {
+        padding-top: 3.4rem;
+        padding-bottom: 3.8rem;
+    }
+
+    .proof-stats-title {
+        letter-spacing: 3px;
+        line-height: 1.6;
+        margin-bottom: 2.8rem;
+    }
+
+    .proof-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 2.2rem;
+    }
+
+    .proof-stat-value {
+        font-size: 3rem;
+    }
+}

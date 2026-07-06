@@ -205,7 +205,7 @@ app.get('/api/products', async (_req, res) => {
 });
 
 app.get('/api/products/featured', async (_req, res) => {
-  const rows = await prisma.product.findMany({
+  const featuredRows = await prisma.product.findMany({
     where: {
       deletedAt: null,
       detail: {
@@ -236,6 +236,39 @@ app.get('/api/products/featured', async (_req, res) => {
       },
     },
   });
+
+  let rows = featuredRows;
+
+  if (rows.length < 3) {
+    const fallbackRows = await prisma.product.findMany({
+      where: {
+        deletedAt: null,
+        id: { notIn: rows.map((row) => row.id) },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 3 - rows.length,
+      include: {
+        category: { select: { name: true } },
+        detail: {
+          where: { deletedAt: null },
+          select: {
+            description: true,
+            subtitle: true,
+            badge: true,
+            rating: true,
+            reviewCount: true,
+            stockStatus: true,
+            images: true,
+            specs: true,
+            benefits: true,
+            marketplaceLinks: true,
+          },
+        },
+      },
+    });
+
+    rows = [...rows, ...fallbackRows];
+  }
 
   res.json(rows.map((r) => toApiProduct({ ...r, detail: r.detail ?? null })));
 });
