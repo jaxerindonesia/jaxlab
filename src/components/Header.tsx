@@ -45,7 +45,7 @@ const Header: React.FC = () => {
                 </div>
                 <nav className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
                     <a onClick={() => handleNavigation('/products')} style={{ cursor: 'pointer' }}>Produk</a>
-                    <a onClick={() => handleNavigation('#fat-fasting-protocol')} style={{ cursor: 'pointer' }}>Fat Fasting</a>
+                    <a onClick={() => handleNavigation('/fat-fasting')} style={{ cursor: 'pointer' }}>Fat Fasting</a>
                     <a onClick={() => handleNavigation('#blog')} style={{ cursor: 'pointer' }}>Blog</a>
                     <a onClick={() => handleNavigation('#faq')} style={{ cursor: 'pointer' }}>FAQ</a>
                     <div className="mobile-only" style={{ marginTop: '20px' }}>

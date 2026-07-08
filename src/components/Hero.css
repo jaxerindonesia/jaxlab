@@ -2,14 +2,11 @@
    HERO SECTION
    ===================== */
 .hero {
-    background: linear-gradient(135deg, #0a1f0d 0%, #0b150d 40%, #0d1a0f 100%);
-    color: var(--text-white);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
+   background: linear-gradient(135deg, #546d57 0%, #016738 40%, #0d1a0f 100%);
     position: relative;
-    overflow: hidden;
-    padding: 120px 0 80px;
+    padding: 140px 0 80px;
+    min-height: 100vh;
+    overflow: hidden;   
 }
 
 /* Background glows */

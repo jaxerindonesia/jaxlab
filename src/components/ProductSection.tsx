@@ -92,7 +92,7 @@ const ProductSection: React.FC = () => {
               poster="/img/DSC03061-web.jpg"
               aria-label="Video pengantar Fat Fasting JaxLab"
             >
-              <source src="/video/35422496.mp4" type="video/mp4" />
+              <source src="/video/35422496  .mp4" type="video/mp4" />
               Browser Anda tidak mendukung pemutar video.
             </video>
           </div>

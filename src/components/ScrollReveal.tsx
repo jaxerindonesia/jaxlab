@@ -22,7 +22,10 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsVisible(entry.isIntersecting);
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
       },
       {
         threshold: 0.18,
@@ -40,9 +43,8 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
   return (
     <div
       ref={ref}
-      className={`scroll-reveal${isVisible ? " is-visible" : ""}${
-        className ? ` ${className}` : ""
-      }`}
+      className={`scroll-reveal${isVisible ? " is-visible" : ""}${className ? ` ${className}` : ""
+        }`}
       style={{ transitionDelay: `${delay}ms` }}
     >
       {children}

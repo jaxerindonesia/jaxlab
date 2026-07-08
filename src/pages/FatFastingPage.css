@@ -1,0 +1,700 @@
+/* FatFastingPage.css */
+/* Font import – Playfair Display for serif headings */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Inter:wght@400;500;600&display=swap');
+
+/* ─── Root tokens ─── */
+:root {
+  --ff-teal: #0d4a4e;
+  --ff-teal-dark: #0a3538;
+  --ff-teal-mid: #155e63;
+  --ff-green: #2d8c6e;
+  --ff-green-bright: #10b981;
+  --ff-green-hover: #059669;
+  --ff-green-light: #ecfdf5;
+  --ff-green-muted: #d1fae5;
+  --ff-bg: #f0f4f3;
+  --ff-bg-alt: #e8eeed;
+  --ff-white: #ffffff;
+  --ff-text: #0f172a;
+  --ff-text-2: #475569;
+  --ff-text-3: #94a3b8;
+  --ff-border: #cbd5e1;
+  --ff-border-light: #e2e8f0;
+  --ff-amber: #f59e0b;
+  --ff-amber-light: #fffbeb;
+  --ff-amber-border: #fcd34d;
+  --ff-card-bg: #f8fafa;
+  --ff-card-bg-teal: #edf5f4;
+}
+
+/* ─── Base ─── */
+.ff-page {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--ff-bg);
+  color: var(--ff-text);
+  min-height: 100vh;
+}
+
+.ff-container {
+  text-align: center;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.ff-container-wide {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ─── Section label / badge ─── */
+.ff-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ff-green);
+  margin-bottom: 14px;
+}
+
+/* ─── Section heading (serif) ─── */
+.ff-heading {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  color: rgb(22, 22, 22);
+  line-height: 1.15;
+  margin: 0 0 24px;
+}
+
+.ff-heading-xl {
+  font-size: clamp(2.4rem, 6vw, 3.6rem);
+}
+
+.ff-heading-lg {
+  font-size: clamp(2rem, 5vw, 3rem);
+}
+
+.ff-heading-md {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+}
+
+/* ─── Body text ─── */
+.ff-body {
+  color: var(--ff-text-2);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.ff-body-center {
+  text-align: center;
+  max-width: 560px;
+  margin: 0 auto 40px;
+}
+
+/* ─── HERO ─── */
+.ff-hero {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  padding: 120px 24px 80px;
+  text-align: center;
+  background: #0a2a2a;
+  /* fallback while video loads */
+}
+
+/* The background video */
+.ff-hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* Dark overlay so text stays legible over the video */
+.ff-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 30, 30, 0.62);
+  z-index: 1;
+}
+
+/* All hero content sits above video + overlay */
+.ff-hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.ff-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  padding: 6px 16px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 28px;
+}
+
+.ff-hero-badge svg {
+  width: 14px;
+  height: 14px;
+  opacity: 0.8;
+}
+
+.ff-hero-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 800;
+  font-size: clamp(2.2rem, 6vw, 3.8rem);
+  line-height: 1.12;
+  color: #fff;
+  margin: 0 0 20px;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ff-hero-sub {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.7;
+  max-width: 580px;
+  margin: 0 auto 40px;
+}
+
+.ff-hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ff-green-bright);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 14px 32px;
+  border-radius: 9999px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
+}
+
+.ff-hero-cta:hover {
+  background: var(--ff-green-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(16, 185, 129, 0.4);
+}
+
+.ff-hero-scroll {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.4);
+  animation: bounce 2s infinite;
+  z-index: 2;
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(6px);
+  }
+}
+
+/* ─── Generic section ─── */
+.ff-section {
+  padding: 100px 0;
+  background: #f9f5ec;
+}
+
+.ff-section-alt {
+  padding: 100px 0;
+  background: #001802;
+  color: #fff;
+}
+
+/* Dark theme overrides for .ff-section-alt */
+.ff-section-alt .ff-heading,
+.ff-section-alt .ff-body,
+.ff-section-alt .ff-quote-italic {
+  color: #fff;
+}
+
+.ff-section-alt .ff-card {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.ff-section-alt .ff-card-title {
+  color: #fff;
+}
+
+.ff-section-alt .ff-card-body {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.ff-section-alt .ff-card-icon {
+  background: rgba(255, 255, 255, 0.1);
+  color: #5ee9b5;
+}
+
+.ff-section-alt .ff-evoo-note {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.ff-section-alt .ff-evoo-note strong,
+.ff-section-alt .ff-evoo-note a {
+  color: #fff;
+}
+
+.ff-section-alt .ff-tag {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.ff-section-white {
+  padding: 100px 0;
+  background: var(--ff-white);
+}
+
+.ff-section-center {
+  text-align: left;
+}
+
+/* ─── Cards ─── */
+.ff-card {
+  background: var(--ff-white);
+  border: 1px solid var(--ff-border-light);
+  border-radius: 16px;
+  padding: 28px 24px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.ff-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.ff-card-teal {
+  background: var(--ff-card-bg-teal);
+  border-color: #c5e0de;
+}
+
+.ff-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--ff-green-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: var(--ff-green);
+  font-size: 1.2rem;
+}
+
+.ff-card-icon-amber {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.ff-card-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--ff-text);
+  margin-bottom: 8px;
+}
+
+.ff-card-body {
+  font-size: 0.9rem;
+  color: var(--ff-text-2);
+  line-height: 1.65;
+}
+
+/* ─── 2-col grid ─── */
+.ff-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* ─── 3-col grid ─── */
+.ff-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* ─── Section 2: Apa Itu Fat Fasting ─── */
+.ff-concept-para {
+  text-align: center;
+  color: var(--ff-text-2);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  max-width: 640px;
+  margin: 28px auto 0;
+}
+
+.ff-concept-note {
+  background: var(--ff-card-bg-teal);
+  border: 1px solid #c5e0de;
+  border-radius: 12px;
+  padding: 18px 24px;
+  text-align: center;
+  color: var(--ff-text);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  max-width: 640px;
+  margin: 24px auto 0;
+}
+
+/* ─── Section 3: Benefits ─── */
+.ff-disclaimer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--ff-text-3);
+  margin-top: 24px;
+}
+
+/* ─── Section 4: Siapa yang Cocok ─── */
+.ff-checklist {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ff-check-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--ff-white);
+  border: 1px solid var(--ff-border-light);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-size: 0.95rem;
+  color: var(--ff-text);
+  font-weight: 500;
+}
+
+.ff-check-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--ff-green-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--ff-green);
+  font-size: 0.85rem;
+}
+
+.ff-warning-box {
+  max-width: 600px;
+  margin: 28px auto 0;
+  background: var(--ff-amber-light);
+  border: 1px solid var(--ff-amber-border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  font-size: 0.88rem;
+  color: #92400e;
+  line-height: 1.65;
+}
+
+.ff-warning-icon {
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  margin-top: 1px;
+}
+
+/* ─── Section 5: EVOO two-column ─── */
+.ff-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.ff-two-col-reverse {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.ff-image-rounded {
+  width: 100%;
+  border-radius: 18px;
+  object-fit: cover;
+  display: block;
+  aspect-ratio: 4/3;
+}
+
+.ff-image-banner {
+  width: 100%;
+  border-radius: 18px;
+  object-fit: cover;
+  display: block;
+  aspect-ratio: 21/9;
+  margin-bottom: 28px;
+}
+
+.ff-image-banner-label {
+  position: relative;
+}
+
+.ff-banner-caption {
+  position: absolute;
+  bottom: 20px;
+  left: 24px;
+  color: #fff;
+}
+
+.ff-banner-caption small {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.ff-banner-caption strong {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.ff-quote-italic {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--ff-text-2);
+  margin: 0 0 28px;
+}
+
+.ff-evoo-note {
+  background: var(--ff-white);
+  border: 1px solid var(--ff-border-light);
+  border-radius: 12px;
+  padding: 18px 20px;
+  font-size: 0.9rem;
+  color: var(--ff-text-2);
+  line-height: 1.7;
+  margin-top: 20px;
+}
+
+.ff-evoo-note strong {
+  color: var(--ff-text);
+}
+
+.ff-evoo-note a {
+  color: var(--ff-green);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* ─── Polyphenol tags ─── */
+.ff-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.ff-tag {
+  background: var(--ff-white);
+  border: 1px solid var(--ff-border);
+  border-radius: 9999px;
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  color: var(--ff-text-2);
+  font-weight: 500;
+}
+
+/* ─── Quality metrics mini-cards ─── */
+.ff-metric-card {
+  background: var(--ff-white);
+  border: 1px solid var(--ff-border-light);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.ff-metric-icon {
+  color: var(--ff-green);
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.ff-metric-label {
+  font-size: 0.85rem;
+  color: var(--ff-text-2);
+  margin-bottom: 4px;
+}
+
+.ff-metric-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ff-green);
+}
+
+/* ─── CTA Button ─── */
+.ff-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ff-green-bright);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 13px 28px;
+  border-radius: 9999px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+  margin-top: 24px;
+}
+
+.ff-btn-primary:hover {
+  background: var(--ff-green-hover);
+  transform: translateY(-1px);
+}
+
+/* ─── Footer minimal ─── */
+.ff-footer {
+  background: #0e1e12;
+  padding: 48px 24px;
+  text-align: center;
+  color: #fff;
+}
+
+.ff-footer-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.ff-footer-sub {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 20px;
+}
+
+.ff-footer-copy {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ─── Scroll reveal animation ─── */
+.ff-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.ff-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hero elements still use CSS animation (no observer needed there) */
+.ff-fade-up {
+  animation: ff-fade-up 0.55s ease both;
+}
+
+@keyframes ff-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ff-fade-up-d1 {
+  animation-delay: 0.08s;
+}
+
+.ff-fade-up-d2 {
+  animation-delay: 0.16s;
+}
+
+.ff-fade-up-d3 {
+  animation-delay: 0.24s;
+}
+
+.ff-fade-up-d4 {
+  animation-delay: 0.32s;
+}
+
+.ff-fade-up-d5 {
+  animation-delay: 0.40s;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 720px) {
+  .ff-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .ff-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .ff-two-col,
+  .ff-two-col-reverse {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .ff-two-col-reverse .ff-image-rounded {
+    order: -1;
+  }
+
+  .ff-section,
+  .ff-section-alt,
+  .ff-section-white {
+    padding: 72px 0;
+  }
+
+  .ff-hero {
+    padding: 100px 24px 64px;
+  }
+
+  .ff-image-banner {
+    aspect-ratio: 16/9;
+  }
+}
