@@ -670,7 +670,6 @@ const FatFastingPage: React.FC = () => {
       <footer className="ff-footer">
         <div className="ff-footer-logo">
           <img src="/logo-jaxlab.png" alt="JaxLab" style={{ height: 24 }} />
-          JaxLab
         </div>
         <p className="ff-footer-sub">
           Fat Fasting with Premium Extra Virgin Olive Oil from Tunisia.
