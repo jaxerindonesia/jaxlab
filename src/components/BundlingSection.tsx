@@ -11,7 +11,7 @@ const BundlingSection: React.FC = () => {
       <div className="fat-fasting-set-card">
         <div className="set-card-visual">
           <img
-            src="/img/FF72-set.png"
+            src="/img/Bundling set FF72.png"
             alt="Fat Fasting Set - Extra Virgin Olive Oil, Virgin Coconut Oil, Ketone Immuno"
           />
         </div>

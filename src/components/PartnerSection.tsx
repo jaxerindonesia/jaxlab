@@ -276,7 +276,7 @@ const PartnerSection: React.FC = () => {
                     visibleMosaicItems >= 1 ? " is-visible" : ""
                   }`}
                 >
-                  <img src="/img/kenapa-leaves.png" alt="Bahan alami Jaxlab" />
+                  <img src="/img/zaitun.jpg" alt="Bahan alami Jaxlab" />
                 </div>
                 <div
                   className={`mosaic-top-right mosaic-reveal-item${
@@ -284,7 +284,7 @@ const PartnerSection: React.FC = () => {
                   }`}
                 >
                   <img
-                    src="/img/kenapa-yoga.png"
+                    src="/img/Jaroliva.png"
                     alt="Gaya hidup sehat Fat Fasting"
                   />
                 </div>
@@ -294,7 +294,7 @@ const PartnerSection: React.FC = () => {
                   visibleMosaicItems >= 3 ? " is-visible" : ""
                 }`}
               >
-                <img src="/img/kenapa-food.png" alt="Bahan Fat Fasting sehat" />
+                <img src="/img/DSC03061.jpg" alt="Bahan Fat Fasting sehat" />
                 <div className="mosaic-badge">
                   <CheckCircle2 size={14} />
                   <span>Lemak Sehat Berkualitas</span>

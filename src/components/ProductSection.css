@@ -605,7 +605,7 @@
 
 .products-page .product-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(540px, 1fr));
     gap: 1.6rem;
     width: 100%;
     max-width: 1440px;
@@ -631,13 +631,14 @@
 
 .products-page .product-card-footer {
     align-items: center;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 0.7rem;
 }
 
 .products-page .buy-btn-solid {
     padding-inline: 1.2rem;
     font-size: 0.82rem;
+    flex: 0 0 auto;
 }
 
 .products-page .learn-more-link {

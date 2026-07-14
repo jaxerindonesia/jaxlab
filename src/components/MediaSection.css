@@ -430,13 +430,13 @@
 }
 
 .featured-video-shell {
-    width: min(100%, 1180px);
+    width: min(100%, 890px);
     margin: 0 auto;
 }
 
 .featured-video-card {
     overflow: hidden;
-    border-radius: 10px;
+    border-radius: 12px;
     background: #102315;
     box-shadow: 0 18px 45px rgba(12, 35, 18, 0.12);
 }
@@ -451,7 +451,7 @@
 
 .featured-video-thumbs {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 260px));
+    grid-template-columns: repeat(3, minmax(0, 180px));
     justify-content: center;
     gap: 1.25rem;
     margin-top: 0.95rem;

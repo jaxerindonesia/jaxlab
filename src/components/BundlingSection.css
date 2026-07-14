@@ -136,8 +136,7 @@
 
 .set-card-visual img {
     display: block;
-    width: 80%;
-    height: clamp(420px, 42vw, 610px);
+    width: 90%;
     object-fit: cover;
     object-position: center;
 }
