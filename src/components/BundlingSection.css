@@ -1,6 +1,6 @@
 .bundling-section {
     background: #f9f5ec;
-    padding: 0;
+    padding: 0 0 1.5rem;
 }
 
 .media-cta {
@@ -122,30 +122,24 @@
     color: rgba(249, 245, 236, 0.32);
 }
 
-.set-card-visual,
 .set-card-content {
     position: relative;
     z-index: 1;
 }
 
 .set-card-visual {
-    /* hapus/comment background-image kalau ada, ganti jadi ini */
+    background-color: white;
+    border-radius: 28px;
     overflow: hidden;
-    border-radius: 16px; /* sesuaikan sama radius card kamu */
+    justify-items: center;
 }
 
 .set-card-visual img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
     display: block;
-}
-
-.set-card-visual {
-    min-height: 420px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
+    width: 80%;
+    height: clamp(420px, 42vw, 610px);
+    object-fit: cover;
+    object-position: center;
 }
 
 .set-card-box {
@@ -300,20 +294,19 @@
 }
 
 .fat-fasting-set-card {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(460px, 0.92fr);
-    align-items: center;
-    gap: 3rem;
-    max-width: 1440px;
-    min-height: 560px;
-    margin: 0 auto 3.4rem;
-    padding: 4.2rem 5rem;
-    border-radius: 28px;
-    background: #001802;
-    color: #ffffff;
-    overflow: hidden;
     position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(420px, 0.9fr);
+    align-items: center;
+    gap: 2.5rem;
+    max-width: 80%;
+    margin: 3rem auto 0;
+    padding: 2.75rem;
+    background: #001802;
+    border-radius: 28px;
+    color: #ffffff;
     box-shadow: none;
+    overflow: hidden;
 }
 
 .fat-fasting-set-card::before {
@@ -326,4 +319,36 @@
     background-size: 44px 44px;
     opacity: 0.28;
     pointer-events: none;
+}
+
+@media (max-width: 1200px) {
+    .fat-fasting-set-card {
+        max-width: calc(100% - 2.5rem);
+        grid-template-columns: minmax(0, 1fr) minmax(380px, 0.92fr);
+        gap: 2rem;
+        padding: 2.25rem;
+    }
+}
+
+@media (max-width: 960px) {
+    .bundling-section {
+        padding-bottom: 1rem;
+    }
+
+    .fat-fasting-set-card {
+        grid-template-columns: 1fr;
+        max-width: calc(100% - 2rem);
+        margin-top: 2rem;
+        padding: 1.5rem;
+    }
+
+    .set-card-visual img {
+        height: auto;
+        max-height: 520px;
+        object-fit: contain;
+    }
+
+    .set-card-content h3 {
+        font-size: clamp(2.1rem, 7vw, 3rem);
+    }
 }

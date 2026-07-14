@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./MediaSection.css";
-import { ArrowRight, PlayCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const galleryImages = [
   {
@@ -31,10 +31,6 @@ const galleryImages = [
     src: "/img/IMG_4856.jpg",
     alt: "Galeri foto JaxLab 7",
   },
-  {
-    src: "/img/IMG_7889.jpg",
-    alt: "Galeri foto JaxLab 8",
-  },
 ];
 
 const videos = [
@@ -57,6 +53,7 @@ const videos = [
 
 const MediaSection: React.FC = () => {
   const [activeImage, setActiveImage] = useState(0);
+  const [activeVideo, setActiveVideo] = useState(0);
   const ctaRef = useRef<HTMLDivElement | null>(null);
   const [ctaVisible, setCtaVisible] = useState(false);
   const previousImage =
@@ -161,26 +158,31 @@ const MediaSection: React.FC = () => {
             </p>
           </div>
 
-          <div className="video-grid">
-            {videos.map((video) => (
-              <div className="video-card" key={video.id}>
-                <iframe
-                  src={`https://www.youtube.com/embed/${video.id}`}
-                  title={video.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
-                <a
-                  className="video-card-label"
-                  href={video.url}
-                  target="_blank"
-                  rel="noreferrer"
+          <div className="featured-video-shell">
+            <div className="featured-video-card">
+              <iframe
+                src={`https://www.youtube.com/embed/${videos[activeVideo].id}`}
+                title={videos[activeVideo].title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            </div>
+            <div className="featured-video-thumbs" aria-label="Pilihan video">
+              {videos.map((video, index) => (
+                <button
+                  key={video.id}
+                  type="button"
+                  className={`featured-video-thumb${activeVideo === index ? " active" : ""}`}
+                  onClick={() => setActiveVideo(index)}
+                  aria-label={`Tampilkan video ${video.title}`}
                 >
-                  <PlayCircle size={18} />
-                  <span>{video.title}</span>
-                </a>
-              </div>
-            ))}
+                  <img
+                    src={`https://img.youtube.com/vi/${video.id}/mqdefault.jpg`}
+                    alt={video.title}
+                  />
+                </button>
+              ))}
+            </div>
           </div>
 
           <div

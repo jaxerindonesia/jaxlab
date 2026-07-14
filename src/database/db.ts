@@ -117,8 +117,7 @@ const _testimonials: Testimonial[] = [
     role: 'Dokter Umum · Bandung',
     quote:
       'Saya menyukai pendekatan JaxLab yang berfokus pada edukasi dan perubahan gaya hidup, bukan sekadar mengejar angka di timbangan. Program seperti ini membantu peserta lebih memahami pentingnya kesehatan metabolik dan membangun kebiasaan yang lebih baik.',
-    image:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+    image: '/img/image_1dc335a.png',
     rating: 5,
   },
   {
@@ -127,8 +126,7 @@ const _testimonials: Testimonial[] = [
     role: 'Ibu Rumah Tangga & Entrepreneur · Jakarta',
     quote:
       'Awalnya saya ragu mencoba Fat Fasting. Setelah mengikuti panduan dan komunitas JaxLab, saya merasa pola makan saya jadi lebih teratur, energi lebih stabil, dan saya lebih sadar dalam memilih makanan setiap hari.',
-    image:
-      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+    image: '/img/image_efb47978.png',
     rating: 5,
   },
   {
@@ -137,8 +135,7 @@ const _testimonials: Testimonial[] = [
     role: 'Professional IT · Medan',
     quote:
       'Yang paling saya suka bukan hanya soal perubahan berat badan, tapi kebiasaan saya ikut berubah. Saya jadi lebih konsisten bergerak, lebih mengontrol porsi makan, dan merasa tubuh lebih ringan untuk beraktivitas',
-    image:
-      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+    image: '/img/image_70590cf9.png',
     rating: 5,
   },
   {
@@ -147,8 +144,7 @@ const _testimonials: Testimonial[] = [
     role: 'Ibu Rumah Tangga & Guru · Surabaya',
     quote:
       'Sebagai ibu yang sibuk mengurus keluarga, saya butuh program yang praktis. Panduan menu dan komunitas JaxLab membuat saya lebih mudah menjalani pola hidup sehat tanpa harus memasak menu yang berbeda setiap hari.',
-    image:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+    image: '/img/image_f6ea7314.png',
     rating: 5,
   },
   {
@@ -157,8 +153,7 @@ const _testimonials: Testimonial[] = [
     role: 'Atlet Lari, Surabaya',
     quote:
       'Pemulihan otot saya jauh lebih cepat sejak rutin minum Bone Broth JaxLab setelah latihan. Ini produk wajib buat semua atlet yang peduli kesehatan jangka panjang.',
-    image:
-      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+    image: '/img/image_1dc335a.png',
     rating: 5,
   },
 ];
@@ -280,4 +275,3 @@ export function getStats(): Stat[] {
 export function formatRupiah(price: number): string {
   return `Rp ${price.toLocaleString('id-ID')}`;
 }
-
