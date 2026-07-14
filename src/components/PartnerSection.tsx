@@ -272,27 +272,24 @@ const PartnerSection: React.FC = () => {
             <div ref={mosaicRef} className="kenapa-mosaic">
               <div className="mosaic-top">
                 <div
-                  className={`mosaic-top-left mosaic-reveal-item${
-                    visibleMosaicItems >= 1 ? " is-visible" : ""
-                  }`}
-                >
-                  <img src="/img/zaitun.jpg" alt="Bahan alami Jaxlab" />
-                </div>
-                <div
-                  className={`mosaic-top-right mosaic-reveal-item${
-                    visibleMosaicItems >= 2 ? " is-visible" : ""
-                  }`}
+                  className={`mosaic-top-right mosaic-reveal-item${visibleMosaicItems >= 2 ? " is-visible" : ""
+                    }`}
                 >
                   <img
                     src="/img/Jaroliva.png"
                     alt="Gaya hidup sehat Fat Fasting"
                   />
                 </div>
+                <div
+                  className={`mosaic-top-left mosaic-reveal-item${visibleMosaicItems >= 1 ? " is-visible" : ""
+                    }`}
+                >
+                  <img src="/img/Jaroliva (4).png" alt="Bahan alami Jaxlab" />
+                </div>
               </div>
               <div
-                className={`mosaic-bottom mosaic-reveal-item${
-                  visibleMosaicItems >= 3 ? " is-visible" : ""
-                }`}
+                className={`mosaic-bottom mosaic-reveal-item${visibleMosaicItems >= 3 ? " is-visible" : ""
+                  }`}
               >
                 <img src="/img/DSC03061.jpg" alt="Bahan Fat Fasting sehat" />
                 <div className="mosaic-badge">
@@ -377,9 +374,8 @@ const PartnerSection: React.FC = () => {
           {/* Header */}
           <div
             ref={protocolHeaderRef}
-            className={`protocol-section-header protocol-header-reveal${
-              protocolHeaderVisible ? " is-visible" : ""
-            }`}
+            className={`protocol-section-header protocol-header-reveal${protocolHeaderVisible ? " is-visible" : ""
+              }`}
           >
             <span className="section-subtitle">✦ Panduan Fat Fasting</span>
             <h2 className="protocol-section-title">
@@ -400,9 +396,8 @@ const PartnerSection: React.FC = () => {
               >
                 {timelineSteps.map((step, index) => (
                   <article
-                    className={`protocol-step${
-                      visibleSteps.has(step.id) ? " is-visible" : ""
-                    }`}
+                    className={`protocol-step${visibleSteps.has(step.id) ? " is-visible" : ""
+                      }`}
                     key={step.id}
                     data-step-id={step.id}
                     ref={(el) => {

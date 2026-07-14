@@ -128,7 +128,6 @@
 }
 
 .set-card-visual {
-    background-color: white;
     border-radius: 28px;
     overflow: hidden;
     justify-items: center;
@@ -136,7 +135,7 @@
 
 .set-card-visual img {
     display: block;
-    width: 90%;
+    width: 80%;
     object-fit: cover;
     object-position: center;
 }

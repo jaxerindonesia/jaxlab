@@ -96,7 +96,7 @@ const MediaSection: React.FC = () => {
           }}
         >
           <div className="photo-gallery-header">
-            <h2>Life at JaxLab</h2>
+            <h2>Momen dari <span>Perjalanan Sehat</span> Jaxlab</h2>
             <p>
               Lebih dari sekadar produk, Jaxlab adalah perjalanan yang dibangun
               oleh orang-orang dengan visi yang sama. Temukan cerita, aktivitas,

@@ -473,7 +473,7 @@ const FatFastingPage: React.FC = () => {
           <div className="ff-two-col">
             <div>
               <img
-                src="/img/kenapa-food.png"
+                src="/img/JarolivaOrganic_1.png"
                 alt="Extra Virgin Olive Oil JaxLab"
                 className="ff-image-rounded"
               />

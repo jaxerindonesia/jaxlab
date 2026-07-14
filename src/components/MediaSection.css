@@ -196,15 +196,24 @@
 .photo-gallery-header h2 {
     font-family: "Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
     color: #050a04;
-    font-size: clamp(1.5rem, 3vw, 3rem);
+    font-size: clamp(2.2rem, 2vw, 3.45rem);
     font-weight: 800;
-    line-height: 1;
-    margin: 0;
+    line-height: 1.05;
     letter-spacing: 0;
+    margin: 0 auto 0.85rem;
+    max-width: 980px;
+}
+
+.photo-gallery-header h2 span {
+    color: #3b8f2c;
+    font-style: italic;
+    font-weight: 700;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.14em;
 }
 
 .photo-gallery-header p {
-    max-width: 760px;
+    max-width: 960px;
     margin: 0;
     color: #3d473d;
     font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -413,15 +422,16 @@
 .video-gallery-header h2 {
     font-family: "Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
     color: #050a04;
-    font-size: clamp(1.5rem, 3vw, 3rem);
+    font-size: clamp(2.2rem, 2vw, 3.45rem);
     font-weight: 800;
-    line-height: 1;
-    margin: 0;
+    line-height: 1.05;
     letter-spacing: 0;
+    margin: 0 auto 0.85rem;
+    max-width: 980px;
 }
 
 .video-gallery-header p {
-    max-width: 760px;
+    max-width: 960px;
     margin: 0;
     color: #3d473d;
     font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
