@@ -57,9 +57,9 @@ const ProductsPage: React.FC = () => {
                         </p>
                     </div>
 
-                    <div className="search-filter-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', marginBottom: '3rem' }}>
+                    <div className="search-filter-container products-toolbar" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', marginBottom: '3rem' }}>
                         {/* Search Input */}
-                        <div style={{ position: 'relative', width: '100%', maxWidth: '500px' }}>
+                        <div className="products-search" style={{ position: 'relative', width: '100%', maxWidth: '500px' }}>
                             <input 
                                 type="text" 
                                 placeholder="Cari produk JaxLab..." 
@@ -92,7 +92,7 @@ const ProductsPage: React.FC = () => {
                         </div>
 
                         {/* Category Pills */}
-                        <div className="category-pills" style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        <div className="category-pills products-category-pills" style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap', justifyContent: 'center' }}>
                             {categories.map((cat, idx) => {
                                 const isSelected = selectedCategory === cat;
                                 return (
@@ -123,7 +123,7 @@ const ProductsPage: React.FC = () => {
                     ) : filteredProducts.length === 0 ? (
                         <div className="text-center" style={{ padding: '4rem' }}>Tidak ada produk yang sesuai dengan pencarian Anda.</div>
                     ) : (
-                        <div className="product-grid">
+                        <div className="products-catalog-grid">
                             {filteredProducts.map((product) => {
                                 const highlights =
                                     product.benefits?.length > 0
@@ -131,15 +131,15 @@ const ProductsPage: React.FC = () => {
                                         : [product.subtitle, product.description].filter(Boolean).slice(0, 2);
 
                                 return (
-                                    <article key={product.id} className="product-card">
-                                        <div className="product-image-wrapper">
+                                    <article key={product.id} className="catalog-product-card">
+                                        <div className="catalog-product-image">
                                             <img src={product.images[0]} alt={product.name} />
                                         </div>
-                                        <div className="product-info">
-                                            <span className="product-category-tag">{product.badge || product.category}</span>
+                                        <div className="catalog-product-body">
+                                            <span className="catalog-product-tag">{product.badge || product.category}</span>
                                             <h3>{product.name}</h3>
 
-                                            <ul className="product-benefits">
+                                            <ul className="catalog-product-benefits">
                                                 {highlights.map((benefit) => (
                                                     <li key={benefit}>
                                                         <Check size={20} strokeWidth={2.4} />
@@ -148,9 +148,9 @@ const ProductsPage: React.FC = () => {
                                                 ))}
                                             </ul>
 
-                                            <div className="product-card-footer">
+                                            <div className="catalog-product-footer">
                                                 <button
-                                                    className="buy-btn-solid"
+                                                    className="catalog-buy-btn"
                                                     aria-label={`Beli ${product.name}`}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
@@ -162,7 +162,7 @@ const ProductsPage: React.FC = () => {
                                                     {formatRupiah(product.price)}
                                                 </button>
                                                 <button
-                                                    className="learn-more-link"
+                                                    className="catalog-learn-more"
                                                     type="button"
                                                     onClick={() => navigate(`/products/${product.id}`)}
                                                 >
