@@ -19,6 +19,7 @@ const ADMIN_PASSWORD = "jaxlab2024";
 function blankProduct(): Omit<Product, "id"> {
   return {
     name: "",
+    priority: 999,
     subtitle: "",
     description: "",
     longDescription: "",
@@ -103,6 +104,7 @@ const AdminPage: React.FC = () => {
   const openEdit = (p: Product) => {
     setForm({
       name: p.name,
+      priority: p.priority,
       subtitle: p.subtitle,
       description: p.description,
       longDescription: p.longDescription,
@@ -155,6 +157,7 @@ const AdminPage: React.FC = () => {
 
       const cleaned = {
         ...form,
+        priority: Number.isFinite(form.priority) ? form.priority : 999,
         images: filteredImages,
         specs: form.specs.filter(
           (s) => s.label.trim() !== "" || s.value.trim() !== "",
@@ -353,6 +356,7 @@ const AdminPage: React.FC = () => {
                     <tr>
                       <th>Foto</th>
                       <th>Nama</th>
+                      <th>Priority</th>
                       <th>Kategori</th>
                       <th>Harga</th>
                       <th>Badge</th>
@@ -376,6 +380,9 @@ const AdminPage: React.FC = () => {
                         </td>
                         <td>
                           <strong>{p.name}</strong>
+                        </td>
+                        <td style={{ color: "var(--text-2)", fontWeight: 700 }}>
+                          {p.priority}
                         </td>
                         <td style={{ color: "var(--text-2)" }}>{p.category}</td>
                         <td
@@ -447,7 +454,7 @@ const AdminPage: React.FC = () => {
                     {products.length === 0 && (
                       <tr>
                         <td
-                          colSpan={7}
+                          colSpan={8}
                           style={{
                             textAlign: "center",
                             color: "var(--text-3)",
@@ -482,6 +489,18 @@ const AdminPage: React.FC = () => {
                       value={form.name}
                       onChange={(e) => setField("name", e.target.value)}
                       placeholder="Contoh: JaxLab Bone Broth"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Priority</label>
+                    <input
+                      type="number"
+                      value={form.priority}
+                      onChange={(e) =>
+                        setField("priority", Number(e.target.value))
+                      }
+                      min={0}
+                      placeholder="1 tampil paling atas"
                     />
                   </div>
                   <div className="form-group">

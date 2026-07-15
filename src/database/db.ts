@@ -9,6 +9,7 @@
 export interface Product {
   id: string;
   name: string;
+  priority: number;
   subtitle: string;
   description: string;
   longDescription: string;

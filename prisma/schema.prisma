@@ -23,6 +23,7 @@ model Product {
   id                 String    @id @default(uuid())
   categoryId          String?   @map("category_id")
   name               String
+  priority           Int       @default(999)
   shortDescription    String    @map("short_description")
   sellPrice           Int       @map("sell_price")
   strikeThroughPrice  Int?      @map("strike_through_price")
@@ -69,4 +70,3 @@ model DirectLink {
 
   @@map("direct_links")
 }
-

@@ -283,9 +283,7 @@ const FatFastingPage: React.FC = () => {
           </div>
           <h1 className="ff-hero-title ff-fade-up">
             Kembali ke Cara Alami <br />
-            Tubuh <span style={{ color: "#4fc66b" }}>Menghasilkan</span>
-            <br />
-            <span style={{ color: "#4fc66b" }}>Energi</span>
+            Tubuh <span style={{ color: "#4fc66b" }}>Menghasilkan Energi</span>
           </h1>
           <p className="ff-hero-sub ff-fade-up ff-fade-up-d1">
             Fat Fasting adalah pendekatan nutrisi yang membantu tubuh

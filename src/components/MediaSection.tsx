@@ -150,7 +150,7 @@ const MediaSection: React.FC = () => {
           </div>
 
           <div className="video-gallery-header">
-            <h2>Discover More with Jaxlab</h2>
+            <h2>Jelajahi <span>Ruang Sehat</span> Jaxlab</h2>
             <p>
               Jelajahi konten yang membantu Anda memahami kesehatan dengan lebih
               sederhana, ilmiah, dan mudah diterapkan dalam kehidupan

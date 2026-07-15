@@ -1,6 +1,7 @@
 export type ProductSeed = {
   name: string;
   category: string;
+  priority?: number;
   subtitle: string;
   description: string;
   longDescription: string;
@@ -26,6 +27,7 @@ export const seedCategories = [
 export const seedProducts: ProductSeed[] = [
   {
     name: 'JaxLab Bone Broth Original',
+    priority: 1,
     subtitle: 'Kaldu Tulang Sapi Premium – Kaya Kolagen & Mineral',
     description: 'Kaldu tulang sapi murni kaya kolagen, asam amino, dan mineral esensial.',
     longDescription:
@@ -59,6 +61,7 @@ export const seedProducts: ProductSeed[] = [
   },
   {
     name: 'Jaroliva Olive Oil + Rosemary',
+    priority: 2,
     subtitle: 'Minyak Zaitun Premium dengan Rosemary Segar',
     description: 'Minyak zaitun extra virgin berkualitas tinggi dengan infusi rosemary segar.',
     longDescription:
@@ -91,6 +94,7 @@ export const seedProducts: ProductSeed[] = [
   },
   {
     name: 'Ketone Immuno Booster',
+    priority: 3,
     subtitle: 'Suplemen Imunitas – Formula Ketogenik Alami',
     description: 'Suplemen pendukung imunitas berbasis bahan-bahan alami formula ketogenik.',
     longDescription:
@@ -124,6 +128,7 @@ export const seedProducts: ProductSeed[] = [
   },
   {
     name: 'Raw Honey Forest Grade A',
+    priority: 4,
     subtitle: 'Madu Hutan Murni Tanpa Filter – Kaya Enzim Alami',
     description: 'Madu hutan mentah Grade A langsung dari lebah liar pegunungan Indonesia.',
     longDescription:
@@ -155,6 +160,7 @@ export const seedProducts: ProductSeed[] = [
   },
   {
     name: 'JaxLab Bone Broth Chicken',
+    priority: 5,
     subtitle: 'Kaldu Ayam Kampung – Ringan & Bergizi Tinggi',
     description: 'Kaldu ayam kampung slow-cook kaya gelatin dan asam amino esensial.',
     longDescription:
@@ -186,6 +192,7 @@ export const seedProducts: ProductSeed[] = [
   },
   {
     name: 'VitaGreen Multivitamin Alami',
+    priority: 6,
     subtitle: 'Multivitamin Berbasis Sayuran Hijau & Superfood',
     description: 'Multivitamin lengkap dari ekstrak sayuran hijau, spirulina, dan superfood.',
     longDescription:
@@ -217,4 +224,3 @@ export const seedProducts: ProductSeed[] = [
     ],
   },
 ];
-

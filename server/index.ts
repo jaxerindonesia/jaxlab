@@ -17,6 +17,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 type ApiProduct = {
   id: string;
   name: string;
+  priority: number;
   subtitle: string;
   description: string;
   longDescription: string;
@@ -36,6 +37,7 @@ type ApiProduct = {
 function toApiProduct(row: {
   id: string;
   name: string;
+  priority: number;
   shortDescription: string;
   sellPrice: number;
   strikeThroughPrice: number | null;
@@ -63,6 +65,7 @@ function toApiProduct(row: {
   return {
     id: row.id,
     name: row.name,
+    priority: row.priority,
     subtitle: detail?.subtitle ?? '',
     description: row.shortDescription,
     longDescription: detail?.description ?? '',
@@ -110,6 +113,7 @@ async function resetAndSeed(): Promise<void> {
     const product = await prisma.product.create({
       data: {
         name: p.name,
+        priority: p.priority ?? 999,
         categoryId,
         shortDescription: p.description,
         sellPrice: p.price,
@@ -180,7 +184,7 @@ app.delete('/api/categories', async (req, res) => {
 app.get('/api/products', async (_req, res) => {
   const rows = await prisma.product.findMany({
     where: { deletedAt: null },
-    orderBy: { createdAt: 'desc' },
+    orderBy: [{ priority: 'asc' }, { createdAt: 'desc' }],
     include: {
       category: { select: { name: true } },
       detail: {
@@ -215,7 +219,7 @@ app.get('/api/products/featured', async (_req, res) => {
         },
       },
     },
-    orderBy: { createdAt: 'desc' },
+    orderBy: [{ priority: 'asc' }, { createdAt: 'desc' }],
     take: 3,
     include: {
       category: { select: { name: true } },
@@ -245,7 +249,7 @@ app.get('/api/products/featured', async (_req, res) => {
         deletedAt: null,
         id: { notIn: rows.map((row) => row.id) },
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ priority: 'asc' }, { createdAt: 'desc' }],
       take: 3 - rows.length,
       include: {
         category: { select: { name: true } },
@@ -304,6 +308,7 @@ app.get('/api/products/:id', async (req, res) => {
 app.post('/api/products', async (req, res) => {
   const p = req.body as Partial<ApiProduct>;
   const name = String(p?.name ?? '').trim();
+  const priority = typeof p.priority === 'number' && Number.isFinite(p.priority) ? p.priority : 999;
   console.log('Received product:', name);
   console.log('Images received:', p.images?.length || 0, 'images');
   console.log('First image length:', p.images?.[0]?.length || 0);
@@ -319,6 +324,7 @@ app.post('/api/products', async (req, res) => {
     const product = await tx.product.create({
       data: {
         name,
+        priority,
         categoryId,
         shortDescription: String(p.description ?? ''),
         sellPrice: price,
@@ -374,6 +380,7 @@ app.put('/api/products/:id', async (req, res) => {
   const id = String(req.params.id);
   const p = req.body as Partial<ApiProduct>;
   const name = String(p?.name ?? '').trim();
+  const priority = typeof p.priority === 'number' && Number.isFinite(p.priority) ? p.priority : 999;
   if (!name) return res.status(400).json({ error: 'name is required' });
   if (typeof p.price !== 'number' || p.price <= 0) return res.status(400).json({ error: 'price must be > 0' });
 
@@ -386,6 +393,7 @@ app.put('/api/products/:id', async (req, res) => {
       where: { id },
       data: {
         name,
+        priority,
         categoryId,
         shortDescription: String(p.description ?? ''),
         sellPrice: price,
@@ -437,4 +445,3 @@ app.listen(port, () => {
   // eslint-disable-next-line no-console
   console.log(`[jaxlab] api listening on http://localhost:${port}`);
 });
-

@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import './ProductDetailPage.css';
-import { ArrowLeft, CheckCircle, Star } from 'lucide-react';
+import { ArrowLeft, CheckCircle, ChevronDown, Star } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { type Product, formatRupiah, getProductById } from '../database/db';
 
 const ProductDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [selectedImage, setSelectedImage] = useState(0);
+    const [openSection, setOpenSection] = useState<'description' | 'benefits' | 'specs'>('description');
 
     const [product, setProduct] = useState<Product | null>(null);
     const [loadedId, setLoadedId] = useState<string | null>(null);
@@ -24,12 +25,14 @@ const ProductDetailPage: React.FC = () => {
                 setProduct(p);
                 setLoadedId(id);
                 setSelectedImage(0);
+                setOpenSection('description');
             })
             .catch(() => {
                 if (cancelled) return;
                 setProduct(null);
                 setLoadedId(id);
                 setSelectedImage(0);
+                setOpenSection('description');
             });
 
         return () => { cancelled = true; };
@@ -70,6 +73,9 @@ const ProductDetailPage: React.FC = () => {
                     {!loading && product && (() => {
                         const p = product;
                         const selectedProductImage = p.images[selectedImage] ?? p.images[0];
+                        const discountPercentage = p.originalPrice
+                            ? Math.round((1 - p.price / p.originalPrice) * 100)
+                            : 0;
 
                         return (
                             <>
@@ -88,6 +94,15 @@ const ProductDetailPage: React.FC = () => {
 
                                 <div className="product-layout">
                                     <div className={`product-gallery ${p.images.length <= 1 ? 'product-gallery-single' : ''}`}>
+                                        <div className="main-image">
+                                            {selectedProductImage && <img src={selectedProductImage} alt={p.name} />}
+                                            {p.badge && (
+                                                <span className={`product-badge-detail badge-${p.badge.toLowerCase().replace(/\s/g, '-')}`}>
+                                                    {p.badge}
+                                                </span>
+                                            )}
+                                        </div>
+
                                         {p.images.length > 1 && (
                                             <div className="thumbnail-list" aria-label="Pilihan gambar produk">
                                                 {p.images.map((image, index) => (
@@ -103,15 +118,6 @@ const ProductDetailPage: React.FC = () => {
                                                 ))}
                                             </div>
                                         )}
-
-                                        <div className="main-image">
-                                            {selectedProductImage && <img src={selectedProductImage} alt={p.name} />}
-                                            {p.badge && (
-                                                <span className={`product-badge-detail badge-${p.badge.toLowerCase().replace(/\s/g, '-')}`}>
-                                                    {p.badge}
-                                                </span>
-                                            )}
-                                        </div>
                                     </div>
 
                                     <div className="product-details-info">
@@ -141,7 +147,7 @@ const ProductDetailPage: React.FC = () => {
                                                 <>
                                                     <span className="original-price">{formatRupiah(p.originalPrice)}</span>
                                                     <span className="discount-badge">
-                                                        -{Math.round((1 - p.price / p.originalPrice) * 100)}%
+                                                        Hemat {discountPercentage}%
                                                     </span>
                                                 </>
                                             )}
@@ -156,53 +162,127 @@ const ProductDetailPage: React.FC = () => {
                                             </span>
                                         </div>
 
-                                        {p.marketplaceLinks && p.marketplaceLinks.length > 0 && (
-                                            <div className="action-buttons">
-                                                {p.marketplaceLinks.map((btn, i) => (
-                                                    <a
-                                                        key={i}
-                                                        href={btn.url}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="btn-buy"
-                                                    >
-                                                        {btn.label}
-                                                    </a>
-                                                ))}
-                                            </div>
-                                        )}
-
                                         {p.benefits.length > 0 && (
-                                            <div className="benefits-list">
-                                                <p>Manfaat Utama:</p>
+                                            <div className="benefit-chips">
+                                                <p>Highlight Produk</p>
                                                 <ul>
                                                     {p.benefits.map((benefit, i) => (
-                                                        <li key={i}>
-                                                            <CheckCircle size={14} />
-                                                            <span>{benefit}</span>
-                                                        </li>
+                                                        <li key={i}>{benefit}</li>
                                                     ))}
                                                 </ul>
                                             </div>
                                         )}
-                                    </div>
-                                </div>
 
-                                <div className="product-description-block">
-                                    <div className="desc-section">
-                                        <h3>Deskripsi Produk</h3>
-                                        <p>{p.longDescription}</p>
-                                    </div>
-                                    <div className="specs-section">
-                                        <h3>Spesifikasi Produk</h3>
-                                        <ul className="specs-list">
-                                            {p.specs.map((spec, index) => (
-                                                <li key={index}>
-                                                    <strong>{spec.label}:</strong>
-                                                    <span>{spec.value}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
+                                        <div className="purchase-panel">
+                                            <div className="purchase-card purchase-card-primary">
+                                                <div>
+                                                    <p className="purchase-label">Pilihan Pembelian</p>
+                                                    <h3>Beli Sekarang</h3>
+                                                    <span className="purchase-copy">
+                                                        Produk original dengan pengiriman cepat dan dukungan customer service.
+                                                    </span>
+                                                </div>
+                                                <div className="purchase-price-group">
+                                                    <strong>{formatRupiah(p.price)}</strong>
+                                                    {p.originalPrice && <span>{formatRupiah(p.originalPrice)}</span>}
+                                                </div>
+                                            </div>
+
+                                            {p.marketplaceLinks && p.marketplaceLinks.length > 0 && (
+                                                <div className="action-buttons">
+                                                    {p.marketplaceLinks.map((btn, i) => (
+                                                        <a
+                                                            key={i}
+                                                            href={btn.url}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className={`btn-buy ${i === 0 ? 'btn-buy-primary' : 'btn-buy-secondary'}`}
+                                                        >
+                                                            {btn.label}
+                                                        </a>
+                                                    ))}
+                                                </div>
+                                            )}
+
+                                            <div className="trust-points">
+                                                <div>
+                                                    <CheckCircle size={16} />
+                                                    <span>Original product</span>
+                                                </div>
+                                                <div>
+                                                    <CheckCircle size={16} />
+                                                    <span>Packaging aman</span>
+                                                </div>
+                                                <div>
+                                                    <CheckCircle size={16} />
+                                                    <span>Bisa konsultasi dulu</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="detail-accordion">
+                                            <div className={`accordion-item ${openSection === 'description' ? 'open' : ''}`}>
+                                                <button
+                                                    type="button"
+                                                    className="accordion-trigger"
+                                                    onClick={() => setOpenSection(openSection === 'description' ? 'benefits' : 'description')}
+                                                >
+                                                    <span>Deskripsi</span>
+                                                    <ChevronDown size={18} />
+                                                </button>
+                                                {openSection === 'description' && (
+                                                    <div className="accordion-content">
+                                                        <p>{p.longDescription}</p>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div className={`accordion-item ${openSection === 'benefits' ? 'open' : ''}`}>
+                                                <button
+                                                    type="button"
+                                                    className="accordion-trigger"
+                                                    onClick={() => setOpenSection(openSection === 'benefits' ? 'description' : 'benefits')}
+                                                >
+                                                    <span>Manfaat</span>
+                                                    <ChevronDown size={18} />
+                                                </button>
+                                                {openSection === 'benefits' && (
+                                                    <div className="accordion-content">
+                                                        <ul className="accordion-benefits">
+                                                            {p.benefits.map((benefit, i) => (
+                                                                <li key={i}>
+                                                                    <CheckCircle size={14} />
+                                                                    <span>{benefit}</span>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div className={`accordion-item ${openSection === 'specs' ? 'open' : ''}`}>
+                                                <button
+                                                    type="button"
+                                                    className="accordion-trigger"
+                                                    onClick={() => setOpenSection(openSection === 'specs' ? 'description' : 'specs')}
+                                                >
+                                                    <span>Spesifikasi</span>
+                                                    <ChevronDown size={18} />
+                                                </button>
+                                                {openSection === 'specs' && (
+                                                    <div className="accordion-content">
+                                                        <ul className="specs-list">
+                                                            {p.specs.map((spec, index) => (
+                                                                <li key={index}>
+                                                                    <strong>{spec.label}</strong>
+                                                                    <span>{spec.value}</span>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </>
