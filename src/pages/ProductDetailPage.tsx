@@ -2,14 +2,16 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import './ProductDetailPage.css';
-import { ArrowLeft, CheckCircle, ChevronDown, Star } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Star } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { type Product, formatRupiah, getProductById } from '../database/db';
+
+type DetailSection = 'highlight' | 'description' | 'benefits' | 'specs';
 
 const ProductDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const [selectedImage, setSelectedImage] = useState(0);
-    const [openSection, setOpenSection] = useState<'description' | 'benefits' | 'specs'>('description');
+    const [openSection, setOpenSection] = useState<DetailSection | null>('description');
 
     const [product, setProduct] = useState<Product | null>(null);
     const [loadedId, setLoadedId] = useState<string | null>(null);
@@ -76,6 +78,9 @@ const ProductDetailPage: React.FC = () => {
                         const discountPercentage = p.originalPrice
                             ? Math.round((1 - p.price / p.originalPrice) * 100)
                             : 0;
+                        const toggleSection = (section: DetailSection) => {
+                            setOpenSection((current) => current === section ? null : section);
+                        };
 
                         return (
                             <>
@@ -162,17 +167,6 @@ const ProductDetailPage: React.FC = () => {
                                             </span>
                                         </div>
 
-                                        {p.benefits.length > 0 && (
-                                            <div className="benefit-chips">
-                                                <p>Highlight Produk</p>
-                                                <ul>
-                                                    {p.benefits.map((benefit, i) => (
-                                                        <li key={i}>{benefit}</li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        )}
-
                                         <div className="purchase-panel">
                                             <div className="purchase-card purchase-card-primary">
                                                 <div>
@@ -221,14 +215,39 @@ const ProductDetailPage: React.FC = () => {
                                         </div>
 
                                         <div className="detail-accordion">
+                                            {p.benefits.length > 0 && (
+                                                <div className={`accordion-item ${openSection === 'highlight' ? 'open' : ''}`}>
+                                                    <button
+                                                        type="button"
+                                                        className="accordion-trigger"
+                                                        onClick={() => toggleSection('highlight')}
+                                                    >
+                                                        <span>Highlight Produk</span>
+                                                        <span className="accordion-icon" aria-hidden="true">+</span>
+                                                    </button>
+                                                    {openSection === 'highlight' && (
+                                                        <div className="accordion-content">
+                                                            <ul className="accordion-benefits accordion-highlight-list">
+                                                                {p.benefits.map((benefit, i) => (
+                                                                    <li key={i}>
+                                                                        <CheckCircle size={14} />
+                                                                        <span>{benefit}</span>
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+
                                             <div className={`accordion-item ${openSection === 'description' ? 'open' : ''}`}>
                                                 <button
                                                     type="button"
                                                     className="accordion-trigger"
-                                                    onClick={() => setOpenSection(openSection === 'description' ? 'benefits' : 'description')}
+                                                    onClick={() => toggleSection('description')}
                                                 >
                                                     <span>Deskripsi</span>
-                                                    <ChevronDown size={18} />
+                                                    <span className="accordion-icon" aria-hidden="true">+</span>
                                                 </button>
                                                 {openSection === 'description' && (
                                                     <div className="accordion-content">
@@ -241,10 +260,10 @@ const ProductDetailPage: React.FC = () => {
                                                 <button
                                                     type="button"
                                                     className="accordion-trigger"
-                                                    onClick={() => setOpenSection(openSection === 'benefits' ? 'description' : 'benefits')}
+                                                    onClick={() => toggleSection('benefits')}
                                                 >
                                                     <span>Manfaat</span>
-                                                    <ChevronDown size={18} />
+                                                    <span className="accordion-icon" aria-hidden="true">+</span>
                                                 </button>
                                                 {openSection === 'benefits' && (
                                                     <div className="accordion-content">
@@ -264,10 +283,10 @@ const ProductDetailPage: React.FC = () => {
                                                 <button
                                                     type="button"
                                                     className="accordion-trigger"
-                                                    onClick={() => setOpenSection(openSection === 'specs' ? 'description' : 'specs')}
+                                                    onClick={() => toggleSection('specs')}
                                                 >
                                                     <span>Spesifikasi</span>
-                                                    <ChevronDown size={18} />
+                                                    <span className="accordion-icon" aria-hidden="true">+</span>
                                                 </button>
                                                 {openSection === 'specs' && (
                                                     <div className="accordion-content">

@@ -285,37 +285,6 @@
     color: #dc2626;
 }
 
-.benefit-chips {
-    margin-bottom: 1.5rem;
-}
-
-.benefit-chips p {
-    margin: 0 0 0.75rem;
-    color: #1b231d;
-    font-size: 0.9rem;
-    font-weight: 800;
-}
-
-.benefit-chips ul {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.7rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.benefit-chips li {
-    padding: 0.85rem 0.95rem;
-    border: 1px solid rgba(20, 85, 46, 0.12);
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.72);
-    color: #233126;
-    font-size: 0.88rem;
-    font-weight: 700;
-    line-height: 1.45;
-}
-
 .purchase-panel {
     display: flex;
     flex-direction: column;
@@ -448,15 +417,12 @@
 .detail-accordion {
     display: flex;
     flex-direction: column;
-    gap: 0.9rem;
-    margin-top: 1.3rem;
+    margin-top: 1.5rem;
+    border-top: 1px solid rgba(21, 24, 18, 0.12);
 }
 
 .accordion-item {
-    border: 1px solid rgba(20, 85, 46, 0.12);
-    border-radius: 22px;
-    background: rgba(255, 255, 255, 0.68);
-    overflow: hidden;
+    border-bottom: 1px solid rgba(21, 24, 18, 0.12);
 }
 
 .accordion-trigger {
@@ -465,30 +431,33 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding: 1rem 1.15rem;
+    padding: 1.28rem 0.1rem;
     border: 0;
     background: transparent;
-    color: #152018;
+    color: #242824;
     cursor: pointer;
-    font-size: 0.94rem;
-    font-weight: 800;
+    font-size: 0.98rem;
+    font-weight: 500;
     text-align: left;
 }
 
-.accordion-item.open .accordion-trigger svg {
-    transform: rotate(180deg);
-}
-
-.accordion-trigger svg {
-    color: #14552e;
+.accordion-icon {
+    color: #2a2a2a;
+    font-size: 2.15rem;
+    line-height: 1;
+    font-weight: 300;
     transition: transform 0.2s ease;
 }
 
+.accordion-item.open .accordion-icon {
+    transform: rotate(45deg);
+}
+
 .accordion-content {
-    padding: 0 1.15rem 1.15rem;
-    color: #5d675f;
+    padding: 0 0.1rem 1.3rem;
+    color: #4f5751;
     font-size: 0.88rem;
-    line-height: 1.75;
+    line-height: 1.8;
 }
 
 .accordion-content p {
@@ -522,6 +491,10 @@
     flex: 0 0 auto;
     margin-top: 0.15rem;
     color: #3f9d56;
+}
+
+.accordion-highlight-list li {
+    font-weight: 600;
 }
 
 .specs-list li {
@@ -577,7 +550,6 @@
         padding-bottom: 0.2rem;
     }
 
-    .benefit-chips ul,
     .action-buttons {
         grid-template-columns: 1fr;
     }
