@@ -593,7 +593,7 @@ const FatFastingPage: React.FC = () => {
             </div>
             <div>
               <img
-                src="/img/kenapa-leaves.png"
+                src="/img/polifenol.jpeg"
                 alt="Pohon zaitun Tunisia"
                 className="ff-image-rounded"
               />
