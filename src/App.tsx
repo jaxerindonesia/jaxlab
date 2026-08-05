@@ -12,17 +12,19 @@ import PaymentErrorPage from './pages/PaymentErrorPage';
 import OrderHistoryPage from './pages/OrderHistoryPage/OrderHistoryPage';
 import AccountPage from './pages/AccountPage/AccountPage';
 import PaymentResultPage from './pages/PaymentResultPage';
+import FatFastingPage from './pages/FatFastingPage/FatFastingPage';
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen flex flex-col">
+      <div className="flex min-h-screen flex-col">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/products/:id" element={<ProductDetailPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/fat-fasting" element={<FatFastingPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/member" element={<AccountPage />} />
           <Route path="/member/auth" element={<MemberAuthPage />} />
