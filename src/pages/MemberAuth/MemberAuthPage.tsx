@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Footer from '../../components/Footer';
 import Header from '../../components/Header';
@@ -12,6 +13,7 @@ export default function MemberAuthPage() {
   const [form, setForm] = useState({ name: '', email: '', address: '', phoneWa: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const submit = async () => {
     setLoading(true);
@@ -23,7 +25,10 @@ export default function MemberAuthPage() {
       setMember(member);
       nav('/products');
     } catch (e) {
-      setError((e as Error).message || 'Gagal memproses permintaan');
+      const message = (e as Error).message;
+      setError(message === 'Failed to fetch'
+        ? 'Tidak dapat terhubung ke server. Pastikan layanan API sedang berjalan.'
+        : message || 'Gagal memproses permintaan');
     } finally {
       setLoading(false);
     }
@@ -52,32 +57,37 @@ export default function MemberAuthPage() {
               {mode === 'register' && (
                 <label>
                   <span className="mb-1.5 block text-[0.92rem] font-semibold text-[#304337]">Nama Lengkap</span>
-                  <input className="w-full rounded-xl border border-[#d6dfd5] bg-[#fcfdfc] px-3.5 py-3 text-[0.95rem] outline-none focus:border-[var(--secondary-green)] focus:shadow-[0_0_0_3px_rgba(79,121,66,0.15)]" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Nama lengkap" />
+                  <input className="w-full rounded-xl border border-[#d6dfd5] bg-[#fcfdfc] px-3.5 py-3 text-[0.95rem] !text-[#1d2e22] caret-[#14552e] outline-none placeholder:!text-[#9aa49c] focus:border-[var(--secondary-green)] focus:shadow-[0_0_0_3px_rgba(79,121,66,0.15)]" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Nama lengkap" />
                 </label>
               )}
 
               <label>
                 <span className="mb-1.5 block text-[0.92rem] font-semibold text-[#304337]">Email</span>
-                <input className="w-full rounded-xl border border-[#d6dfd5] bg-[#fcfdfc] px-3.5 py-3 text-[0.95rem] outline-none focus:border-[var(--secondary-green)] focus:shadow-[0_0_0_3px_rgba(79,121,66,0.15)]" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="nama@email.com" />
+                <input className="w-full rounded-xl border border-[#d6dfd5] bg-[#fcfdfc] px-3.5 py-3 text-[0.95rem] !text-[#1d2e22] caret-[#14552e] outline-none placeholder:!text-[#9aa49c] focus:border-[var(--secondary-green)] focus:shadow-[0_0_0_3px_rgba(79,121,66,0.15)]" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="nama@email.com" />
               </label>
 
               {mode === 'register' && (
                 <label>
                   <span className="mb-1.5 block text-[0.92rem] font-semibold text-[#304337]">Alamat Pengiriman</span>
-                  <textarea className="w-full rounded-xl border border-[#d6dfd5] bg-[#fcfdfc] px-3.5 py-3 text-[0.95rem] outline-none focus:border-[var(--secondary-green)] focus:shadow-[0_0_0_3px_rgba(79,121,66,0.15)]" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Alamat lengkap" rows={3} />
+                  <textarea className="w-full rounded-xl border border-[#d6dfd5] bg-[#fcfdfc] px-3.5 py-3 text-[0.95rem] !text-[#1d2e22] caret-[#14552e] outline-none placeholder:!text-[#9aa49c] focus:border-[var(--secondary-green)] focus:shadow-[0_0_0_3px_rgba(79,121,66,0.15)]" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Alamat lengkap" rows={3} />
                 </label>
               )}
 
               {mode === 'register' && (
                 <label>
                   <span className="mb-1.5 block text-[0.92rem] font-semibold text-[#304337]">No. WhatsApp</span>
-                  <input className="w-full rounded-xl border border-[#d6dfd5] bg-[#fcfdfc] px-3.5 py-3 text-[0.95rem] outline-none focus:border-[var(--secondary-green)] focus:shadow-[0_0_0_3px_rgba(79,121,66,0.15)]" value={form.phoneWa} onChange={(e) => setForm({ ...form, phoneWa: e.target.value })} placeholder="08xxxxxxxxxx" />
+                  <input className="w-full rounded-xl border border-[#d6dfd5] bg-[#fcfdfc] px-3.5 py-3 text-[0.95rem] !text-[#1d2e22] caret-[#14552e] outline-none placeholder:!text-[#9aa49c] focus:border-[var(--secondary-green)] focus:shadow-[0_0_0_3px_rgba(79,121,66,0.15)]" value={form.phoneWa} onChange={(e) => setForm({ ...form, phoneWa: e.target.value })} placeholder="08xxxxxxxxxx" />
                 </label>
               )}
 
               <label>
                 <span className="mb-1.5 block text-[0.92rem] font-semibold text-[#304337]">Password</span>
-                <input className="w-full rounded-xl border border-[#d6dfd5] bg-[#fcfdfc] px-3.5 py-3 text-[0.95rem] outline-none focus:border-[var(--secondary-green)] focus:shadow-[0_0_0_3px_rgba(79,121,66,0.15)]" type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="Minimal 6 karakter" />
+                <div className="relative">
+                  <input className="w-full rounded-xl border border-[#d6dfd5] bg-[#fcfdfc] py-3 pl-3.5 pr-12 text-[0.95rem] !text-[#1d2e22] caret-[#14552e] outline-none placeholder:!text-[#9aa49c] focus:border-[var(--secondary-green)] focus:shadow-[0_0_0_3px_rgba(79,121,66,0.15)]" type={showPassword ? 'text' : 'password'} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} placeholder="Minimal 6 karakter" />
+                  <button type="button" onClick={() => setShowPassword((current) => !current)} className="absolute inset-y-0 right-0 inline-flex w-12 items-center justify-center border-0 bg-transparent !text-[#617066] hover:!text-[#14552e]" aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}>
+                    {showPassword ? <EyeOff size={19} /> : <Eye size={19} />}
+                  </button>
+                </div>
               </label>
             </div>
 
