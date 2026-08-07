@@ -30,15 +30,15 @@ export default function MemberAuthPage() {
   };
 
   return (
-    <div className="bg-[#efe9e3]">
+    <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top_left,rgba(211,233,218,0.6),transparent_32%),linear-gradient(180deg,#f7f3ec_0%,#eee9e2_100%)]">
       <Header />
-      <main className="px-0 py-10 max-md:py-6">
-        <div className="container">
-          <section className="mx-auto max-w-[760px] rounded-[20px] border border-[#e6dfd7] bg-white p-8 shadow-[0_16px_40px_rgba(26,77,46,0.08)] max-md:rounded-2xl max-md:p-5">
+      <main className="flex flex-1 items-start px-6 pb-16 pt-[7.5rem] max-md:px-4 max-md:pb-10 max-md:pt-[6.5rem]">
+        <div className="mx-auto w-full max-w-[820px]">
+          <section className="rounded-[24px] border border-white/80 bg-white/95 p-8 shadow-[0_20px_55px_rgba(34,52,40,0.09)] max-md:rounded-2xl max-md:p-5">
             <div>
-              <TagPill className="text-[0.8rem] font-bold tracking-[0.03em]">Membership JaxLab</TagPill>
-              <h1 className="my-2.5 text-[2rem] text-[var(--primary-green)] max-md:text-2xl">{mode === 'login' ? 'Masuk Untuk Belanja' : 'Daftar Membership'}</h1>
-              <p className="m-0 text-[#5f645f]">
+              <TagPill className="bg-[#e7f3e9] text-[0.8rem] font-bold tracking-[0.03em] !text-[#246038]">Membership JaxLab</TagPill>
+              <h1 className="my-2.5 text-[2rem] font-extrabold !text-[#14552e] max-md:text-2xl">{mode === 'login' ? 'Masuk Untuk Belanja' : 'Daftar Membership'}</h1>
+              <p className="m-0 leading-relaxed !text-[#5f6b62]">
                 Checkout di website hanya memproses harga produk + PPN. Ongkir akan dikonfirmasi admin via WhatsApp.
               </p>
             </div>

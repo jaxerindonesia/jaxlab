@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import { ArrowLeft, CheckCircle, Star } from 'lucide-react';
-import { Link, useParams } from 'react-router-dom';
+import { ArrowLeft, CheckCircle, ShoppingCart, Sparkles, Star } from 'lucide-react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getProductById } from '../../services/api/products';
+import { isMemberLoggedIn } from '../../services/auth';
+import { addToCart } from '../../services/cart';
 import { formatRupiah, type ProductDto } from '../../services/service-api';
 
 type DetailSection = 'highlight' | 'description' | 'benefits' | 'specs';
 
 const ProductDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
     const [selectedImage, setSelectedImage] = useState(0);
     const [openSection, setOpenSection] = useState<DetailSection | null>('description');
 
@@ -114,7 +117,7 @@ const ProductDetailPage: React.FC = () => {
 
                                         {p.images.length > 1 && (
                                             <div className="mt-4 grid grid-cols-[repeat(auto-fit,minmax(88px,1fr))] gap-[0.8rem] max-[768px]:grid-cols-[repeat(4,minmax(72px,1fr))] max-[768px]:overflow-x-auto max-[768px]:pb-[0.2rem]" aria-label="Pilihan gambar produk">
-                                                {p.images.map((image: any, index: number) => (
+                                                {p.images.map((image, index) => (
                                                     <button
                                                         key={`${image}-${index}`}
                                                         type="button"
@@ -172,18 +175,39 @@ const ProductDetailPage: React.FC = () => {
                                         </div> */}
 
                                         <div className="mb-4 flex flex-col gap-4">
-                                            <div className="flex items-start justify-between gap-4 rounded-3xl border border-[rgba(20,85,46,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.85),rgba(238,245,240,0.95))] px-5 pb-[1.15rem] pt-5 shadow-[0_16px_32px_rgba(29,39,31,0.05)] max-[768px]:flex-col">
-                                                <div>
-                                                    <p className="mb-[0.35rem] text-[0.76rem] font-extrabold uppercase tracking-[0.08em] !text-[#6b746d]">Pilihan Pembelian</p>
-                                                    <h3 className="mb-[0.3rem] text-xl font-extrabold !text-[#152018]">Beli Sekarang</h3>
-                                                    <span className="block max-w-[34ch] text-[0.86rem] leading-[1.6] !text-[#677268]">
-                                                        Produk original dengan pengiriman cepat dan dukungan customer service.
-                                                    </span>
+                                            <div className="relative overflow-hidden rounded-[24px] border-2 border-[#14552e] bg-[linear-gradient(135deg,#f8fcf9_0%,#dcefe2_100%)] p-5 shadow-[0_18px_40px_rgba(20,85,46,0.14)]">
+                                                <div className="pointer-events-none absolute -right-8 -top-10 h-28 w-28 rounded-full bg-[#7fc890]/25 blur-xl" />
+                                                <div className="relative mb-4 flex items-start justify-between gap-4 max-[520px]:flex-col">
+                                                    <div>
+                                                        <p className="mb-2 text-[0.72rem] font-extrabold uppercase tracking-[0.1em] !text-[#52705b]">Pilihan Pembelian</p>
+                                                        <span className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-[#f2c94c] px-2.5 py-1 text-[0.67rem] font-black uppercase tracking-[0.08em] !text-[#29321f]">
+                                                            <Sparkles size={13} /> Harga Terbaik
+                                                        </span>
+                                                        <h3 className="mb-1 text-xl font-extrabold !text-[#152018]">Beli Langsung di Website</h3>
+                                                        <p className="m-0 max-w-[37ch] text-[0.86rem] font-semibold leading-[1.55] !text-[#496050]">
+                                                            Harga lebih hemat, produk original, dan tetap didukung customer service.
+                                                        </p>
+                                                    </div>
+                                                    <div className="shrink-0 text-right max-[520px]:text-left">
+                                                        <strong className="block text-[1.5rem] leading-[1.1] !text-[#14552e]">{formatRupiah(p.price)}</strong>
+                                                        {p.originalPrice && <span className="text-[0.85rem] !text-[#7d8a80] line-through">{formatRupiah(p.originalPrice)}</span>}
+                                                    </div>
                                                 </div>
-                                                <div className="shrink-0 text-right max-[768px]:text-left">
-                                                    <strong className="block text-[1.45rem] leading-[1.1] !text-[#152018]">{formatRupiah(p.price)}</strong>
-                                                    {p.originalPrice && <span className="text-[0.88rem] !text-[#8d958e] line-through">{formatRupiah(p.originalPrice)}</span>}
-                                                </div>
+                                                <button
+                                                    type="button"
+                                                    className="relative inline-flex min-h-[58px] w-full items-center justify-center gap-2 rounded-[16px] border-0 bg-[#14552e] px-8 py-[0.95rem] text-base font-black !text-white shadow-[0_12px_26px_rgba(20,85,46,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#0f4625] hover:shadow-[0_16px_34px_rgba(20,85,46,0.3)]"
+                                                    onClick={() => {
+                                                        if (!isMemberLoggedIn()) {
+                                                            navigate('/member/auth');
+                                                            return;
+                                                        }
+                                                        addToCart(p.id, 1);
+                                                        navigate('/cart');
+                                                    }}
+                                                >
+                                                    <ShoppingCart size={20} />
+                                                    Beli di Website
+                                                </button>
                                             </div>
 
                                             {p.marketplaceLinks && p.marketplaceLinks.length > 0 && (
@@ -196,7 +220,7 @@ const ProductDetailPage: React.FC = () => {
                                                             rel="noopener noreferrer"
                                                             className={`inline-flex min-h-[54px] items-center justify-center rounded-[18px] px-[1.2rem] py-[0.9rem] text-[0.9rem] font-extrabold transition-all duration-200 hover:-translate-y-px ${i === 0 ? 'bg-[#14552e] !text-white hover:bg-[#0f4625] hover:shadow-[0_16px_32px_rgba(20,85,46,0.18)]' : 'border border-[rgba(20,85,46,0.16)] bg-white/70 !text-[#14552e] hover:border-[#14552e] hover:shadow-[0_12px_28px_rgba(20,85,46,0.08)]'}`}
                                                         >
-                                                            {btn.label}
+                                                            Beli di {btn.label}
                                                         </a>
                                                     ))}
                                                 </div>

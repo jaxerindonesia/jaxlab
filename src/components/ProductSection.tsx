@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
-import type { ProductDto } from "../services/service-api";
+import { getFeaturedProducts, type ProductDto } from "../services/service-api";
 
 const ProductSection: React.FC = () => {
   const navigate = useNavigate();
@@ -50,19 +50,19 @@ const ProductSection: React.FC = () => {
     },
   ];
 
-  // useEffect(() => {
-  //   let cancelled = false;
-  //   getFeaturedProducts()
-  //     .then((p) => {
-  //       if (!cancelled) setProducts(p);
-  //     })
-  //     .catch(() => {
-  //       if (!cancelled) setProducts([]);
-  //     });
-  //   return () => {
-  //     cancelled = true;
-  //   };
-  // }, []);
+  useEffect(() => {
+    let cancelled = false;
+    getFeaturedProducts()
+      .then((p) => {
+        if (!cancelled) setProducts(p);
+      })
+      .catch(() => {
+        if (!cancelled) setProducts([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const track = productTrackRef.current;

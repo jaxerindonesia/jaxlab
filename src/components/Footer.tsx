@@ -170,7 +170,7 @@ const Footer: React.FC = () => {
         </div>
       </div>
       <div className="flex flex-col items-center border-t border-white/5 pt-8 text-center text-[0.85rem] !text-white/40">
-        <p className="inline-flex flex-wrap items-center justify-center gap-4">&copy; 2026 JaxLab Indonesia. All Rights Reserved.</p>
+        <p className="inline-flex flex-wrap items-center justify-center gap-4">&copy; {new Date().getFullYear()} JaxLab Indonesia. All Rights Reserved.</p>
         <span className="font-bold !text-[#4ade80]">💚 Bantu Tubuh Sehat Alami</span>
       </div>
     </footer>

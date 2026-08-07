@@ -18,17 +18,19 @@ const detailSelect = {
   marketplaceLinks: true,
 };
 
+const stockEntriesSelect = {
+  where: { deletedAt: null },
+  select: { type: true, quantity: true },
+};
+
 router.get('/', async (_req, res) => {
   const rows = await prisma.product.findMany({
     where: { deletedAt: null },
-    orderBy: { createdAt: 'desc' },
+    orderBy: [{ priority: 'asc' }, { createdAt: 'desc' }],
     include: {
       category: { select: { name: true } },
       detail: { where: { deletedAt: null }, select: detailSelect },
-      stockEntries: {
-        where: { deletedAt: null },
-        select: { type: true, quantity: true },
-      },
+      stockEntries: stockEntriesSelect,
     },
   });
 
@@ -36,22 +38,44 @@ router.get('/', async (_req, res) => {
 });
 
 router.get('/featured', async (_req, res) => {
-  const rows = await prisma.product.findMany({
+  const featuredRows = await prisma.product.findMany({
     where: {
       deletedAt: null,
-      detail: { is: { deletedAt: null, badge: { in: ['Best Seller', 'New'] } } },
+      detail: {
+        is: {
+          deletedAt: null,
+          badge: { in: ['Best Seller', 'New'] },
+        },
+      },
     },
-    orderBy: { createdAt: 'desc' },
+    orderBy: [{ priority: 'asc' }, { createdAt: 'desc' }],
     take: 3,
     include: {
       category: { select: { name: true } },
       detail: { where: { deletedAt: null }, select: detailSelect },
-      stockEntries: {
-        where: { deletedAt: null },
-        select: { type: true, quantity: true },
-      },
+      stockEntries: stockEntriesSelect,
     },
   });
+
+  let rows = featuredRows;
+
+  if (rows.length < 3) {
+    const fallbackRows = await prisma.product.findMany({
+      where: {
+        deletedAt: null,
+        id: { notIn: rows.map((row) => row.id) },
+      },
+      orderBy: [{ priority: 'asc' }, { createdAt: 'desc' }],
+      take: 3 - rows.length,
+      include: {
+        category: { select: { name: true } },
+        detail: { where: { deletedAt: null }, select: detailSelect },
+        stockEntries: stockEntriesSelect,
+      },
+    });
+
+    rows = [...rows, ...fallbackRows];
+  }
 
   res.json(rows.map((r) => toApiProduct({ ...r, detail: r.detail ?? null })));
 });

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 
 /* ── Intersection-observer hook: hidden → visible on scroll ── */
@@ -681,18 +682,7 @@ const FatFastingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ═══ FOOTER minimal ═══ */}
-      <footer className="bg-[#0e1e12] px-6 py-12 text-center !text-white">
-        <div className="mb-3 flex items-center justify-center gap-3 text-xl font-bold !text-white">
-          <img className="!h-6 !w-auto" src="/logo-jaxlab.png" alt="JaxLab" />
-        </div>
-        <p className="mb-5 text-[0.9rem] !text-white/80">
-          Fat Fasting with Premium Extra Virgin Olive Oil from Tunisia.
-        </p>
-        <p className="text-[0.85rem] !text-white/50">
-          © {new Date().getFullYear()} JaxLab. All rights reserved.
-        </p>
-      </footer>
+      <Footer />
     </div>
   );
 };
