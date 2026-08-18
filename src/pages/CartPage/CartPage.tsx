@@ -107,9 +107,8 @@ export default function CartPage() {
   );
 
   const subtotal = rows.reduce((sum, r) => sum + r.product.price * r.qty, 0);
-  const ppn = Math.round(subtotal * 0.11);
   const shippingAmount = selectedShipping?.cost ?? 0;
-  const total = subtotal + ppn + shippingAmount;
+  const total = subtotal + shippingAmount;
 
   const chooseDestination = async (destination: ShippingDestination) => {
     setSelectedDestination(destination);
@@ -444,12 +443,6 @@ export default function CartPage() {
                   <span>Subtotal Produk</span>
                   <strong className="!text-[#31483a]">
                     {formatRupiah(subtotal)}
-                  </strong>
-                </div>
-                <div className="flex justify-between gap-4">
-                  <span>PPN 11%</span>
-                  <strong className="!text-[#31483a]">
-                    {formatRupiah(ppn)}
                   </strong>
                 </div>
                 <div className="flex justify-between gap-4">

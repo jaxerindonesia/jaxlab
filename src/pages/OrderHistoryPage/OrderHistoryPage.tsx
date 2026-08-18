@@ -175,10 +175,10 @@ const OrderHistoryPage: React.FC = () => {
                               <span>Subtotal</span>
                               <strong>{formatRupiah(order.subtotalAmount)}</strong>
                             </div>
-                            <div className="flex justify-between">
+                            {order.ppnAmount > 0 && <div className="flex justify-between">
                               <span>PPN</span>
                               <strong>{formatRupiah(order.ppnAmount)}</strong>
-                            </div>
+                            </div>}
                             <div className="flex justify-between border-t border-dashed border-[#e3ddd3] pt-2 text-base text-[#1d241d]">
                               <span>Total</span>
                               <strong>{formatRupiah(order.totalAmount)}</strong>

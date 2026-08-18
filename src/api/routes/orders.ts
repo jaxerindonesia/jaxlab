@@ -5,8 +5,6 @@ import { calculateShipping } from './shipping';
 
 export const router = Router();
 
-const PPN_RATE = 0.11;
-
 function getMidtransSnapUrl() {
   const baseUrl = process.env.NODE_ENV === 'production' ? process.env.MIDTRANS_URL_PRODUCTION : process.env.MIDTRANS_URL_SANDBOX;
   if (!baseUrl) throw new Error('Midtrans URL belum di-set');
@@ -65,7 +63,8 @@ router.post('/checkout', async (req, res) => {
   if (!normalized.length) return res.status(400).json({ error: 'no valid items' });
 
   const subtotal = normalized.reduce((sum: number, i: { productId: string; qty: number }) => sum + (map.get(i.productId)?.sellPrice ?? 0) * i.qty, 0);
-  const ppnAmount = Math.round(subtotal * PPN_RATE);
+  // Harga produk sudah termasuk PPN.
+  const ppnAmount = 0;
   const destinationId = Number(shipping.destinationId);
   const totalQuantity = normalized.reduce((sum: number, item: { qty: number }) => sum + item.qty, 0);
   const gramsPerItem = Math.max(1, Number(process.env.RAJAONGKIR_DEFAULT_WEIGHT_GRAMS ?? 1000));
@@ -75,7 +74,7 @@ router.post('/checkout', async (req, res) => {
   );
   if (!selectedShipping) return res.status(400).json({ error: 'Layanan pengiriman tidak valid atau sudah berubah' });
   const shippingAmount = selectedShipping.cost;
-  const total = subtotal + ppnAmount + shippingAmount;
+  const total = subtotal + shippingAmount;
 
   const order = await prisma.$transaction(async (tx) => {
     const created = await tx.order.create({
@@ -134,7 +133,6 @@ router.post('/checkout', async (req, res) => {
           const p = map.get(i.productId)!;
           return { id: p.id, name: p.name.slice(0, 50), price: p.sellPrice, quantity: i.qty };
         }),
-        { id: 'PPN11', name: 'PPN 11%', price: ppnAmount, quantity: 1 },
         { id: 'SHIPPING', name: `${selectedShipping.name} ${selectedShipping.service}`.slice(0, 50), price: shippingAmount, quantity: 1 },
       ],
     }),
