@@ -15,19 +15,19 @@ const galleryImages = [
     alt: "Galeri foto JaxLab 3",
   },
   {
-    src: "/img/DSC02984.jpg",
+    src: "/img/DSC02984-web.webp",
     alt: "Galeri foto JaxLab 4",
   },
   {
-    src: "/img/HAN02200.jpg",
+    src: "/img/HAN02200-web.webp",
     alt: "Galeri foto JaxLab 5",
   },
   {
-    src: "/img/HAN03450.jpg",
+    src: "/img/HAN03450-web.webp",
     alt: "Galeri foto JaxLab 6",
   },
   {
-    src: "/img/IMG_4856.jpg",
+    src: "/img/IMG_4856-web.webp",
     alt: "Galeri foto JaxLab 7",
   },
 ];
@@ -124,7 +124,7 @@ const MediaSection: React.FC = () => {
                     aria-hidden={slideState === "hidden"}
                     tabIndex={slideState === "hidden" ? -1 : 0}
                   >
-                    <img className="block !h-full !w-full object-cover" src={image.src} alt={image.alt} />
+                    <img className="block !h-full !w-full object-cover" src={image.src} alt={image.alt} loading="lazy" decoding="async" />
                   </button>
                 );
               })}
@@ -160,6 +160,7 @@ const MediaSection: React.FC = () => {
               <iframe
                 src={`https://www.youtube.com/embed/${videos[activeVideo].id}`}
                 title={videos[activeVideo].title}
+                loading="lazy"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen className="block !aspect-video !w-full border-0 bg-[#0b150d]"
               />
@@ -176,6 +177,8 @@ const MediaSection: React.FC = () => {
                   <img className="block !aspect-video !w-full rounded-xl border border-[rgba(6,20,10,0.08)] object-cover"
                     src={`https://img.youtube.com/vi/${video.id}/mqdefault.jpg`}
                     alt={video.title}
+                    loading="lazy"
+                    decoding="async"
                   />
                 </button>
               ))}

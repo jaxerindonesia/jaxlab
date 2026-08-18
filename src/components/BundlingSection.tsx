@@ -12,7 +12,7 @@ const BundlingSection: React.FC = () => {
         <div className="relative z-[1] grid justify-items-center overflow-hidden rounded-[28px]">
           <img
             className="block !h-auto !w-4/5 object-cover object-center max-[960px]:max-h-[520px] max-[960px]:object-contain"
-            src="/img/Bundling set FF72.png"
+            src="/img/bundling-ff72.webp"
             alt="Fat Fasting Set - Extra Virgin Olive Oil, Virgin Coconut Oil, Ketone Immuno"
           />
         </div>

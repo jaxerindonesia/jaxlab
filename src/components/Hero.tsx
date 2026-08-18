@@ -112,8 +112,12 @@ const Hero: React.FC = () => {
         <div className="flex max-w-[720px] flex-[1.15] animate-[fadeInUp_0.8s_ease_0.2s_both] justify-end max-[1024px]:max-w-[500px] max-[1024px]:justify-center">
           <div className="relative w-full">
             <img
-              src="/img/Jaroliva.png"
+              src="/img/Jaroliva.webp"
               alt="Produk Jaroliva"
+              width="896"
+              height="1200"
+              fetchPriority="high"
+              decoding="async"
               className="!h-[680px] !w-full rounded-3xl object-cover shadow-[0_30px_60px_rgba(0,0,0,0.3)] max-[1024px]:!h-[520px] max-[600px]:!h-[420px]"
             />
             {/* Floating card overlay */}

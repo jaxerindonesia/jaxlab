@@ -274,20 +274,20 @@ const PartnerSection: React.FC = () => {
                   className={`group !aspect-[3/4] overflow-hidden rounded-r-[20px] shadow-[0_16px_40px_rgba(0,0,0,0.35)] transition-all duration-700 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${visibleMosaicItems >= 2 ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-[34px] scale-[0.96] opacity-0'}`}
                 >
                   <img className="block !h-full !w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    src="/img/Jaroliva.png"
+                    src="/img/Jaroliva.webp"
                     alt="Gaya hidup sehat Fat Fasting"
                   />
                 </div>
                 <div
                   className={`group !aspect-[1/1.15] overflow-hidden rounded-[20px] shadow-[0_16px_40px_rgba(0,0,0,0.35)] transition-all duration-700 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${visibleMosaicItems >= 1 ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-[34px] scale-[0.96] opacity-0'}`}
                 >
-                  <img className="block !h-full !w-full object-cover transition-transform duration-500 group-hover:scale-105" src="/img/Jaroliva (4).png" alt="Bahan alami Jaxlab" />
+                  <img className="block !h-full !w-full object-cover transition-transform duration-500 group-hover:scale-105" src="/img/Jaroliva (4).png" alt="Bahan alami Jaxlab" loading="lazy" decoding="async" />
                 </div>
               </div>
               <div
                 className={`group relative !aspect-[16/7] overflow-hidden rounded-[20px] border border-[rgba(74,222,128,0.1)] shadow-[0_16px_40px_rgba(0,0,0,0.35)] transition-all duration-700 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] ${visibleMosaicItems >= 3 ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-[34px] scale-[0.96] opacity-0'}`}
               >
-                <img className="block !h-full !w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" src="/img/DSC03061.jpg" alt="Bahan Fat Fasting sehat" />
+                <img className="block !h-full !w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" src="/img/DSC03061-web.jpg" alt="Bahan Fat Fasting sehat" loading="lazy" decoding="async" />
                 <div className="absolute bottom-4 right-4 inline-flex items-center gap-[0.4rem] whitespace-nowrap rounded-full border border-[rgba(74,222,128,0.28)] bg-[rgba(8,16,10,0.78)] px-[0.9rem] py-[0.4rem] text-[0.77rem] font-bold tracking-[0.4px] !text-[#4ade80] backdrop-blur-[10px]">
                   <CheckCircle2 size={14} />
                   <span>Lemak Sehat Berkualitas</span>
@@ -434,7 +434,7 @@ const PartnerSection: React.FC = () => {
             <div className="grid grid-cols-1 items-start justify-items-end max-[1024px]:mx-auto max-[1024px]:w-full max-[1024px]:max-w-[720px]">
               <div className="!aspect-[0.92/1] w-[min(100%,520px)] justify-self-end overflow-hidden rounded-[16px_16px_16px_58%] bg-[#d9dde8] max-[768px]:w-[min(90%,420px)] max-[768px]:justify-self-center max-[768px]:rounded-[14px_14px_14px_52%]">
                 <img className="block !h-full !w-full object-cover"
-                  src="/img/Jaroliva.png"
+                  src="/img/Jaroliva.webp"
                   alt="Pendampingan Fat Fasting JaxLab"
                 />
               </div>

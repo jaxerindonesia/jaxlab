@@ -7,7 +7,9 @@ import { getFeaturedProducts, type ProductDto } from "../services/service-api";
 const ProductSection: React.FC = () => {
   const navigate = useNavigate();
   const productTrackRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [products, setProducts] = useState<ProductDto[]>([]);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
 
   const scrollProducts = (direction: "prev" | "next") => {
     const track = productTrackRef.current;
@@ -51,6 +53,36 @@ const ProductSection: React.FC = () => {
   ];
 
   useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !("IntersectionObserver" in window)) {
+      setShouldLoadVideo(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoadVideo(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "300px 0px" },
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (shouldLoadVideo) {
+      videoRef.current?.load();
+      void videoRef.current?.play().catch(() => {
+        // Browser tertentu tetap dapat memblokir autoplay meski video muted.
+      });
+    }
+  }, [shouldLoadVideo]);
+
+  useEffect(() => {
     let cancelled = false;
     getFeaturedProducts()
       .then((p) => {
@@ -81,17 +113,18 @@ const ProductSection: React.FC = () => {
         <div className="mx-auto max-w-[1490px] px-[25px]">
           <div className="mx-auto mb-[3.2rem] max-w-[1440px] overflow-hidden rounded-[14px] bg-[#10170f] shadow-[0_22px_48px_rgba(20,24,18,0.14)] max-[768px]:mb-[2.2rem] max-[768px]:rounded-xl">
             <video
+              ref={videoRef}
               className="block !aspect-[16/6.5] max-h-[520px] !w-full bg-[#10170f] object-cover max-[768px]:!aspect-[16/10] max-[768px]:max-h-none"
               autoPlay
               controls
               loop
               muted
               playsInline
-              preload="metadata"
+              preload="none"
               poster="/img/DSC03061-web.jpg"
               aria-label="Video pengantar Fat Fasting JaxLab"
             >
-              <source src="/video/tunisia_video.mp4" type="video/mp4" />
+              {shouldLoadVideo && <source src="/video/tunisia_video.mp4" type="video/mp4" />}
               Browser Anda tidak mendukung pemutar video.
             </video>
           </div>
@@ -135,7 +168,7 @@ const ProductSection: React.FC = () => {
                 return (
                   <article data-product-card key={product.id} className="group relative grid min-h-[330px] flex-[0_0_var(--product-card-width)] snap-start grid-cols-[minmax(210px,38%)_minmax(0,1fr)] items-stretch overflow-hidden rounded-[18px] border border-[rgba(6,59,24,0.12)] bg-[#d9edcf] !text-[#063b18] shadow-[0_18px_44px_rgba(20,44,22,0.08)] transition-all duration-300 hover:-translate-y-[5px] hover:border-[rgba(6,59,24,0.22)] hover:shadow-[0_24px_58px_rgba(20,44,22,0.14)] max-[1180px]:min-h-[320px] max-[1180px]:flex-auto max-[768px]:min-h-0 max-[768px]:grid-cols-1">
                     <div className="relative flex min-h-full w-full items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_58%,rgba(79,198,107,0.24),transparent_42%),linear-gradient(145deg,#e6f2dd_0%,#cce4bd_100%)] px-[1.6rem] py-[2.1rem] after:absolute after:bottom-[22px] after:left-[12%] after:right-[12%] after:h-[18px] after:rounded-full after:bg-[rgba(6,59,24,0.12)] after:blur-xl max-[768px]:min-h-[220px] max-[768px]:px-[1.4rem] max-[768px]:pb-[1.45rem] max-[768px]:pt-[1.8rem]">
-                      <img className="relative z-[1] !h-60 !w-[min(86%,220px)] object-contain drop-shadow-[0_20px_18px_rgba(6,59,24,0.16)] transition-transform duration-500 group-hover:-translate-y-1 max-[768px]:!h-[190px]" src={product.images[0]} alt={product.name} />
+                      <img className="relative z-[1] !h-60 !w-[min(86%,220px)] object-contain drop-shadow-[0_20px_18px_rgba(6,59,24,0.16)] transition-transform duration-500 group-hover:-translate-y-1 max-[768px]:!h-[190px]" src={product.images[0]} alt={product.name} loading="lazy" decoding="async" />
                     </div>
                     <div className="flex min-w-0 flex-1 flex-col items-start px-[1.85rem] py-8 text-left max-[768px]:px-5 max-[768px]:pb-[1.35rem] max-[768px]:pt-[1.3rem]">
                       <span className="mb-[0.95rem] inline-flex min-h-[30px] items-center rounded-full border border-[rgba(6,59,24,0.22)] bg-[rgba(79,198,107,0.12)] px-[0.78rem] py-1 text-[0.78rem] font-extrabold leading-[1.3] !text-[#06451b]">
