@@ -34,12 +34,22 @@ model Member {
   name         String
   email        String   @unique
   address      String
+  shippingDestinationId Int? @map("shipping_destination_id")
+  shippingDestination String? @map("shipping_destination")
+  province     String?
+  city         String?
+  postalCode   String? @map("postal_code")
+  referralCode String   @unique @map("referral_code")
+  referredById String?  @map("referred_by_id")
   phoneWa      String   @map("phone_wa")
   passwordHash String   @map("password_hash")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  orders Order[]
+  orders          Order[]
+  referredBy      Member?          @relation("MemberReferrals", fields: [referredById], references: [id])
+  referrals       Member[]         @relation("MemberReferrals")
+  referralRewards ReferralReward[] @relation("ReferrerRewards")
 
   @@map("members")
 }
@@ -49,6 +59,11 @@ model Order {
   memberId        String   @map("member_id")
   subtotalAmount  Int      @map("subtotal_amount")
   ppnAmount       Int      @map("ppn_amount")
+  shippingAmount  Int      @default(0) @map("shipping_amount")
+  shippingCourier String?  @map("shipping_courier")
+  shippingService String?  @map("shipping_service")
+  shippingDestinationId Int? @map("shipping_destination_id")
+  shippingDestination String? @map("shipping_destination")
   totalAmount     Int      @map("total_amount")
   paymentStatus   String   @default("pending") @map("payment_status")
   paymentProvider String   @default("midtrans") @map("payment_provider")
@@ -58,9 +73,36 @@ model Order {
 
   member Member      @relation(fields: [memberId], references: [id], onDelete: Cascade)
   items  OrderItem[]
+  referralReward ReferralReward?
 
   @@index([memberId])
   @@map("orders")
+}
+
+model ReferralSetting {
+  id         Int      @id @default(1)
+  percentage Float    @default(5)
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("referral_settings")
+}
+
+model ReferralReward {
+  id                 String   @id @default(uuid())
+  referrerId         String   @map("referrer_id")
+  orderId            String   @unique @map("order_id")
+  percentageSnapshot Float    @map("percentage_snapshot")
+  baseAmount         Int      @map("base_amount")
+  bonusAmount        Int      @map("bonus_amount")
+  status             String   @default("earned")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  referrer Member @relation("ReferrerRewards", fields: [referrerId], references: [id], onDelete: Cascade)
+  order    Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([referrerId, status])
+  @@map("referral_rewards")
 }
 
 model OrderItem {

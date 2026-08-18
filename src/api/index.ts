@@ -8,6 +8,7 @@ import { router as healthRouter } from './routes/health';
 import { router as membersRouter } from './routes/members';
 import { router as ordersRouter } from './routes/orders';
 import { router as productsRouter } from './routes/products';
+import { router as shippingRouter } from './routes/shipping';
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use('/api/members', membersRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/content', contentRouter);
+app.use('/api/shipping', shippingRouter);
 
 const port = Number(process.env.PORT ?? 3001);
 app.listen(port, () => {

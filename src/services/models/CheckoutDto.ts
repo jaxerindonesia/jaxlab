@@ -1,5 +1,11 @@
 export interface CheckoutRequestDto {
   items: { productId: string; qty: number }[];
+  shipping: {
+    destinationId: number;
+    destinationLabel: string;
+    courierCode: string;
+    service: string;
+  };
 }
 
 export interface CheckoutResponseDto {
@@ -10,4 +16,5 @@ export interface CheckoutResponseDto {
   grossAmount: number;
   ppnAmount: number;
   subtotal: number;
+  shippingAmount: number;
 }

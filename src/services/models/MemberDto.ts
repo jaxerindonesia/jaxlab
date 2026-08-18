@@ -4,4 +4,10 @@ export interface MemberDto {
   email: string;
   address: string;
   phoneWa: string;
+  shippingDestinationId: number | null;
+  shippingDestination: string | null;
+  province: string | null;
+  city: string | null;
+  postalCode: string | null;
+  referralCode: string;
 }

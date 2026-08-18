@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { Router } from 'express';
 import { prisma } from '../lib/prisma';
+import { calculateShipping } from './shipping';
 
 export const router = Router();
 
@@ -47,7 +48,8 @@ function mapMidtransStatus(transactionStatus: string, fraudStatus?: string) {
 router.post('/checkout', async (req, res) => {
   const memberId = String(req.header('x-member-id') ?? '').trim();
   const items = Array.isArray(req.body?.items) ? req.body.items : [];
-  if (!memberId || items.length === 0) return res.status(400).json({ error: 'invalid checkout' });
+  const shipping = req.body?.shipping;
+  if (!memberId || items.length === 0 || !shipping) return res.status(400).json({ error: 'invalid checkout' });
 
   const member = await prisma.member.findUnique({ where: { id: memberId } });
   if (!member) return res.status(401).json({ error: 'member invalid' });
@@ -64,11 +66,25 @@ router.post('/checkout', async (req, res) => {
 
   const subtotal = normalized.reduce((sum: number, i: { productId: string; qty: number }) => sum + (map.get(i.productId)?.sellPrice ?? 0) * i.qty, 0);
   const ppnAmount = Math.round(subtotal * PPN_RATE);
-  const total = subtotal + ppnAmount;
+  const destinationId = Number(shipping.destinationId);
+  const totalQuantity = normalized.reduce((sum: number, item: { qty: number }) => sum + item.qty, 0);
+  const gramsPerItem = Math.max(1, Number(process.env.RAJAONGKIR_DEFAULT_WEIGHT_GRAMS ?? 1000));
+  const shippingOptions = await calculateShipping(destinationId, totalQuantity * gramsPerItem);
+  const selectedShipping = shippingOptions.find((option) =>
+    option.code === String(shipping.courierCode) && option.service === String(shipping.service)
+  );
+  if (!selectedShipping) return res.status(400).json({ error: 'Layanan pengiriman tidak valid atau sudah berubah' });
+  const shippingAmount = selectedShipping.cost;
+  const total = subtotal + ppnAmount + shippingAmount;
 
   const order = await prisma.$transaction(async (tx) => {
     const created = await tx.order.create({
-      data: { memberId: member.id, subtotalAmount: subtotal, ppnAmount, totalAmount: total },
+      data: {
+        memberId: member.id, subtotalAmount: subtotal, ppnAmount, shippingAmount, totalAmount: total,
+        shippingCourier: selectedShipping.code, shippingService: selectedShipping.service,
+        shippingDestinationId: destinationId,
+        shippingDestination: String(shipping.destinationLabel).slice(0, 300),
+      },
     });
 
     for (const item of normalized) {
@@ -119,6 +135,7 @@ router.post('/checkout', async (req, res) => {
           return { id: p.id, name: p.name.slice(0, 50), price: p.sellPrice, quantity: i.qty };
         }),
         { id: 'PPN11', name: 'PPN 11%', price: ppnAmount, quantity: 1 },
+        { id: 'SHIPPING', name: `${selectedShipping.name} ${selectedShipping.service}`.slice(0, 50), price: shippingAmount, quantity: 1 },
       ],
     }),
   });
@@ -138,6 +155,7 @@ router.post('/checkout', async (req, res) => {
     redirectUrl: snapJson.redirect_url,
     subtotal,
     ppnAmount,
+    shippingAmount,
     grossAmount: total,
   });
 });
@@ -161,7 +179,23 @@ router.post('/payment-notification', async (req, res) => {
   if (!isValidSignature) return res.status(401).json({ error: 'invalid signature' });
 
   const nextStatus = mapMidtransStatus(transactionStatus, fraudStatus);
-  await prisma.order.updateMany({ where: { paymentRef: orderId }, data: { paymentStatus: nextStatus } });
+  await prisma.$transaction(async (tx) => {
+    await tx.order.updateMany({ where: { paymentRef: orderId }, data: { paymentStatus: nextStatus } });
+    const order = await tx.order.findFirst({ where: { paymentRef: orderId }, include: { member: { select: { referredById: true } } } });
+    if (!order?.member.referredById) return;
+
+    if (nextStatus === 'paid') {
+      const setting = await tx.referralSetting.upsert({ where: { id: 1 }, update: {}, create: { id: 1, percentage: 5 } });
+      const bonusAmount = Math.round(order.subtotalAmount * setting.percentage / 100);
+      await tx.referralReward.upsert({
+        where: { orderId: order.id },
+        update: { status: 'earned' },
+        create: { referrerId: order.member.referredById, orderId: order.id, percentageSnapshot: setting.percentage, baseAmount: order.subtotalAmount, bonusAmount, status: 'earned' },
+      });
+    } else if (['denied', 'cancelled', 'expired', 'failed'].includes(nextStatus)) {
+      await tx.referralReward.updateMany({ where: { orderId: order.id }, data: { status: 'cancelled' } });
+    }
+  });
 
   return res.status(200).json({ ok: true });
 });

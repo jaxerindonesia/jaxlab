@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently -n api,web -c magenta,cyan \"npm run dev:api\" \"npm run dev:web\"",
     "dev:web": "vite",
-    "dev:api": "tsx watch src/api/index.ts",
+    "dev:api": "node --env-file=.env --import tsx --watch src/api/index.ts",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
