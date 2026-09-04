@@ -11,6 +11,41 @@ function getMidtransSnapUrl() {
   return `${baseUrl}/snap/v1/transactions`;
 }
 
+async function createXenditInvoice(params: {
+  orderId: string;
+  amount: number;
+  email: string;
+  description: string;
+  successRedirectUrl: string;
+  failureRedirectUrl: string;
+}) {
+  const secretKey = process.env.XENDIT_SECRET_KEY ?? '';
+  if (!secretKey) throw new Error('XENDIT_SECRET_KEY belum di-set');
+
+  const response = await fetch('https://api.xendit.co/v2/invoices', {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${Buffer.from(`${secretKey}:`).toString('base64')}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      external_id: `JAX-${params.orderId}-${randomUUID().slice(0, 8)}`,
+      amount: params.amount,
+      payer_email: params.email,
+      description: params.description,
+      success_redirect_url: params.successRedirectUrl,
+      failure_redirect_url: params.failureRedirectUrl,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Xendit error: ${errorText}`);
+  }
+
+  return await response.json() as { id: string; invoice_url: string; external_id: string };
+}
+
 function splitName(fullName: string) {
   const cleaned = fullName.trim();
   if (!cleaned) return { first_name: 'Customer', last_name: '' };
@@ -40,6 +75,13 @@ function mapMidtransStatus(transactionStatus: string, fraudStatus?: string) {
   if (transactionStatus === 'cancel') return 'cancelled';
   if (transactionStatus === 'expire') return 'expired';
   if (transactionStatus === 'failure') return 'failed';
+  return 'pending';
+}
+
+function mapXenditStatus(status: string) {
+  const normalized = status.toUpperCase();
+  if (normalized === 'PAID' || normalized === 'SETTLED') return 'paid';
+  if (normalized === 'EXPIRED') return 'expired';
   return 'pending';
 }
 
@@ -103,14 +145,48 @@ router.post('/checkout', async (req, res) => {
     return created;
   });
 
+  const publicBaseUrl = (process.env.PUBLIC_BASE_URL ?? '').replace(/\/$/, '');
+  const appBaseUrl = publicBaseUrl || `${req.protocol}://${req.get('host')}`;
+
+  if (process.env.XENDIT_SECRET_KEY) {
+    try {
+      const invoice = await createXenditInvoice({
+        orderId: order.id,
+        amount: total,
+        email: member.email,
+        description: `Pembayaran pesanan JaxLab ${order.id}`,
+        successRedirectUrl: `${appBaseUrl}/payment/result`,
+        failureRedirectUrl: `${appBaseUrl}/payment/error`,
+      });
+
+      await prisma.order.update({
+        where: { id: order.id },
+        data: { paymentRef: invoice.external_id, paymentProvider: 'xendit' },
+      });
+
+      return res.json({
+        orderId: order.id,
+        paymentRef: invoice.external_id,
+        snapToken: '',
+        redirectUrl: invoice.invoice_url,
+        paymentProvider: 'xendit',
+        subtotal,
+        ppnAmount,
+        shippingAmount,
+        grossAmount: total,
+      });
+    } catch (error) {
+      return res.status(502).json({ error: error instanceof Error ? error.message : 'Gagal membuat invoice Xendit' });
+    }
+  }
+
+  // Retained as a fallback for existing Midtrans deployments.
   const serverKey = process.env.MIDTRANS_SERVER_KEY ?? '';
-  if (!serverKey) return res.status(500).json({ error: 'MIDTRANS_SERVER_KEY belum di-set' });
+  if (!serverKey) return res.status(500).json({ error: 'XENDIT_SECRET_KEY belum di-set dan MIDTRANS_SERVER_KEY juga belum di-set' });
 
   const auth = Buffer.from(`${serverKey}:`).toString('base64');
   const externalOrderId = `JAX-${order.id}-${randomUUID().slice(0, 8)}`;
   const customerName = splitName(member.name);
-  const publicBaseUrl = (process.env.PUBLIC_BASE_URL ?? '').replace(/\/$/, '');
-  const appBaseUrl = publicBaseUrl || `${req.protocol}://${req.get('host')}`;
 
   const snapRes = await fetch(getMidtransSnapUrl(), {
     method: 'POST',
@@ -151,6 +227,7 @@ router.post('/checkout', async (req, res) => {
     paymentRef: externalOrderId,
     snapToken: snapJson.token,
     redirectUrl: snapJson.redirect_url,
+    paymentProvider: 'midtrans',
     subtotal,
     ppnAmount,
     shippingAmount,
@@ -191,6 +268,39 @@ router.post('/payment-notification', async (req, res) => {
         create: { referrerId: order.member.referredById, orderId: order.id, percentageSnapshot: setting.percentage, baseAmount: order.subtotalAmount, bonusAmount, status: 'earned' },
       });
     } else if (['denied', 'cancelled', 'expired', 'failed'].includes(nextStatus)) {
+      await tx.referralReward.updateMany({ where: { orderId: order.id }, data: { status: 'cancelled' } });
+    }
+  });
+
+  return res.status(200).json({ ok: true });
+});
+
+// Xendit callback is kept separate from the existing Midtrans webhook.
+router.post('/xendit-webhook', async (req, res) => {
+  const callbackToken = process.env.XENDIT_CALLBACK_TOKEN ?? '';
+  if (callbackToken && req.header('x-callback-token') !== callbackToken) {
+    return res.status(401).json({ error: 'invalid callback token' });
+  }
+
+  const externalId = String(req.body?.external_id ?? '').trim();
+  const status = String(req.body?.status ?? 'PENDING');
+  if (!externalId) return res.status(400).json({ error: 'invalid Xendit payload' });
+
+  const nextStatus = mapXenditStatus(status);
+  await prisma.$transaction(async (tx) => {
+    await tx.order.updateMany({ where: { paymentRef: externalId }, data: { paymentStatus: nextStatus } });
+    const order = await tx.order.findFirst({ where: { paymentRef: externalId }, include: { member: { select: { referredById: true } } } });
+    if (!order?.member.referredById) return;
+
+    if (nextStatus === 'paid') {
+      const setting = await tx.referralSetting.upsert({ where: { id: 1 }, update: {}, create: { id: 1, percentage: 5 } });
+      const bonusAmount = Math.round(order.subtotalAmount * setting.percentage / 100);
+      await tx.referralReward.upsert({
+        where: { orderId: order.id },
+        update: { status: 'earned' },
+        create: { referrerId: order.member.referredById, orderId: order.id, percentageSnapshot: setting.percentage, baseAmount: order.subtotalAmount, bonusAmount, status: 'earned' },
+      });
+    } else if (nextStatus === 'expired') {
       await tx.referralReward.updateMany({ where: { orderId: order.id }, data: { status: 'cancelled' } });
     }
   });

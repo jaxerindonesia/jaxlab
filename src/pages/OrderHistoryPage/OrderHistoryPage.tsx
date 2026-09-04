@@ -138,6 +138,10 @@ const OrderHistoryPage: React.FC = () => {
                                 alert('Link pembayaran belum tersedia lagi. Silakan buat order baru dari keranjang.');
                                 return;
                               }
+                              if (session.paymentProvider === 'xendit' && session.redirectUrl) {
+                                window.location.href = session.redirectUrl;
+                                return;
+                              }
                               if (window.snap) {
                                 window.snap.pay(session.snapToken);
                                 return;

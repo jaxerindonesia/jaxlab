@@ -7,6 +7,7 @@ export type PaymentSession = {
   paymentRef: string;
   snapToken: string;
   redirectUrl?: string;
+  paymentProvider?: 'xendit' | 'midtrans';
   createdAt: string;
 };
 
@@ -31,6 +32,7 @@ export function savePaymentSession(response: CheckoutResponseDto): void {
     paymentRef: response.paymentRef,
     snapToken: response.snapToken,
     redirectUrl: response.redirectUrl,
+    paymentProvider: response.paymentProvider,
     createdAt: new Date().toISOString(),
   };
   writeSessions(sessions);

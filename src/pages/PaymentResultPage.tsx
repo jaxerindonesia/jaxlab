@@ -51,7 +51,7 @@ export default function PaymentResultPage() {
       subTextColor: 'text-[#7b6a47]',
       buttonPrimary: 'bg-[#b66d00]',
       buttonSecondary: 'bg-[#f8f2e5] text-[#725417]',
-      message: 'Pembayaran kamu masih menunggu konfirmasi dari Midtrans.',
+      message: 'Pembayaran kamu masih menunggu konfirmasi dari penyedia pembayaran.',
       footer: 'Kamu bisa cek lagi statusnya dari history order setelah beberapa saat.',
       primaryLink: '/orders/history',
       primaryLabel: 'Lihat History',

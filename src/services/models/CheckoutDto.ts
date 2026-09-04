@@ -13,6 +13,7 @@ export interface CheckoutResponseDto {
   paymentRef: string;
   snapToken: string;
   redirectUrl?: string;
+  paymentProvider?: 'xendit' | 'midtrans';
   grossAmount: number;
   ppnAmount: number;
   subtotal: number;

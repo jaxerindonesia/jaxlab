@@ -177,6 +177,10 @@ export default function CartPage() {
       savePaymentSession(res);
       clearCart();
       setCartState([]);
+      if (res.paymentProvider === "xendit" && res.redirectUrl) {
+        window.location.href = res.redirectUrl;
+        return;
+      }
       if (!window.snap) {
         if (res.redirectUrl) {
           window.location.href = res.redirectUrl;
