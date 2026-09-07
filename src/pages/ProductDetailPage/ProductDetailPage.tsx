@@ -1,3 +1,4 @@
+import { formatWeight } from '../../services/format-weight';
 import React, { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -319,12 +320,16 @@ const ProductDetailPage: React.FC = () => {
                                                 {openSection === 'specs' && (
                                                     <div className={accordionContentClass}>
                                                         <ul className="m-0 list-none p-0 [&_li]:flex [&_li]:items-start [&_li]:justify-between [&_li]:gap-4 [&_li]:border-t [&_li]:border-[rgba(20,85,46,0.08)] [&_li]:py-[0.65rem] [&_li:first-child]:border-t-0 [&_li:first-child]:pt-0 max-[768px]:[&_li]:flex-col max-[768px]:[&_li]:gap-[0.2rem] [&_strong]:font-extrabold [&_strong]:!text-[#152018] [&_span]:text-right [&_span]:!text-[#5d675f] max-[768px]:[&_span]:text-left">
-                                                            {p.specs.map((spec, index) => (
+                                                            {p.specs.filter((spec) => spec.label.trim().toLowerCase() !== 'berat pengiriman').map((spec, index) => (
                                                                 <li key={index}>
                                                                     <strong>{spec.label}</strong>
                                                                     <span>{spec.value}</span>
                                                                 </li>
                                                             ))}
+                                                            <li>
+                                                                <strong>Berat pengiriman{p.weightEstimated ? ' (estimasi)' : ''}</strong>
+                                                                <span>{formatWeight(p.weightGrams)}</span>
+                                                            </li>
                                                         </ul>
                                                     </div>
                                                 )}

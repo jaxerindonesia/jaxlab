@@ -13,6 +13,7 @@ import {
   Truck,
   UserRound,
 } from "lucide-react";
+import { formatWeight } from "../../services/format-weight";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { getMember } from "../../services/auth";
@@ -74,7 +75,7 @@ export default function CartPage() {
   const [selectedShipping, setSelectedShipping] =
     useState<ShippingOption | null>(null);
   const [loadingShipping, setLoadingShipping] = useState(false);
-  const totalCartQuantity = cart.reduce((sum, item) => sum + item.qty, 0);
+
 
   useEffect(() => {
     getAllProducts()
@@ -110,52 +111,48 @@ export default function CartPage() {
   const shippingAmount = selectedShipping?.cost ?? 0;
   const total = subtotal + shippingAmount;
 
-  const chooseDestination = async (destination: ShippingDestination) => {
+  const totalWeight = rows.reduce((sum, row) => sum + row.product.weightGrams * row.qty, 0);
+  const weightEstimated = rows.some((row) => row.product.weightEstimated);
+
+  const chooseDestination = (destination: ShippingDestination) => {
     setSelectedDestination(destination);
     setDestinationQuery(destination.label);
     setDestinations([]);
     setSelectedShipping(null);
-    setLoadingShipping(true);
-    try {
-      const options = await getShippingCosts(
-        destination.id,
-        cart.reduce((sum, item) => sum + item.qty, 0),
-      );
-      setShippingOptions(options);
-    } catch (error) {
-      setShippingOptions([]);
-      alert((error as Error).message || "Gagal mengambil ongkir");
-    } finally {
-      setLoadingShipping(false);
-    }
   };
 
   useEffect(() => {
-    if (!member?.shippingDestinationId || !member.shippingDestination) return;
-    const destination: ShippingDestination = {
-      id: member.shippingDestinationId,
-      label: member.shippingDestination,
-      province_name: member.province ?? "",
-      city_name: member.city ?? "",
-      district_name: "",
-      subdistrict_name: "",
-      zip_code: member.postalCode ?? "",
-    };
-    void chooseDestination(destination);
-    // Muat tarif langsung dari profil dan perbarui ketika jumlah barang berubah.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [member?.shippingDestinationId, totalCartQuantity]);
+    let active = true;
+    setSelectedShipping(null);
+    setShippingOptions([]);
+    if (!selectedDestination || !cart.length) {
+      setLoadingShipping(false);
+      return;
+    }
+    setLoadingShipping(true);
+    getShippingCosts(selectedDestination.id, cart)
+      .then((options) => { if (active) setShippingOptions(options); })
+      .catch((error: Error) => {
+        if (active) alert(error.message || "Gagal mengambil ongkir");
+      })
+      .finally(() => { if (active) setLoadingShipping(false); });
+    return () => { active = false; };
+  }, [selectedDestination, cart]);
 
   const updateQty = (productId: string, qty: number) => {
     const next = cart.map((i) =>
       i.productId === productId ? { ...i, qty: Math.max(1, qty) } : i,
     );
+    setSelectedShipping(null);
+    setShippingOptions([]);
     setCart(next);
     setCartState(next);
   };
 
   const removeItem = (productId: string) => {
     const next = cart.filter((i) => i.productId !== productId);
+    setSelectedShipping(null);
+    setShippingOptions([]);
     setCart(next);
     setCartState(next);
   };
@@ -315,6 +312,10 @@ export default function CartPage() {
                         <p className="mb-0 mt-2 text-sm font-semibold !text-[#607066]">
                           {formatRupiah(row.product.price)} / item
                         </p>
+                        <p className="mb-0 mt-1 text-xs leading-relaxed !text-[#68736b]">
+                          Berat{row.product.weightEstimated ? " (estimasi)" : ""}: {formatWeight(row.product.weightGrams)} / item
+                          {row.qty > 1 && <> ? Total {formatWeight(row.product.weightGrams * row.qty)}</>}
+                        </p>
                       </div>
                       <div className="flex min-w-[180px] flex-col items-end gap-3 max-[640px]:col-span-2 max-[640px]:min-w-0 max-[640px]:flex-row max-[640px]:items-center max-[640px]:justify-between">
                         <strong className="text-lg !text-[#193421]">
@@ -416,7 +417,7 @@ export default function CartPage() {
                 )}
                 {shippingOptions.length > 0 && (
                   <div className="mt-4 flex snap-x gap-3 overflow-x-auto pb-2 [scrollbar-width:thin]">
-                    {shippingOptions.slice(0, 12).map((option) => {
+                    {shippingOptions.map((option) => {
                       const selected =
                         selectedShipping?.code === option.code &&
                         selectedShipping?.service === option.service;
@@ -443,6 +444,10 @@ export default function CartPage() {
                 )}
               </div>
               <div className="space-y-3 text-sm !text-[#536258]">
+                <div className="flex justify-between gap-4">
+                  <span>Total Berat{weightEstimated ? " (estimasi)" : ""}</span>
+                  <strong className="!text-[#31483a]">{formatWeight(totalWeight)}</strong>
+                </div>
                 <div className="flex justify-between gap-4">
                   <span>Subtotal Produk</span>
                   <strong className="!text-[#31483a]">
@@ -490,7 +495,7 @@ export default function CartPage() {
               <button
                 className="inline-flex min-h-[54px] w-full items-center justify-center gap-2 rounded-xl border-0 bg-[#14552e] px-5 font-extrabold text-white shadow-[0_12px_28px_rgba(20,85,46,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0f4625] disabled:cursor-not-allowed disabled:opacity-55"
                 onClick={checkout}
-                disabled={!rows.length || !selectedShipping || loadingCheckout}
+                disabled={!rows.length || !selectedShipping || loadingShipping || loadingCheckout}
               >
                 <CreditCard size={19} />{" "}
                 {loadingCheckout ? "Memproses..." : "Bayar Online"}

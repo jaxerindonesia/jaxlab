@@ -2,6 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { Router } from 'express';
 import { prisma } from '../lib/prisma';
 import { calculateShipping } from './shipping';
+import { getProductWeight } from '../lib/product-weight';
 
 export const router = Router();
 
@@ -95,7 +96,7 @@ router.post('/checkout', async (req, res) => {
   if (!member) return res.status(401).json({ error: 'member invalid' });
 
   const productIds = items.map((i: { productId: string }) => i.productId);
-  const products = await prisma.product.findMany({ where: { id: { in: productIds }, deletedAt: null }, select: { id: true, name: true, sellPrice: true } });
+  const products = await prisma.product.findMany({ where: { id: { in: productIds }, deletedAt: null }, select: { id: true, name: true, sellPrice: true, detail: { where: { deletedAt: null }, select: { specs: true } } } });
   const map = new Map(products.map((p) => [p.id, p]));
 
   const normalized = items
@@ -108,9 +109,8 @@ router.post('/checkout', async (req, res) => {
   // Harga produk sudah termasuk PPN.
   const ppnAmount = 0;
   const destinationId = Number(shipping.destinationId);
-  const totalQuantity = normalized.reduce((sum: number, item: { qty: number }) => sum + item.qty, 0);
-  const gramsPerItem = Math.max(1, Number(process.env.RAJAONGKIR_DEFAULT_WEIGHT_GRAMS ?? 1000));
-  const shippingOptions = await calculateShipping(destinationId, totalQuantity * gramsPerItem);
+  const totalWeight = normalized.reduce((sum: number, item: { productId: string; qty: number }) => sum + getProductWeight(map.get(item.productId)?.detail?.specs).weightGrams * item.qty, 0);
+  const shippingOptions = await calculateShipping(destinationId, totalWeight);
   const selectedShipping = shippingOptions.find((option) =>
     option.code === String(shipping.courierCode) && option.service === String(shipping.service)
   );

@@ -20,6 +20,8 @@ import {
 
 function blankProduct(): Omit<ProductDto, "id"> {
   return {
+    weightGrams: 0,
+    weightEstimated: true,
     name: "",
     subtitle: "",
     description: "",

@@ -5,6 +5,8 @@ export type ApiProduct = {
   description: string;
   longDescription: string;
   price: number;
+  weightGrams: number;
+  weightEstimated: boolean;
   originalPrice?: number;
   category: string;
   badge?: string;

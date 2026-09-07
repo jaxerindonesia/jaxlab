@@ -223,6 +223,7 @@ export function ProductForm({ editing, form, categories, badges, newCat, newBadg
         </div>
         <div className="space-y-2">
           <label className={labelClass}>Spesifikasi</label>
+          <p className="text-xs text-slate-400">Tambahkan label "Berat pengiriman" dengan nilai seperti "500 g" atau "1,5 kg", termasuk kemasan. Berat ini digunakan untuk menghitung ongkir. Jika belum diisi, sistem memakai estimasi berat bawaan.</p>
           {form.specs.map((s, i) => (
             <div key={i} className="grid grid-cols-1 gap-2 md:grid-cols-[1fr_1fr_160px]">
               <Input className="text-sm" disabled={loading} value={s.label} placeholder="Label" onChange={(e) => {

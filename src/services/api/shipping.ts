@@ -6,8 +6,8 @@ export type ShippingOption = { name: string; code: string; service: string; desc
 export const searchShippingDestinations = (search: string) =>
   api<ShippingDestination[]>(`/api/shipping/destinations?search=${encodeURIComponent(search)}`);
 
-export const getShippingCosts = (destinationId: number, quantity: number) =>
+export const getShippingCosts = (destinationId: number, items: { productId: string; qty: number }[]) =>
   api<ShippingOption[]>('/api/shipping/costs', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ destinationId, quantity }),
+    body: JSON.stringify({ destinationId, items }),
   });

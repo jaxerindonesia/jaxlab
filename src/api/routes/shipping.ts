@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { prisma } from '../lib/prisma';
+import { getProductWeight } from '../lib/product-weight';
 
 export const router = Router();
 
@@ -36,7 +38,7 @@ export async function calculateShipping(destinationId: number, weight: number): 
     origin: String(origin),
     destination: String(destinationId),
     weight: String(Math.max(1, Math.round(weight))),
-    courier: process.env.RAJAONGKIR_COURIERS ?? 'jne:sicepat:jnt:anteraja:pos:tiki',
+    courier: process.env.RAJAONGKIR_COURIERS ?? 'jne:sicepat:ide:sap:jnt:ninja:tiki:lion:anteraja:pos:ncs:rex:rpx:sentral:star:wahana',
     price: 'lowest',
   });
   const data = await rajaOngkir('/calculate/domestic-cost', {
@@ -61,11 +63,20 @@ router.get('/destinations', async (req, res) => {
 
 router.post('/costs', async (req, res) => {
   const destinationId = Number(req.body?.destinationId);
-  const quantity = Math.max(1, Number(req.body?.quantity ?? 1));
+  const items = req.body?.items as { productId: string; qty: number }[];
+  if (!Array.isArray(items) || !items.length || items.some((item) => !item || typeof item.productId !== 'string' || !Number.isSafeInteger(item.qty) || item.qty <= 0)) {
+    return res.status(400).json({ error: 'Barang tidak valid' });
+  }
   if (!Number.isInteger(destinationId) || destinationId <= 0) return res.status(400).json({ error: 'Tujuan tidak valid' });
   try {
-    const gramsPerItem = Math.max(1, Number(process.env.RAJAONGKIR_DEFAULT_WEIGHT_GRAMS ?? 1000));
-    return res.json(await calculateShipping(destinationId, quantity * gramsPerItem));
+    const products = await prisma.product.findMany({
+      where: { id: { in: items.map((item) => item.productId) }, deletedAt: null },
+      select: { id: true, detail: { where: { deletedAt: null }, select: { specs: true } } },
+    });
+    const weights = new Map(products.map((product) => [product.id, getProductWeight(product.detail?.specs).weightGrams]));
+    if (items.some((item) => !weights.has(item.productId))) return res.status(400).json({ error: 'Produk tidak tersedia' });
+    const weight = items.reduce((sum, item) => sum + weights.get(item.productId)! * item.qty, 0);
+    return res.json(await calculateShipping(destinationId, weight));
   } catch (error) {
     return res.status(502).json({ error: error instanceof Error ? error.message : 'Gagal menghitung ongkir' });
   }

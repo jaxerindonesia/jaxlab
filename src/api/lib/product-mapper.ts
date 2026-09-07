@@ -1,4 +1,5 @@
 import type { ApiProduct } from '../contexts/product';
+import { getProductWeight } from './product-weight';
 
 type ProductRow = {
   id: string;
@@ -41,6 +42,7 @@ export function toApiProduct(row: ProductRow): ApiProduct {
     description: row.shortDescription,
     longDescription: detail?.description ?? '',
     price: row.sellPrice,
+    ...getProductWeight(detail?.specs),
     originalPrice: row.strikeThroughPrice ?? undefined,
     category: row.category?.name ?? '',
     badge: detail?.badge ?? undefined,
