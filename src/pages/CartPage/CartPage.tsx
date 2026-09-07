@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
@@ -75,6 +75,7 @@ export default function CartPage() {
   const [selectedShipping, setSelectedShipping] =
     useState<ShippingOption | null>(null);
   const [loadingShipping, setLoadingShipping] = useState(false);
+  const shippingDrag = useRef({ pointerId: -1, startX: 0, scrollLeft: 0, moved: false });
 
 
   useEffect(() => {
@@ -416,7 +417,55 @@ export default function CartPage() {
                   </p>
                 )}
                 {shippingOptions.length > 0 && (
-                  <div className="mt-4 flex snap-x gap-3 overflow-x-auto pb-2 [scrollbar-width:thin]">
+                  <div
+                    role="region"
+                    aria-label="Pilihan pengiriman, geser ke samping untuk melihat layanan lainnya"
+                    className="mt-4 flex cursor-grab select-none gap-3 overflow-x-auto overscroll-x-contain pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&_button]:cursor-grab data-[dragging=true]:cursor-grabbing data-[dragging=true]:[&_button]:cursor-grabbing"
+                    onPointerDown={(event) => {
+                      shippingDrag.current.moved = false;
+                      if (event.pointerType !== "mouse" || event.button !== 0) return;
+                      shippingDrag.current = {
+                        pointerId: event.pointerId,
+                        startX: event.clientX,
+                        scrollLeft: event.currentTarget.scrollLeft,
+                        moved: false,
+                      };
+                    }}
+                    onPointerMove={(event) => {
+                      const drag = shippingDrag.current;
+                      if (drag.pointerId !== event.pointerId || event.buttons !== 1) return;
+                      const distance = event.clientX - drag.startX;
+                      if (!drag.moved && Math.abs(distance) < 5) return;
+                      if (!drag.moved) {
+                        drag.moved = true;
+                        event.currentTarget.setPointerCapture(event.pointerId);
+                        event.currentTarget.dataset.dragging = "true";
+                      }
+                      event.preventDefault();
+                      event.currentTarget.scrollLeft = drag.scrollLeft - distance;
+                    }}
+                    onPointerUp={(event) => {
+                      shippingDrag.current.pointerId = -1;
+                      delete event.currentTarget.dataset.dragging;
+                      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+                        event.currentTarget.releasePointerCapture(event.pointerId);
+                      }
+                    }}
+                    onPointerCancel={(event) => {
+                      shippingDrag.current.pointerId = -1;
+                      delete event.currentTarget.dataset.dragging;
+                    }}
+                    onLostPointerCapture={(event) => {
+                      shippingDrag.current.pointerId = -1;
+                      delete event.currentTarget.dataset.dragging;
+                    }}
+                    onClickCapture={(event) => {
+                      if (shippingDrag.current.moved && event.detail > 0) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                      }
+                    }}
+                  >
                     {shippingOptions.map((option) => {
                       const selected =
                         selectedShipping?.code === option.code &&
