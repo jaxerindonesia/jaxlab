@@ -45,7 +45,7 @@ declare global {
   }
 }
 
-type CartRow = { productId: string; qty: number; product: ProductDto };
+type CartRow = { productId: string; qty: number; product: ProductDto; subtotal: number; weightGrams: number };
 
 export default function CartPage() {
   const nav = useNavigate();
@@ -75,6 +75,7 @@ export default function CartPage() {
   const [selectedShipping, setSelectedShipping] =
     useState<ShippingOption | null>(null);
   const [loadingShipping, setLoadingShipping] = useState(false);
+  const preferredShipping = useRef<Pick<ShippingOption, "code" | "service"> | null>(null);
   const shippingDrag = useRef({ pointerId: -1, startX: 0, scrollLeft: 0, moved: false });
 
 
@@ -102,20 +103,26 @@ export default function CartPage() {
       cart
         .map((c) => {
           const product = products.find((p) => p.id === c.productId);
-          return product ? { ...c, product } : null;
+          return product ? {
+            ...c,
+            product,
+            subtotal: product.price * c.qty,
+            weightGrams: product.weightGrams * c.qty,
+          } : null;
         })
         .filter((r): r is CartRow => r !== null),
     [cart, products],
   );
 
-  const subtotal = rows.reduce((sum, r) => sum + r.product.price * r.qty, 0);
+  const subtotal = rows.reduce((sum, row) => sum + row.subtotal, 0);
   const shippingAmount = selectedShipping?.cost ?? 0;
   const total = subtotal + shippingAmount;
 
-  const totalWeight = rows.reduce((sum, row) => sum + row.product.weightGrams * row.qty, 0);
+  const totalWeight = rows.reduce((sum, row) => sum + row.weightGrams, 0);
   const weightEstimated = rows.some((row) => row.product.weightEstimated);
 
   const chooseDestination = (destination: ShippingDestination) => {
+    preferredShipping.current = null;
     setSelectedDestination(destination);
     setDestinationQuery(destination.label);
     setDestinations([]);
@@ -126,26 +133,38 @@ export default function CartPage() {
     let active = true;
     setSelectedShipping(null);
     setShippingOptions([]);
-    if (!selectedDestination || !cart.length) {
+    if (!selectedDestination || !cart.length || rows.length !== cart.length || totalWeight <= 0) {
       setLoadingShipping(false);
       return;
     }
     setLoadingShipping(true);
     getShippingCosts(selectedDestination.id, cart)
-      .then((options) => { if (active) setShippingOptions(options); })
+      .then((options) => {
+        if (!active) return;
+        setShippingOptions(options);
+        // Gunakan tarif terbaru untuk layanan yang sama setelah quantity berubah.
+        const preferred = preferredShipping.current;
+        const refreshed = options.find((option) =>
+          option.code === preferred?.code && option.service === preferred.service
+        ) ?? null;
+        setSelectedShipping(refreshed);
+        if (!refreshed) preferredShipping.current = null;
+      })
       .catch((error: Error) => {
         if (active) alert(error.message || "Gagal mengambil ongkir");
       })
       .finally(() => { if (active) setLoadingShipping(false); });
     return () => { active = false; };
-  }, [selectedDestination, cart]);
+  }, [selectedDestination, cart, rows.length, totalWeight]);
 
   const updateQty = (productId: string, qty: number) => {
+    if (!Number.isSafeInteger(qty) || qty < 1 || cart.find((item) => item.productId === productId)?.qty === qty) return;
     const next = cart.map((i) =>
       i.productId === productId ? { ...i, qty: Math.max(1, qty) } : i,
     );
     setSelectedShipping(null);
     setShippingOptions([]);
+    setLoadingShipping(Boolean(selectedDestination));
     setCart(next);
     setCartState(next);
   };
@@ -154,12 +173,13 @@ export default function CartPage() {
     const next = cart.filter((i) => i.productId !== productId);
     setSelectedShipping(null);
     setShippingOptions([]);
+    setLoadingShipping(Boolean(selectedDestination && next.length));
     setCart(next);
     setCartState(next);
   };
 
   const checkout = async () => {
-    if (!member || !cart.length || !selectedDestination || !selectedShipping)
+    if (!member || !cart.length || !selectedDestination || !selectedShipping || loadingShipping)
       return;
     setLoadingCheckout(true);
     try {
@@ -315,12 +335,12 @@ export default function CartPage() {
                         </p>
                         <p className="mb-0 mt-1 text-xs leading-relaxed !text-[#68736b]">
                           Berat{row.product.weightEstimated ? " (estimasi)" : ""}: {formatWeight(row.product.weightGrams)} / item
-                          {row.qty > 1 && <> ? Total {formatWeight(row.product.weightGrams * row.qty)}</>}
+                          {row.qty > 1 && <> ? Total {formatWeight(row.weightGrams)}</>}
                         </p>
                       </div>
                       <div className="flex min-w-[180px] flex-col items-end gap-3 max-[640px]:col-span-2 max-[640px]:min-w-0 max-[640px]:flex-row max-[640px]:items-center max-[640px]:justify-between">
                         <strong className="text-lg !text-[#193421]">
-                          {formatRupiah(row.product.price * row.qty)}
+                          {formatRupiah(row.subtotal)}
                         </strong>
                         <div className="flex items-center gap-2">
                           <div className="inline-flex h-10 items-center rounded-xl border border-[#d9e6dc] bg-[#f8fbf8] p-1">
@@ -387,6 +407,7 @@ export default function CartPage() {
                       value={destinationQuery}
                       onChange={(event) => {
                         setDestinationQuery(event.target.value);
+                        preferredShipping.current = null;
                         setSelectedDestination(null);
                         setSelectedShipping(null);
                         setShippingOptions([]);
@@ -474,7 +495,10 @@ export default function CartPage() {
                         <button
                           key={`${option.code}-${option.service}`}
                           type="button"
-                          onClick={() => setSelectedShipping(option)}
+                          onClick={() => {
+                            preferredShipping.current = { code: option.code, service: option.service };
+                            setSelectedShipping(option);
+                          }}
                           className={`flex min-w-[190px] flex-[0_0_190px] snap-start flex-col items-start rounded-xl border px-3 py-3 text-left transition ${selected ? "border-[#14552e] bg-[#dff0e3] ring-2 ring-[#14552e]/10" : "border-[#dce9df] bg-white hover:border-[#9bbca4]"}`}
                         >
                           <strong className="line-clamp-1 text-xs uppercase !text-[#25432f]">
@@ -508,7 +532,7 @@ export default function CartPage() {
                     <Truck size={15} /> Ongkos Kirim
                   </span>
                   <strong className="!text-[#31483a]">
-                    {selectedShipping ? formatRupiah(shippingAmount) : "-"}
+                    {loadingShipping ? "Menghitung..." : selectedShipping ? formatRupiah(shippingAmount) : "-"}
                   </strong>
                 </div>
               </div>
@@ -517,7 +541,7 @@ export default function CartPage() {
                   Total Pembayaran
                 </span>
                 <strong className="text-xl !text-[#14552e]">
-                  {formatRupiah(total)}
+                  {loadingShipping ? "Menghitung..." : formatRupiah(total)}
                 </strong>
               </div>
 
@@ -553,6 +577,10 @@ export default function CartPage() {
                 <button
                   className="mt-3 h-11 w-full border-0 bg-transparent text-sm font-bold !text-[#7a4944] hover:underline"
                   onClick={() => {
+                    preferredShipping.current = null;
+                    setSelectedShipping(null);
+                    setShippingOptions([]);
+                    setLoadingShipping(false);
                     clearCart();
                     setCartState([]);
                   }}
