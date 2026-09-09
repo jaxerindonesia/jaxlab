@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, ShoppingCart, UserRound, X } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { AUTH_CHANGED_EVENT, getMember } from '../services/auth';
 import { CART_CHANGED_EVENT, getCart } from '../services/cart';
 
@@ -28,7 +28,7 @@ const Header: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        const syncMember = () => setMember(getMember());
+        const syncMember = () => { setMember(getMember()); syncCart(); };
         const syncCart = () => setCartCount(getCart().reduce((total, item) => total + item.qty, 0));
 
         window.addEventListener(AUTH_CHANGED_EVENT, syncMember);
@@ -94,14 +94,13 @@ const Header: React.FC = () => {
                         </button>
                     </div>
                     <div className="mt-5 min-[1025px]:hidden">
-                        <a
-                            href={`https://wa.me/6281234567890?text=${encodeURIComponent('Hai! Saya tertarik dengan produk JaxLab. Bisa info lebih lanjut?')}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                        <Link
+                            to="/products"
+                            onClick={() => setIsMenuOpen(false)}
                             className="inline-flex items-center gap-1.5 rounded-full bg-[#4ade80] px-[1.4rem] py-[0.55rem] text-[0.88rem] font-semibold !text-[#0b0f0b] no-underline transition-all duration-300 hover:-translate-y-px hover:bg-[#22c55e] hover:shadow-[0_4px_15px_rgba(74,222,128,0.3)]"
                         >
                             Beli Sekarang
-                        </a>
+                        </Link>
                     </div>
                     <button aria-label="Tutup menu" onClick={() => setIsMenuOpen(false)} className="absolute right-5 top-5 block bg-transparent text-white min-[1025px]:hidden"><X /></button>
                 </nav>
@@ -113,14 +112,12 @@ const Header: React.FC = () => {
                     <button type="button" onClick={() => navigate(member ? '/member' : '/member/auth')} className="hidden min-h-10 max-w-[140px] items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 text-sm font-semibold !text-white transition hover:border-[#4ade80]/50 hover:bg-white/10 min-[1025px]:inline-flex" title={member ? `Akun ${member.name}` : 'Masuk atau daftar'}>
                         <UserRound size={18} /> <span className="truncate">{member ? member.name : 'Masuk'}</span>
                     </button>
-                    <a
-                        href={`https://wa.me/6281234567890?text=${encodeURIComponent('Hai! Saya tertarik dengan produk JaxLab. Bisa info lebih lanjut?')}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    <Link
+                        to="/products"
                         className="hidden items-center gap-1.5 rounded-full bg-[#4ade80] px-[1.15rem] py-[0.55rem] text-[0.85rem] font-semibold !text-[#0b0f0b] no-underline transition-all duration-300 hover:-translate-y-px hover:bg-[#22c55e] hover:shadow-[0_4px_15px_rgba(74,222,128,0.3)] min-[1025px]:inline-flex"
                     >
                         Beli Sekarang
-                    </a>
+                    </Link>
                     <button aria-label="Buka menu" className="block bg-transparent min-[1025px]:hidden" onClick={() => setIsMenuOpen(true)}>
                         <Menu color="white" />
                     </button>

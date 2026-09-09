@@ -16,8 +16,8 @@ import {
 import { formatWeight } from "../../services/format-weight";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import { getMember } from "../../services/auth";
-import { clearCart, getCart, setCart } from "../../services/cart";
+import { AUTH_CHANGED_EVENT, getMember } from "../../services/auth";
+import { CART_CHANGED_EVENT, clearCart, getCart, setCart } from "../../services/cart";
 import {
   checkoutOrder,
   formatRupiah,
@@ -51,6 +51,17 @@ export default function CartPage() {
   const nav = useNavigate();
   const member = getMember();
   const [cart, setCartState] = useState(getCart());
+  useEffect(() => {
+    const sync = () => setCartState(getCart());
+    window.addEventListener(CART_CHANGED_EVENT, sync);
+    window.addEventListener(AUTH_CHANGED_EVENT, sync);
+    window.addEventListener('storage', sync);
+    return () => {
+      window.removeEventListener(CART_CHANGED_EVENT, sync);
+      window.removeEventListener(AUTH_CHANGED_EVENT, sync);
+      window.removeEventListener('storage', sync);
+    };
+  }, []);
   const [products, setProducts] = useState<ProductDto[]>([]);
   const [loadingCheckout, setLoadingCheckout] = useState(false);
   const [destinationQuery, setDestinationQuery] = useState(

@@ -5,6 +5,8 @@ import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { TagPill } from "../../components/ui/site";
 import { setMember } from "../../services/auth";
+import { toast } from "sonner";
+import { claimGuestCart } from '../../services/cart';
 import {
   loginMember,
   registerMember,
@@ -21,6 +23,8 @@ export default function MemberAuthPage() {
     address: "",
     phoneWa: "",
     password: "",
+    isAffiliate: false,
+    affiliatePhotos: [] as string[],
     shippingDestinationId: 0,
     shippingDestination: "",
     province: "",
@@ -35,7 +39,7 @@ export default function MemberAuthPage() {
     [],
   );
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [uploading, setUploading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
@@ -69,18 +73,22 @@ export default function MemberAuthPage() {
   };
 
   const submit = async () => {
+    if (loading || uploading) return;
+    if (!form.email.trim() || !form.password) { toast.error("Masukkan email dan password."); return; }
+    if (mode === 'register' && form.isAffiliate && !form.affiliatePhotos.length) { toast.error('Unggah minimal satu foto pendukung affiliate.'); return; }
     setLoading(true);
-    setError("");
     try {
       const member =
         mode === "login"
           ? await loginMember({ email: form.email, password: form.password })
           : await registerMember(form);
       setMember(member);
+      await claimGuestCart();
+      toast.success(mode === 'login' ? 'Berhasil masuk.' : 'Akun berhasil didaftarkan.');
       nav("/products");
     } catch (e) {
       const message = (e as Error).message;
-      setError(
+      toast.error(
         message === "Failed to fetch"
           ? "Tidak dapat terhubung ke server. Pastikan layanan API sedang berjalan."
           : message || "Gagal memproses permintaan",
@@ -88,6 +96,26 @@ export default function MemberAuthPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const uploadPhotos = async (files: FileList | null) => {
+    if (!files) return;
+    const chosen = Array.from(files);
+    if (chosen.length + form.affiliatePhotos.length > 5) { toast.error('Maksimal 5 foto pendukung.'); return; }
+    if (chosen.some((file) => !['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 2 * 1024 * 1024)) {
+      toast.error('Gunakan foto JPG, PNG, atau WebP, maksimal 2 MB per file.'); return;
+    }
+    setUploading(true);
+    try {
+      const photos = await Promise.all(chosen.map((file) => new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = () => reject(new Error('Foto gagal dibaca. Silakan coba lagi.'));
+        reader.readAsDataURL(file);
+      })));
+      setForm((current) => ({ ...current, affiliatePhotos: [...current.affiliatePhotos, ...photos] }));
+    } catch (error) { toast.error((error as Error).message); }
+    finally { setUploading(false); }
   };
 
   return (
@@ -301,14 +329,30 @@ export default function MemberAuthPage() {
               </label>
             </div>
 
-            {error ? (
-              <p className="mt-3.5 text-[0.92rem] text-[#b42318]">{error}</p>
-            ) : null}
+            {mode === 'register' && (
+              <fieldset className="mt-5 rounded-2xl border border-[#dce9df] bg-[#f5faf6] p-4 text-[#304337]" disabled={loading || uploading}>
+                <legend className="px-1 font-semibold">Ingin menjadi affiliate?</legend>
+                <div className="flex gap-5">
+                  <label className="flex items-center gap-2"><input type="radio" name="affiliate" checked={!form.isAffiliate} onChange={() => setForm({ ...form, isAffiliate: false, affiliatePhotos: [] })} /> Tidak</label>
+                  <label className="flex items-center gap-2"><input type="radio" name="affiliate" checked={form.isAffiliate} onChange={() => setForm({ ...form, isAffiliate: true })} /> Ya</label>
+                </div>
+                {form.isAffiliate && <div className="mt-4">
+                  <label className="block text-sm font-semibold" htmlFor="affiliate-photos">Foto pendukung affiliate</label>
+                  <p id="affiliate-photo-help" className="my-2 text-xs">Unggah 1–5 foto pendukung bebas. JPG, PNG, atau WebP, maksimal 2 MB per foto.</p>
+                  <input id="affiliate-photos" aria-describedby="affiliate-photo-help" type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={(event) => { void uploadPhotos(event.target.files); event.target.value = ''; }} className="w-full text-sm" />
+                  {uploading && <p role="status" className="text-sm">Membaca foto...</p>}
+                  <div className="mt-3 flex flex-wrap gap-3">{form.affiliatePhotos.map((photo, index) => <div key={index} className="rounded-xl border bg-white p-2">
+                    <img src={photo} alt={`Foto pendukung ${index + 1}`} className="h-24 w-24 rounded-lg object-cover" />
+                    <button type="button" className="mt-2 w-full text-xs text-red-700" onClick={() => setForm((current) => ({ ...current, affiliatePhotos: current.affiliatePhotos.filter((_, i) => i !== index) }))} aria-label={`Hapus foto pendukung ${index + 1}`}>Hapus</button>
+                  </div>)}</div>
+                </div>}
+              </fieldset>
+            )}
 
             <button
               className="mt-5 h-12 w-full rounded-xl border-0 bg-[var(--primary-green)] text-[0.98rem] font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
               onClick={submit}
-              disabled={loading}
+              disabled={loading || uploading}
               type="button"
             >
               {loading

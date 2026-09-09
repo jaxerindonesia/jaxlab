@@ -1,5 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Toaster } from './components/ui/sonner';
+import MemberSession from './components/MemberSession';
 
 const Home = lazy(() => import('./pages/Home/Home'));
 const ProductsPage = lazy(() => import('./pages/ProductsPage/ProductsPage'));
@@ -19,6 +21,8 @@ const FatFastingPage = lazy(() => import('./pages/FatFastingPage/FatFastingPage'
 function App() {
   return (
     <Router>
+      <MemberSession />
+      <Toaster />
       <div className="flex min-h-screen flex-col">
         <Suspense fallback={<div className="min-h-screen bg-[#f9f5ec]" aria-label="Memuat halaman" />}>
         <Routes>

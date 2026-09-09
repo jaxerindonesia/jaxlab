@@ -12,7 +12,7 @@ const BundlingSection: React.FC = () => {
         <div className="relative z-[1] grid justify-items-center overflow-hidden rounded-[28px]">
           <img
             className="block !h-auto !w-4/5 object-cover object-center max-[960px]:max-h-[520px] max-[960px]:object-contain"
-            src="/img/bundling-ff72.webp"
+            src="/public/img/set.png"
             alt="Fat Fasting Set - Extra Virgin Olive Oil, Virgin Coconut Oil, Ketone Immuno"
           />
         </div>
@@ -38,8 +38,8 @@ const BundlingSection: React.FC = () => {
           </ul>
 
           <div className="mb-[1.6rem] flex flex-wrap items-baseline gap-[1.6rem]">
-            <span className="text-[clamp(1.2rem,2vw,1.65rem)] !text-white/55 line-through decoration-[#ff5c70] decoration-[3px]">Rp 2.200.000</span>
-            <strong className="text-[2.2rem] font-black leading-none !text-white">Rp 1.927.000</strong>
+            <span className="text-[clamp(1.2rem,2vw,1.65rem)] !text-white/55 line-through decoration-[#ff5c70] decoration-[3px]">Rp 3.200.000</span>
+            <strong className="text-[2.2rem] font-black leading-none !text-white">Rp 2.970.000</strong>
           </div>
 
           <div className="flex flex-wrap items-center gap-5">

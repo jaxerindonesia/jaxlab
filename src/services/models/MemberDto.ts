@@ -1,4 +1,6 @@
 export interface MemberDto {
+  expiresAt: string;
+  isAffiliate: boolean;
   id: string;
   name: string;
   email: string;

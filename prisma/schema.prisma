@@ -43,6 +43,10 @@ model Member {
   referredById String?  @map("referred_by_id")
   phoneWa      String   @map("phone_wa")
   passwordHash String   @map("password_hash")
+  isAffiliate Boolean @default(false) @map("is_affiliate")
+  affiliatePhotos Json @default("[]") @map("affiliate_photos")
+  cart Json @default("[]")
+  sessions MemberSession[]
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
@@ -52,6 +56,16 @@ model Member {
   referralRewards ReferralReward[] @relation("ReferrerRewards")
 
   @@map("members")
+}
+
+model MemberSession {
+  tokenHash String @id @map("token_hash")
+  memberId String @map("member_id")
+  expiresAt DateTime @map("expires_at")
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  @@index([memberId])
+  @@index([expiresAt])
+  @@map("member_sessions")
 }
 
 model Order {

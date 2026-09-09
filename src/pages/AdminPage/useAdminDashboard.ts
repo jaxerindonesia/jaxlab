@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { toast as notify } from 'sonner';
 import {
   type ProductDto,
   addBadge,
@@ -118,7 +119,7 @@ export function useAdminDashboard() {
       pushToast("Login berhasil", "success");
     } catch (e) {
       setPwError("Password salah. Coba lagi.");
-      pushToast((e as Error).message || "Login gagal", "error");
+      notify.error((e as Error).message || "Login gagal");
     } finally {
       setLoading((s) => ({ ...s, login: false }));
     }

@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { prisma } from '../lib/prisma';
 import { calculateShipping } from './shipping';
 import { getProductWeight } from '../lib/product-weight';
+import { requireMember } from '../lib/member-session';
 
 export const router = Router();
 
@@ -86,7 +87,7 @@ function mapXenditStatus(status: string) {
   return 'pending';
 }
 
-router.post('/checkout', async (req, res) => {
+router.post('/checkout', requireMember, async (req, res) => {
   const memberId = String(req.header('x-member-id') ?? '').trim();
   const items = Array.isArray(req.body?.items) ? req.body.items : [];
   const shipping = req.body?.shipping;
@@ -308,7 +309,7 @@ router.post('/xendit-webhook', async (req, res) => {
   return res.status(200).json({ ok: true });
 });
 
-router.get('/history', async (req, res) => {
+router.get('/history', requireMember, async (req, res) => {
   const memberId = String(req.header('x-member-id') ?? '').trim();
   if (!memberId) return res.status(400).json({ error: 'invalid member' });
 

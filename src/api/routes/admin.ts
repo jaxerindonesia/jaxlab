@@ -13,7 +13,7 @@ router.post('/login', async (req, res) => {
   }
 
   if (password !== expected) {
-    return res.status(401).json({ error: 'invalid password' });
+    return res.status(401).json({ error: 'Password admin salah. Silakan coba lagi.' });
   }
 
   res.json({ ok: true });
