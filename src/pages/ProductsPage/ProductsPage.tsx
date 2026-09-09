@@ -9,12 +9,15 @@ const ProductsPage: React.FC = () => {
     const navigate = useNavigate();
     const [products, setProducts] = useState<ProductDto[]>([]);
     const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState('');
+    const [retry, setRetry] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('Semua');
 
     useEffect(() => {
         let cancelled = false;
         setLoading(true);
+        setLoadError('');
         getAllProducts()
             .then((p) => {
                 if (!cancelled) {
@@ -22,14 +25,15 @@ const ProductsPage: React.FC = () => {
                     setLoading(false);
                 }
             })
-            .catch(() => {
+            .catch((error: Error) => {
                 if (!cancelled) {
                     setProducts([]);
+                    setLoadError(error.message || 'Produk gagal dimuat. Silakan coba lagi.');
                     setLoading(false);
                 }
             });
         return () => { cancelled = true; };
-    }, []);
+    }, [retry]);
 
     // Extract unique categories
     const categories = ['Semua', ...Array.from(new Set(products.map(p => p.category)))];
@@ -101,6 +105,11 @@ const ProductsPage: React.FC = () => {
 
                     {loading ? (
                         <div className="p-16 text-center">Memuat produk...</div>
+                    ) : loadError ? (
+                        <div role="alert" className="p-16 text-center">
+                            <p>{loadError}</p>
+                            <button type="button" onClick={() => setRetry((value) => value + 1)} className="mt-4 rounded-xl bg-[#14552e] px-6 py-3 font-bold text-white">Coba lagi</button>
+                        </div>
                     ) : filteredProducts.length === 0 ? (
                         <div className="p-16 text-center">Tidak ada produk yang sesuai dengan pencarian Anda.</div>
                     ) : (

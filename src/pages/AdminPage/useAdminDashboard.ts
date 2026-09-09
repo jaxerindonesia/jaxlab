@@ -10,6 +10,7 @@ import {
   deleteCategory,
   deleteProduct,
   getAllProducts,
+  getProductById,
   getBadges,
   getCategories,
   getReferralSetting,
@@ -136,9 +137,11 @@ export function useAdminDashboard() {
     setCreating(true);
   };
 
-  const startEdit = (p: ProductDto) => {
-    setEditing(p);
-    setForm({ ...p });
+  const startEdit = async (p: ProductDto) => {
+    const fullProduct = await getProductById(p.id, true);
+    if (!fullProduct) { notify.error('Produk gagal dimuat. Silakan coba lagi.'); return; }
+    setEditing(fullProduct);
+    setForm({ ...fullProduct });
     setCreating(true);
   };
 

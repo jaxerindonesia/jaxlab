@@ -3,6 +3,7 @@ import type { ApiProduct } from '../contexts/product';
 import { toApiProduct } from '../lib/product-mapper';
 import { prisma } from '../lib/prisma';
 import { ensureCategoryIdByName } from '../lib/services';
+import { decodeProductImage, getCachedProductImage, withProductImageUrls } from '../lib/product-images';
 
 export const router = Router();
 
@@ -34,7 +35,7 @@ router.get('/', async (_req, res) => {
     },
   });
 
-  res.json(rows.map((r) => toApiProduct({ ...r, detail: r.detail ?? null })));
+  res.json(rows.map((r) => withProductImageUrls(toApiProduct({ ...r, detail: r.detail ?? null }))));
 });
 
 router.get('/featured', async (_req, res) => {
@@ -77,7 +78,24 @@ router.get('/featured', async (_req, res) => {
     rows = [...rows, ...fallbackRows];
   }
 
-  res.json(rows.map((r) => toApiProduct({ ...r, detail: r.detail ?? null })));
+  res.json(rows.map((r) => withProductImageUrls(toApiProduct({ ...r, detail: r.detail ?? null }))));
+});
+
+router.get('/:id/images/:index', async (req, res) => {
+  const id = String(req.params.id);
+  const index = Number(req.params.index);
+  if (!Number.isSafeInteger(index) || index < 0) return res.sendStatus(404);
+  let asset = getCachedProductImage(`${id}/${index}/${String(req.query.v ?? '')}`);
+  if (!asset) {
+    const product = await prisma.product.findFirst({ where: { id, deletedAt: null }, select: { detail: { where: { deletedAt: null }, select: { images: true } } } });
+    const images = product?.detail?.images;
+    const source = Array.isArray(images) ? images[index] : null;
+    if (typeof source !== 'string') return res.sendStatus(404);
+    asset = decodeProductImage(source) ?? undefined;
+  }
+  if (!asset) return res.sendStatus(404);
+  res.set({ 'Content-Type': asset.mime, 'Cache-Control': 'public, max-age=300', 'X-Content-Type-Options': 'nosniff' });
+  return res.send(asset.bytes);
 });
 
 router.get('/:id', async (req, res) => {
@@ -95,7 +113,8 @@ router.get('/:id', async (req, res) => {
   });
 
   if (!row) return res.status(404).json({ error: 'not found' });
-  res.json(toApiProduct({ ...row, detail: row.detail ?? null }));
+  const product = toApiProduct({ ...row, detail: row.detail ?? null });
+  res.json(req.query.images === 'inline' ? product : withProductImageUrls(product));
 });
 
 router.post('/', async (req, res) => {

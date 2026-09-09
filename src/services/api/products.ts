@@ -5,8 +5,8 @@ export async function getAllProducts(): Promise<ProductDto[]> {
   return await api<ProductDto[]>('/api/products');
 }
 
-export async function getProductById(id: string): Promise<ProductDto | null> {
-  return await api<ProductDto>(`/api/products/${encodeURIComponent(id)}`).catch(() => null);
+export async function getProductById(id: string, inlineImages = false): Promise<ProductDto | null> {
+  return await api<ProductDto>(`/api/products/${encodeURIComponent(id)}${inlineImages ? '?images=inline' : ''}`).catch(() => null);
 }
 
 export async function getFeaturedProducts(): Promise<ProductDto[]> {
