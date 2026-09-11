@@ -256,7 +256,7 @@ const FatFastingPage: React.FC = () => {
   const r6 = useReveal();
   const r7 = useReveal();
 
-  const waLink = `https://wa.me/6281234567890?text=${encodeURIComponent("Hai! Saya ingin mulai program Fat Fasting bersama JaxLab. Bisa info lebih lanjut?")}`;
+  const waLink = "https://chat.whatsapp.com/LJxucyPUtci4baRJX5WShx?s=cl&p=i&mlu=0&ilr=4";
   const container = "mx-auto max-w-[880px] px-6 text-center";
   const containerWide = "mx-auto max-w-[1100px] px-6";
   const section = "bg-[#f9f5ec] py-[100px] max-[720px]:py-[72px]";
@@ -642,7 +642,7 @@ const FatFastingPage: React.FC = () => {
                     label: "Kandungan Polifenol",
                     value: "867 mg/Kg",
                   },
-                  { icon: <IconActivity />, label: "Acidity", value: "Rendah" },
+                  { icon: <IconActivity />, label: "Acidity", value: "0.28" },
                   {
                     icon: <IconRefresh />,
                     label: "Peroxide Value",
@@ -663,7 +663,7 @@ const FatFastingPage: React.FC = () => {
               </div>
 
               <a
-                href="https://wa.me/6281234567890"
+                href="/img/SertifFull.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#10b981] px-7 py-[13px] text-[0.95rem] font-semibold !text-white shadow-[0_4px_16px_rgba(16,185,129,0.3)] transition-all duration-200 hover:-translate-y-px hover:bg-[#059669]"
@@ -673,7 +673,7 @@ const FatFastingPage: React.FC = () => {
             </div>
             <div>
               <img
-                src="/img/sertif terroliva.png"
+                src="/img/COA.png"
                 alt="Sertifikat kualitas JaxLab"
                 className="block !aspect-[3/4] !w-full rounded-[18px] object-cover"
               />

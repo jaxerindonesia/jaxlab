@@ -1,8 +1,9 @@
 import type { ProductDto } from '../models/ProductDto';
 import { api } from './client';
+import { cachedProducts, clearProductCache } from './product-cache';
 
 export async function getAllProducts(): Promise<ProductDto[]> {
-  return await api<ProductDto[]>('/api/products');
+  return cachedProducts('all', () => api<ProductDto[]>('/api/products'));
 }
 
 export async function getProductById(id: string, inlineImages = false): Promise<ProductDto | null> {
@@ -10,15 +11,17 @@ export async function getProductById(id: string, inlineImages = false): Promise<
 }
 
 export async function getFeaturedProducts(): Promise<ProductDto[]> {
-  return await api<ProductDto[]>('/api/products/featured');
+  return cachedProducts('featured', () => api<ProductDto[]>('/api/products/featured'));
 }
 
 export async function addProduct(product: Omit<ProductDto, 'id'>): Promise<ProductDto | null> {
-  return await api<ProductDto | null>('/api/products', {
+  const created = await api<ProductDto | null>('/api/products', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(product),
   });
+  clearProductCache();
+  return created;
 }
 
 export async function updateProduct(product: ProductDto): Promise<void> {
@@ -27,10 +30,12 @@ export async function updateProduct(product: ProductDto): Promise<void> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(product),
   });
+  clearProductCache();
 }
 
 export async function deleteProduct(id: string): Promise<void> {
   await api<{ ok: true }>(`/api/products/${encodeURIComponent(id)}`, { method: 'DELETE' });
+  clearProductCache();
 }
 
 export async function addStockEntry(
@@ -42,4 +47,5 @@ export async function addStockEntry(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
+  clearProductCache();
 }

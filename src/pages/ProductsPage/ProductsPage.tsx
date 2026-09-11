@@ -114,7 +114,7 @@ const ProductsPage: React.FC = () => {
                         <div className="p-16 text-center">Tidak ada produk yang sesuai dengan pencarian Anda.</div>
                     ) : (
                         <div className="mx-auto mb-[3.2rem] grid max-w-[1440px] grid-cols-2 gap-[1.7rem] max-[1180px]:max-w-[980px] max-[1180px]:grid-cols-1">
-                            {filteredProducts.map((product) => {
+                            {filteredProducts.map((product, index) => {
                                 const highlights =
                                     product.benefits?.length > 0
                                         ? product.benefits.slice(0, 2)
@@ -123,7 +123,7 @@ const ProductsPage: React.FC = () => {
                                 return (
                                     <article key={product.id} className="grid min-h-[348px] grid-cols-[minmax(220px,0.72fr)_minmax(0,1fr)] overflow-hidden rounded-3xl border border-[rgba(6,59,24,0.12)] bg-[linear-gradient(135deg,#dff0d3_0%,#d0e9c0_100%)] shadow-[0_18px_44px_rgba(20,44,22,0.08)] max-[768px]:min-h-0 max-[768px]:grid-cols-1">
                                         <div className="relative flex items-center justify-center bg-[radial-gradient(circle_at_50%_56%,rgba(79,198,107,0.28),transparent_40%),linear-gradient(180deg,rgba(255,255,255,0.16),rgba(255,255,255,0.04))] px-6 py-8 after:absolute after:bottom-7 after:left-[16%] after:right-[16%] after:h-[18px] after:rounded-full after:bg-[rgba(6,59,24,0.12)] after:blur-[14px] max-[768px]:min-h-60">
-                                            <img className="relative z-[1] max-h-[250px] !w-[min(100%,240px)] object-contain drop-shadow-[0_18px_22px_rgba(6,59,24,0.18)]" src={product.images[0]} alt={product.name} />
+                                            <img className="relative z-[1] max-h-[250px] !w-[min(100%,240px)] object-contain drop-shadow-[0_18px_22px_rgba(6,59,24,0.18)]" src={product.images[0]} alt={product.name} loading={index < 2 ? 'eager' : 'lazy'} decoding="async" width={240} height={250} />
                                         </div>
                                         <div className="flex min-w-0 flex-col pb-[1.8rem] pl-8 pr-8 pt-8 max-[768px]:px-5 max-[768px]:pb-[1.45rem] max-[768px]:pt-[1.35rem]">
                                             <span className="mb-4 inline-flex min-h-[38px] w-fit items-center rounded-full border border-[rgba(6,59,24,0.18)] bg-white/25 px-4 py-[0.35rem] text-[0.82rem] font-extrabold !text-[#06451b]">{product.badge || product.category}</span>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Facebook,
   Instagram,
@@ -30,6 +30,8 @@ const _companyInfo = {
 };
 
 const Footer: React.FC = () => {
+  const [showDevelopers, setShowDevelopers] = useState(false);
+  const [developerClickCount, setDeveloperClickCount] = useState(0);
   const companyInfo = _companyInfo;
   const socialLinks = {
     facebook: "https://www.facebook.com/profile.php?id=61590417866178",
@@ -39,9 +41,27 @@ const Footer: React.FC = () => {
     whatsapp:
       "https://chat.whatsapp.com/LJxucyPUtci4baRJX5WShx?s=sw&p=i&mlu=0",
   };
+  const developerNames = [
+    "Muhammad Abu Bakar Assidiq",
+    "Famadha Nugraha Setyajati",
+    "Surya Dharma Bakti RM",
+  ];
   const footerLinkClass = "text-[0.9rem] !text-white/60 transition-colors duration-300 hover:!text-[#4ade80]";
   const columnTitleClass = "mb-6 text-[1.05rem] font-semibold !text-white";
   const listClass = "space-y-4";
+
+  const handleDeveloperClick = () => {
+    setDeveloperClickCount((prev) => {
+      const next = prev + 1;
+
+      if (next >= 3) {
+        setShowDevelopers(true);
+        return 0;
+      }
+
+      return next;
+    });
+  };
 
   return (
     <footer className="border-t border-[rgba(74,222,128,0.08)] bg-[#0e1e12] pb-8 pt-24 text-[0.9rem] !text-white max-[640px]:pb-6 max-[640px]:pt-16">
@@ -170,9 +190,43 @@ const Footer: React.FC = () => {
         </div>
       </div>
       <div className="flex flex-col items-center border-t border-white/5 pt-8 text-center text-[0.85rem] !text-white/40">
-        <p className="inline-flex flex-wrap items-center justify-center gap-4">&copy; {new Date().getFullYear()} JaxLab Indonesia. All Rights Reserved.</p>
+        <button
+          type="button"
+          onClick={handleDeveloperClick}
+          className="inline-flex flex-wrap items-center justify-center gap-4 bg-transparent text-[inherit]"
+        >
+          &copy; {new Date().getFullYear()} JaxLab Indonesia. All Rights Reserved.
+        </button>
         <span className="font-bold !text-[#4ade80]">💚 Bantu Tubuh Sehat Alami</span>
       </div>
+      {showDevelopers && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-6"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Developer JaxLab"
+          onClick={() => setShowDevelopers(false)}
+        >
+          <div
+            className="max-w-md rounded-lg bg-[#0e1e12] p-6 text-center text-white shadow-xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <h2 className="mb-3 text-lg font-semibold">Developer</h2>
+            <ol className="list-inside list-decimal text-left text-white/70">
+              <li>Muhammad Abu Bakar Assidiq</li>
+              <li>Famadha Nugraha Setyajati</li>
+              <li>Surya Dharma Bakti RM</li>
+            </ol>
+            <button
+              type="button"
+              onClick={() => setShowDevelopers(false)}
+              className="mt-5 rounded bg-[#4ade80] px-4 py-2 font-semibold text-[#0b0f0b]"
+            >
+              Tutup
+            </button>
+          </div>
+        </div>
+      )}
     </footer>
   );
 };

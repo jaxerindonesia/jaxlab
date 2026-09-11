@@ -58,21 +58,22 @@ const Hero: React.FC = () => {
         <div className="max-w-[660px] flex-1 max-[1024px]:max-w-full max-[1024px]:text-center">
           <span className="mb-6 inline-flex animate-[fadeInUp_0.6s_ease] items-center gap-2 rounded-full border border-[rgba(74,222,128,0.2)] bg-[rgba(74,222,128,0.1)] px-[1.2rem] py-[0.4rem] text-[0.78rem] font-semibold uppercase tracking-[1px] !text-[#4ade80]">
             <Leaf size={14} />
-            Mulai Fat Fasting dengan Protokol yang Tepat
+            PROTOKOL FAT FASTING 72 JAM DARI JAXLAB
           </span>
 
-          <h1 className="mb-[1.65rem] animate-[fadeInUp_0.6s_ease_0.1s_both] font-['Playfair_Display',ui-serif,Georgia,Cambria,'Times_New_Roman',Times,serif] text-[5rem] font-extrabold leading-[0.96] tracking-[0] !text-[#f9f5ec] max-[1024px]:text-[3.6rem] max-[600px]:text-[2.75rem]">
-            <span className="block">Saatnya</span>
+          <h1 className="mb-[1.65rem] max-w-[680px] animate-[fadeInUp_0.6s_ease_0.1s_both] font-['Playfair_Display',ui-serif,Georgia,Cambria,'Times_New_Roman',Times,serif] text-[clamp(3rem,5.5vw,5rem)] font-extrabold leading-[0.98] tracking-[-0.02em] !text-[#f9f5ec] max-[1024px]:mx-auto max-[1024px]:max-w-[760px] max-[600px]:text-[2.8rem]">
+            <span className="block whitespace-nowrap max-[600px]:whitespace-normal">Fat Fasting</span>
             <span className="block">
-              <span className="inline-block font-['Playfair_Display',serif] text-[0.9em] font-bold italic !text-[#4fc66b]">
-                Tubuhmu
+              <span className="inline-block font-['Playfair_Display',serif] text-[1.12em] font-bold italic !text-[#4fc66b]">
+                72 jam
               </span>
             </span>
-            <span className="block">kembali ke Fitrahnya</span>
+            <span className="mt-2 block text-[0.48em] leading-[1.1] tracking-[-0.01em]">Reset Metabolisme,</span>
+            <span className="block text-[0.48em] leading-[1.1] tracking-[-0.01em]">Aktifkan Energi Alami</span>
           </h1>
 
-          <p className="mb-8 max-w-[500px] animate-[fadeInUp_0.6s_ease_0.2s_both] font-['Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe_UI',sans-serif] text-[1.08rem] leading-[1.7] !text-[rgba(232,224,212,0.82)] max-[1024px]:mx-auto max-[600px]:text-[0.95rem]">
-            Fat Fasting 72 Jam membantu tubuh kembali menggunakan lemak sebagai sumber energi alami, didukung rangkaian nutrisi dari JaxLab.
+          <p className="mb-8 max-w-[560px] animate-[fadeInUp_0.6s_ease_0.2s_both] font-['Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe_UI',sans-serif] text-[clamp(0.95rem,1.5vw,1.08rem)] leading-[1.65] !text-[rgba(232,224,212,0.82)] max-[1024px]:mx-auto max-[600px]:text-[0.95rem]">
+            Panduan lengkap fat fasting 72 jam untuk membantu tubuh beralih ke sumber energi dari lemak, mendukung metabolic reset, dengan edukasi terpercaya dan dukungan komunitas dari Jaxlab.
           </p>
 
           <div className="mb-10 flex animate-[fadeInUp_0.6s_ease_0.3s_both] flex-wrap gap-4 max-[1024px]:justify-center max-[600px]:flex-col max-[600px]:items-center">
@@ -106,28 +107,32 @@ const Hero: React.FC = () => {
               <ShieldCheck size={16} />
               <span>Bergabung dengan Komunitas JaxLab</span>
             </div>
+            <div className="flex items-center gap-1.5 text-[0.82rem] font-normal !text-white/40 after:ml-3 after:content-['•'] after:!text-white/35 [&_svg]:text-[#4ade80] [&_svg]:opacity-70">
+              <BadgeCheck size={16} />
+              <span>Panduan Lengkap & Terstruktur</span>
+            </div>
           </div>
         </div>
 
-        <div className="flex max-w-[720px] flex-[1.15] animate-[fadeInUp_0.8s_ease_0.2s_both] justify-end max-[1024px]:max-w-[500px] max-[1024px]:justify-center">
-          <div className="relative w-full">
+        <div className="flex w-full min-w-0 max-w-[820px] flex-[1.35] animate-[fadeInUp_0.8s_ease_0.2s_both] justify-end max-[1024px]:max-w-[560px] max-[1024px]:flex-none max-[1024px]:justify-center">
+          <div className="relative isolate aspect-[4/3] w-full">
             <img
-              src="/img/Jaroliva.webp"
-              alt="Produk Jaroliva"
-              width="896"
-              height="1200"
+              src="/img/FF72P-hero.png"
+              alt="Paket produk Jaxlab Fat Fasting dengan latar hijau premium dan jam bercahaya 72"
+              width="1448"
+              height="1086"
               fetchPriority="high"
               decoding="async"
-              className="!h-[680px] !w-full rounded-3xl object-cover shadow-[0_30px_60px_rgba(0,0,0,0.3)] max-[1024px]:!h-[520px] max-[600px]:!h-[420px]"
+              className="block !h-full !w-full rounded-3xl object-contain object-center shadow-[0_30px_60px_rgba(0,0,0,0.3)] max-[600px]:rounded-[20px]"
             />
             {/* Floating card overlay */}
-            <div className="absolute bottom-[30px] left-[-20px] right-[30px] flex animate-[float_4s_ease-in-out_infinite] items-center gap-3 rounded-2xl border border-[rgba(74,222,128,0.15)] bg-[rgba(20,31,22,0.85)] px-[1.2rem] py-4 backdrop-blur-[20px] max-[600px]:bottom-5 max-[600px]:left-[10px] max-[600px]:right-[10px]">
+            <div className="absolute bottom-5 -left-5 right-7 flex items-center gap-3 rounded-[22px] border border-[rgba(74,222,128,0.15)] bg-[rgba(20,31,22,0.94)] px-[1.2rem] py-4 shadow-[0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-[20px] max-[600px]:bottom-3 max-[600px]:left-3 max-[600px]:right-3 max-[600px]:gap-2.5 max-[600px]:rounded-2xl max-[600px]:p-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-[rgba(74,222,128,0.15)] text-[#4ade80]">
                 <Circle size={18} fill="currentColor" />
               </div>
-              <div className="flex flex-col">
-                <strong className="text-[0.88rem] font-semibold !text-white">Fat Fasting 72 Jam</strong>
-                <span className="text-xs !text-white/60">Dukungan nutrisi, edukasi, dan komunitas</span>
+              <div className="flex min-w-0 flex-col gap-1">
+                <strong className="text-[0.70rem] font-semibold !text-white">Fat Fasting 72 Jam</strong>
+                <span className="text-xs leading-relaxed !text-white/60">Reset metabolisme. Energi lebih stabil. Versi terbaik dari diri anda.</span>
               </div>
             </div>
           </div>

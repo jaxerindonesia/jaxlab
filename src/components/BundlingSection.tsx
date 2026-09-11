@@ -18,10 +18,16 @@ const BundlingSection: React.FC = () => {
         </div>
 
         <div className="relative z-[1] font-['Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe_UI',sans-serif]">
-          <h3 className="mb-[0.85rem] font-['Playfair_Display',ui-serif,Georgia,Cambria,'Times_New_Roman',Times,serif] text-5xl font-black !text-white max-[960px]:text-[clamp(2.1rem,7vw,3rem)]">Bundling Fat Fasting Set</h3>
-          <p className="mb-[1.35rem] max-w-[640px] leading-[1.55] !text-white/80">
-            Dukung tubuh menjalani Fat Fasting dengan nutrisi pilihan untuk
-            energi, fokus, dan metabolisme yang lebih seimbang.
+          <span className="mb-3 inline-flex items-center gap-2 text-[0.72rem] font-bold uppercase tracking-[0.22em] !text-[#d6b875]">
+            <span className="h-px w-8 bg-[#d6b875]" />
+            Pilihan lengkap untuk fat fasting
+          </span>
+          <h3 className="mb-[0.85rem] max-w-[620px] font-['Playfair_Display',ui-serif,Georgia,Cambria,'Times_New_Roman',Times,serif] text-5xl font-black leading-[1.05] !text-white max-[960px]:text-[clamp(2.1rem,7vw,3rem)]">
+            Bundling <span className="italic !text-[#d6b875]">Fat Fasting</span> Set
+          </h3>
+          <p className="mb-[1.35rem] max-w-[640px] text-lg leading-[1.6] !text-white/80">
+            Dukung tubuh menjalani <strong className="font-semibold !text-white">Fat Fasting</strong> dengan nutrisi pilihan untuk
+            <span className="!text-white"> energi, fokus, dan metabolisme</span> yang lebih seimbang.
           </p>
           <ul className="mb-8 grid list-none gap-[0.65rem] p-0">
             {[
