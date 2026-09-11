@@ -31,7 +31,7 @@ const _companyInfo = {
 
 const Footer: React.FC = () => {
   const [showDevelopers, setShowDevelopers] = useState(false);
-  const [, setDeveloperClickCount] = useState(0);
+  const [developerClickCount, setDeveloperClickCount] = useState(0);
   const companyInfo = _companyInfo;
   const socialLinks = {
     facebook: "https://www.facebook.com/profile.php?id=61590417866178",
@@ -213,7 +213,9 @@ const Footer: React.FC = () => {
           >
             <h2 className="mb-3 text-lg font-semibold">Developer</h2>
             <ol className="list-inside list-decimal text-left text-white/70">
-              {developerNames.map((name) => <li key={name}>{name}</li>)}
+              <li>Muhammad Abu Bakar Assidiq</li>
+              <li>Famadha Nugraha Setyajati</li>
+              <li>Surya Dharma Bakti RM</li>
             </ol>
             <button
               type="button"
