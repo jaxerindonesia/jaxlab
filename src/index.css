@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-@import "tailwindcss";
 
 :root {
   /* Dark Theme Colors */
@@ -41,6 +40,12 @@
   --radius-full: 9999px;
 }
 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
@@ -69,6 +74,11 @@ button {
   cursor: pointer;
   border: none;
   font-family: inherit;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 .container {
@@ -261,40 +271,6 @@ footer {
   50% {
     box-shadow: 0 0 30px rgba(74, 222, 128, 0.2);
   }
-}
-
-@keyframes particleFloat {
-  0% { transform: translate(0, 0); opacity: 0; }
-  10% { opacity: 1; }
-  50% { transform: translate(calc(var(--drift) * 0.5), -50vh); }
-  90% { opacity: 0.6; }
-  100% { transform: translate(var(--drift), -105vh); opacity: 0; }
-}
-
-@keyframes scrollLeft {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-@keyframes productCertifiedScroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-20%); }
-}
-
-@keyframes ffFadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes ffBounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(6px); }
-}
-
-@keyframes kenapaHeadingPop {
-  0% { opacity: 0; transform: translateY(38px) scale(0.94); }
-  72% { opacity: 1; transform: translateY(-4px) scale(1.015); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @media (prefers-reduced-motion: reduce) {

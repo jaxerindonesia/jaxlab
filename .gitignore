@@ -8,14 +8,10 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-.npm-cache/
-test-results/
-playwright-report/
 dist
 dist-ssr
 *.local
 .env
-.env.example
 
 public/video/Tunisia Video.mov
 

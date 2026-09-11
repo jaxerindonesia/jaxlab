@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import "./Footer.css";
 import {
   Facebook,
   Instagram,
@@ -8,31 +9,10 @@ import {
   Youtube,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-
-const _companyInfo = {
-  name: 'JaxLab',
-  tagline: 'Reliable Product to Enhanced Wellness',
-  description:
-    'JaxLab adalah merek produk makanan sehat alami yang menghadirkan Bone Broth, minyak zaitun premium, dan produk multivitamin alami. Kami berkomitmen pada bahan minimal proses untuk mendukung gaya hidup sehat sejak dini.',
-  email: 'hello@jaxlab.id',
-  phone: '+62 812-3456-7890',
-  whatsapp: '6281234567890',
-  address: 'Jl. Cempaka Putih Tengah XVII No.F33, Jakarta Pusat, Indonesia',
-  mapsEmbed:
-    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.130847862578!2d110.3695!3d-7.7956!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwNDcnNDQuMiJTIDExMMKwMjInMTAuMiJF!5e0!3m2!1sen!2sid!4v1000000000000',
-  socialMedia: {
-    instagram: 'https://instagram.com/jaxlab.id',
-    facebook: 'https://facebook.com/jaxlab.id',
-    tiktok: 'https://tiktok.com/@jaxlab.id',
-    youtube: 'https://youtube.com/@jaxlab',
-  },
-  workingHours: 'Senin – Jumat: 08.00 – 17.00 WIB',
-};
+import { getCompanyInfo } from "../database/db";
 
 const Footer: React.FC = () => {
-  const [showDevelopers, setShowDevelopers] = useState(false);
-  const [, setDeveloperClickCount] = useState(0);
-  const companyInfo = _companyInfo;
+  const companyInfo = getCompanyInfo();
   const socialLinks = {
     facebook: "https://www.facebook.com/profile.php?id=61590417866178",
     youtube: "https://www.youtube.com/@jaxlabindonesia",
@@ -41,51 +21,30 @@ const Footer: React.FC = () => {
     whatsapp:
       "https://chat.whatsapp.com/LJxucyPUtci4baRJX5WShx?s=sw&p=i&mlu=0",
   };
-  const developerNames = [
-    "Muhammad Abu Bakar Assidiq",
-    "Famadha Nugraha Setyajati",
-    "Surya Dharma Bakti RM",
-  ];
-  const footerLinkClass = "text-[0.9rem] !text-white/60 transition-colors duration-300 hover:!text-[#4ade80]";
-  const columnTitleClass = "mb-6 text-[1.05rem] font-semibold !text-white";
-  const listClass = "space-y-4";
-
-  const handleDeveloperClick = () => {
-    setDeveloperClickCount((prev) => {
-      const next = prev + 1;
-
-      if (next >= 3) {
-        setShowDevelopers(true);
-        return 0;
-      }
-
-      return next;
-    });
-  };
 
   return (
-    <footer className="border-t border-[rgba(74,222,128,0.08)] bg-[#0e1e12] pb-8 pt-24 text-[0.9rem] !text-white max-[640px]:pb-6 max-[640px]:pt-16">
-      <div className="mx-auto mb-16 flex max-w-[1200px] flex-wrap justify-between gap-12 px-6 max-[1024px]:flex-col">
-        <div className="min-w-[280px] flex-[1_1_360px]">
-          <div>
-            <img className="mb-6 !h-auto max-h-10 !w-auto opacity-95 brightness-0 invert" src="/logo-jaxlab.png" alt="JaxLab Logo" />
+    <footer className="footer">
+      <div className="container footer-container">
+        <div className="footer-brand">
+          <div className="logo">
+            <img src="/logo-jaxlab.png" alt="JaxLab Logo" />
           </div>
-          <h3 className="mb-4 text-[1.4rem] leading-[1.25] !text-white">Reset Tubuh Kembali ke Fitrahnya</h3>
-          <p className="mb-5 max-w-[430px] text-[0.9rem] leading-[1.7] !text-white/60">
+          <h3>Reset Tubuh Kembali ke Fitrahnya</h3>
+          <p className="footer-desc">
             JaxLab menghadirkan nutrisi pendukung Fat Fasting untuk membantu
             menjaga kesehatan metabolik melalui produk berkualitas, edukasi, dan
             komunitas yang saling mendukung.
           </p>
-          <div className="mb-6 flex max-w-[460px] items-start gap-[0.7rem] leading-[1.6] !text-white/60">
-            <MapPin className="mt-[0.2rem] shrink-0 text-[#4ade80]" size={16} />
+          <div className="footer-address">
+            <MapPin size={16} />
             <span>
               Jl. Cempaka Putih Tengah XVII No.F33, Cempaka Putih Timur, Kec.
               Cempaka Putih, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta
               10510
             </span>
           </div>
-          <span className="mb-[0.85rem] block font-bold !text-white">Follow Us</span>
-          <div className="flex gap-4 [&_a]:flex [&_a]:h-10 [&_a]:w-10 [&_a]:items-center [&_a]:justify-center [&_a]:rounded-full [&_a]:border [&_a]:border-[rgba(74,222,128,0.15)] [&_a]:bg-[rgba(74,222,128,0.1)] [&_a]:!text-[#4ade80] [&_a]:transition-all [&_a]:duration-300 [&_a:hover]:-translate-y-[3px] [&_a:hover]:bg-[#4ade80] [&_a:hover]:!text-[#0b0f0b]">
+          <span className="footer-follow-label">Follow Us</span>
+          <div className="social-links">
             <a
               href={companyInfo.socialMedia.instagram}
               target="_blank"
@@ -129,102 +88,78 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-[2_1_560px] flex-wrap justify-end gap-14 max-[1024px]:justify-start max-[1024px]:gap-12 max-[640px]:grid max-[640px]:grid-cols-1 max-[640px]:gap-8">
-          <div>
-            <h4 className={columnTitleClass}>Produk</h4>
-            <ul className={listClass}>
+        <div className="footer-links">
+          <div className="link-column">
+            <h4>Produk</h4>
+            <ul>
               <li>
-                <a className={footerLinkClass} href="#products">Extra Virgin Olive Oil</a>
+                <a href="#products">Extra Virgin Olive Oil</a>
               </li>
               <li>
-                <a className={footerLinkClass} href="#products">Cocofenol</a>
+                <a href="#products">Cocofenol</a>
               </li>
               <li>
-                <a className={footerLinkClass} href="#products">Ketone Imuno</a>
+                <a href="#products">Ketone Imuno</a>
               </li>
               <li>
-                <a className={footerLinkClass} href="#products">Fat Fasting Bundle</a>
+                <a href="#products">Fat Fasting Bundle</a>
               </li>
               <li>
-                <Link className={footerLinkClass} to="/products">Semua Produk</Link>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4 className={columnTitleClass}>Perusahaan</h4>
-            <ul className={listClass}>
-              <li>
-                <Link className={footerLinkClass} to="/about">Tentang JaxLab</Link>
-              </li>
-              <li>
-                <a className={footerLinkClass} href="#gallery">Blog & Artikel</a>
-              </li>
-              <li>
-                <a className={footerLinkClass} href="#hero">Karir</a>
-              </li>
-              <li>
-                <Link className={footerLinkClass} to="/contact">Hubungi Kami</Link>
+                <Link to="/products">Semua Produk</Link>
               </li>
             </ul>
           </div>
-          <div>
-            <h4 className={columnTitleClass}>Bantuan</h4>
-            <ul className={listClass}>
+          <div className="link-column">
+            <h4>Perusahaan</h4>
+            <ul>
               <li>
-                <a className={footerLinkClass} href="#kenapa">FAQ</a>
+                <Link to="/about">Tentang JaxLab</Link>
               </li>
               <li>
-                <a className={footerLinkClass} href="#products">Cara Pemesanan</a>
+                <a href="#gallery">Blog & Artikel</a>
               </li>
               <li>
-                <a className={footerLinkClass} href="#products">Pengiriman</a>
+                <a href="#hero">Karir</a>
               </li>
               <li>
-                <a className={footerLinkClass} href="#hero">Kebijakan Privasi</a>
+                <Link to="/contact">Hubungi Kami</Link>
+              </li>
+            </ul>
+          </div>
+          <div className="link-column">
+            <h4>Bantuan</h4>
+            <ul>
+              <li>
+                <a href="#kenapa">FAQ</a>
               </li>
               <li>
-                <a className={footerLinkClass} href="#hero">Syarat & Ketentuan</a>
+                <a href="#products">Cara Pemesanan</a>
+              </li>
+              <li>
+                <a href="#products">Pengiriman</a>
+              </li>
+              <li>
+                <a href="#hero">Kebijakan Privasi</a>
+              </li>
+              <li>
+                <a href="#hero">Syarat & Ketentuan</a>
               </li>
             </ul>
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-center border-t border-white/5 pt-8 text-center text-[0.85rem] !text-white/40">
-        <button
-          type="button"
-          onClick={handleDeveloperClick}
-          className="inline-flex flex-wrap items-center justify-center gap-4 bg-transparent text-[inherit]"
-        >
-          &copy; {new Date().getFullYear()} JaxLab Indonesia. All Rights Reserved.
-        </button>
-        <span className="font-bold !text-[#4ade80]">💚 Bantu Tubuh Sehat Alami</span>
+      <div
+        className="footer-bottom"
+        style={{
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <p>&copy; 2026 JaxLab Indonesia. All Rights Reserved.</p>
+        <span>💚 Bantu Tubuh Sehat Alami</span>
       </div>
-      {showDevelopers && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-6"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Developer JaxLab"
-          onClick={() => setShowDevelopers(false)}
-        >
-          <div
-            className="max-w-md rounded-lg bg-[#0e1e12] p-6 text-center text-white shadow-xl"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <h2 className="mb-3 text-lg font-semibold">Developer</h2>
-            <ol className="list-inside list-decimal text-left text-white/70">
-              {developerNames.map((name) => <li key={name}>{name}</li>)}
-            </ol>
-            <button
-              type="button"
-              onClick={() => setShowDevelopers(false)}
-              className="mt-5 rounded bg-[#4ade80] px-4 py-2 font-semibold text-[#0b0f0b]"
-            >
-              Tutup
-            </button>
-          </div>
-        </div>
-      )}
     </footer>
   );
 };
