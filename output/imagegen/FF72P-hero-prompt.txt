@@ -1,0 +1,5 @@
+Mode: built-in image_gen, edit
+Source: public/img/FF72P.png
+Output: public/img/FF72P-hero.png
+
+Edit the supplied product image by naturally extending the scene left and right into a spacious horizontal luxury website hero banner, output aspect ratio 4:3 to match the website frame. Preserve the original five products and blue Jaxlab Dr Zen Fat Fasting Set bag exactly, all labels, shapes, colors, counts and relative arrangement. Keep all products centered and fully visible, with generous breathing room around the entire grouping. Preserve the glowing gold 72-hour fasting circular arrow visual behind them, fully visible with margin above. Continue the premium olive/emerald green architectural arches, warm soft light, subtle greenery, stone podium and reflective water naturally at both sides. Balanced clean luxurious photography. Keep the main products within the central area and leave the bottom 15 percent as water/stone breathing room for a website caption overlay so no product is covered. No added products, no extra text, no website UI, no border, no cropping of bag, bottles, jar or clock. Input image is the edit target.

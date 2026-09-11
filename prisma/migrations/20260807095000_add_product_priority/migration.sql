@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "products"
+ADD COLUMN IF NOT EXISTS "priority" INTEGER NOT NULL DEFAULT 0;
+
+ALTER TABLE "products" ALTER COLUMN "priority" SET DEFAULT 0;
