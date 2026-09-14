@@ -156,7 +156,7 @@ const ProductSection: React.FC = () => {
           </div>
 
           <div className="relative mx-auto mb-[3.2rem] max-w-[1440px]">
-            <div className="flex w-[calc(100vw-max(25px,calc((100vw-1490px)/2+25px)))] snap-x snap-mandatory gap-[1.35rem] overflow-x-auto pb-0 pl-0 pr-[calc(var(--product-card-width)*0.55)] pt-[0.9rem] [--product-card-width:calc((min(1440px,calc(100vw-50px))-1.35rem)/2)] [overscroll-behavior-x:contain] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-[1180px]:mx-auto max-[1180px]:grid max-[1180px]:w-auto max-[1180px]:max-w-[980px] max-[1180px]:grid-cols-1 max-[1180px]:overflow-visible max-[1180px]:p-0 max-[1180px]:[scroll-snap-type:none] max-[768px]:gap-[1.2rem]" ref={productTrackRef}>
+            <div className="product-track flex w-[calc(100vw-max(25px,calc((100vw-1490px)/2+25px)))] snap-x snap-mandatory gap-[1.35rem] overflow-x-auto pb-0 pl-0 pr-[calc(var(--product-card-width)*0.55)] pt-[0.9rem] [--product-card-width:calc((min(1440px,calc(100vw-50px))-1.35rem)/2)] [overscroll-behavior-x:contain] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-[1180px]:mx-auto max-[1180px]:grid max-[1180px]:w-full max-[1180px]:max-w-[980px] max-[1180px]:grid-cols-1 max-[1180px]:overflow-visible max-[1180px]:p-0 max-[1180px]:[scroll-snap-type:none] max-[768px]:gap-[1.2rem]" ref={productTrackRef}>
               {products.slice(0, 3).map((product) => {
                 const highlights =
                   product.benefits?.length > 0
@@ -166,7 +166,7 @@ const ProductSection: React.FC = () => {
                         .slice(0, 2);
 
                 return (
-                  <article data-product-card key={product.id} className="group relative grid min-h-[330px] flex-[0_0_var(--product-card-width)] snap-start grid-cols-[minmax(210px,38%)_minmax(0,1fr)] items-stretch overflow-hidden rounded-[18px] border border-[rgba(6,59,24,0.12)] bg-[#d9edcf] !text-[#063b18] shadow-[0_18px_44px_rgba(20,44,22,0.08)] transition-all duration-300 hover:-translate-y-[5px] hover:border-[rgba(6,59,24,0.22)] hover:shadow-[0_24px_58px_rgba(20,44,22,0.14)] max-[1180px]:min-h-[320px] max-[1180px]:flex-auto max-[768px]:min-h-0 max-[768px]:grid-cols-1">
+                  <article data-product-card key={product.id} className="group relative grid min-h-[330px] min-w-0 flex-[0_0_var(--product-card-width)] snap-start grid-cols-[minmax(210px,38%)_minmax(0,1fr)] items-stretch overflow-hidden rounded-[18px] border border-[rgba(6,59,24,0.12)] bg-[#d9edcf] !text-[#063b18] shadow-[0_18px_44px_rgba(20,44,22,0.08)] transition-all duration-300 hover:-translate-y-[5px] hover:border-[rgba(6,59,24,0.22)] hover:shadow-[0_24px_58px_rgba(20,44,22,0.14)] max-[1180px]:w-full max-[1180px]:min-h-[320px] max-[1180px]:flex-auto max-[768px]:min-h-0 max-[768px]:grid-cols-1">
                     <div className="relative flex min-h-full w-full items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_58%,rgba(79,198,107,0.24),transparent_42%),linear-gradient(145deg,#e6f2dd_0%,#cce4bd_100%)] px-[1.6rem] py-[2.1rem] after:absolute after:bottom-[22px] after:left-[12%] after:right-[12%] after:h-[18px] after:rounded-full after:bg-[rgba(6,59,24,0.12)] after:blur-xl max-[768px]:min-h-[220px] max-[768px]:px-[1.4rem] max-[768px]:pb-[1.45rem] max-[768px]:pt-[1.8rem]">
                       <img className="relative z-[1] !h-60 !w-[min(86%,220px)] object-contain drop-shadow-[0_20px_18px_rgba(6,59,24,0.16)] transition-transform duration-500 group-hover:-translate-y-1 max-[768px]:!h-[190px]" src={product.images[0]} alt={product.name} loading="lazy" decoding="async" />
                     </div>
@@ -210,7 +210,7 @@ const ProductSection: React.FC = () => {
                 );
               })}
               <article
-                className="flex min-h-[320px] flex-[0_0_var(--product-card-width)] snap-start cursor-pointer flex-col items-start justify-center rounded-none !border-0 bg-transparent px-[2.6rem] py-[2.4rem] !text-[#061407] shadow-none max-[1180px]:flex-auto max-[768px]:min-h-0 max-[768px]:items-center max-[768px]:px-5 max-[768px]:py-6 max-[768px]:text-center"
+                className="col-span-full flex min-h-[320px] min-w-0 w-full flex-[0_0_var(--product-card-width)] snap-start cursor-pointer flex-col items-start justify-center rounded-none !border-0 bg-transparent px-[2.6rem] py-[2.4rem] !text-[#061407] shadow-none max-[1180px]:flex-auto max-[768px]:min-h-0 max-[768px]:items-center max-[768px]:px-5 max-[768px]:py-6 max-[768px]:text-center"
                 onClick={() => navigate("/products")}
               >
                 <span className="mb-[0.8rem] block text-[0.72rem] font-black uppercase tracking-[0.24em] !text-[#06451b]">Produk Lainnya</span>

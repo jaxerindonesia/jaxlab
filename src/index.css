@@ -297,6 +297,24 @@ footer {
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+@media (max-width: 1180px) {
+  #products .product-track {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    max-width: 980px;
+    overflow: visible;
+    padding: 0;
+    scroll-snap-type: none;
+  }
+
+  #products .product-track [data-product-card],
+  #products .product-track > article:last-child {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .scroll-reveal {
     opacity: 1;
