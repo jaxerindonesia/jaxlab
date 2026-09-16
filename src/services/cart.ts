@@ -71,7 +71,7 @@ export function syncCart(): Promise<boolean> {
         if (getMember()?.id !== member.id) return false;
         if (localStorage.getItem(`${key}:dirty`)) {
           const snapshot = localStorage.getItem(key) ?? '[]';
-          await api('/api/members/cart', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ memberId: member.id, items: JSON.parse(snapshot) }) });
+          await api('/api/members/cart', { method: 'PUT', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ memberId: member.id, items: JSON.parse(snapshot) }) });
           if (localStorage.getItem(key) === snapshot) localStorage.removeItem(`${key}:dirty`);
         } else {
           const result = await api<{ memberId: string; items: CartItemDto[] }>('/api/members/cart');

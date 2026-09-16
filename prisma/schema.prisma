@@ -47,6 +47,7 @@ model Member {
   affiliatePhotos Json @default("[]") @map("affiliate_photos")
   cart Json @default("[]")
   sessions MemberSession[]
+  actionTokens MemberActionToken[]
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
@@ -66,6 +67,19 @@ model MemberSession {
   @@index([memberId])
   @@index([expiresAt])
   @@map("member_sessions")
+}
+
+model MemberActionToken {
+  tokenHash String @id @map("token_hash")
+  memberId String @map("member_id")
+  purpose String
+  email String
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  @@unique([memberId, purpose])
+  @@index([expiresAt])
+  @@map("member_action_tokens")
 }
 
 model Order {

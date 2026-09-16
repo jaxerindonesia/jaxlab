@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '../lib/prisma';
 import { getProductWeight } from '../lib/product-weight';
+import { createShippingCache } from '../lib/shipping-cache';
 
 export const router = Router();
 
@@ -19,6 +20,8 @@ export type ShippingOption = {
   cost: number;
   etd: string;
 };
+
+const cachedQuote = createShippingCache<ShippingOption[]>();
 
 async function rajaOngkir(path: string, init?: RequestInit) {
   const response = await fetch(`${baseUrl()}${path}`, {
@@ -51,9 +54,11 @@ export async function calculateShipping(destinationId: number, weight: number): 
 
 router.get('/destinations', async (req, res) => {
   const search = String(req.query.search ?? '').trim();
+  const offset = Number(req.query.offset ?? 0);
+  if (!Number.isSafeInteger(offset) || offset < 0) return res.status(400).json({ error: 'Halaman pencarian tidak valid' });
   if (search.length < 3) return res.status(400).json({ error: 'Ketik minimal 3 karakter' });
   try {
-    const params = new URLSearchParams({ search, limit: '10', offset: '0' });
+    const params = new URLSearchParams({ search, limit: '10', offset: String(offset) });
     const data = await rajaOngkir(`/destination/domestic-destination?${params}`);
     return res.json(Array.isArray(data) ? data : []);
   } catch (error) {
@@ -76,7 +81,8 @@ router.post('/costs', async (req, res) => {
     const weights = new Map(products.map((product) => [product.id, getProductWeight(product.detail?.specs).weightGrams]));
     if (items.some((item) => !weights.has(item.productId))) return res.status(400).json({ error: 'Produk tidak tersedia' });
     const weight = items.reduce((sum, item) => sum + weights.get(item.productId)! * item.qty, 0);
-    return res.json(await calculateShipping(destinationId, weight));
+    const key = JSON.stringify([baseUrl(), process.env.RAJAONGKIR_ORIGIN_ID, process.env.RAJAONGKIR_COURIERS, destinationId, weight]);
+    return res.json(await cachedQuote(key, () => calculateShipping(destinationId, weight)));
   } catch (error) {
     return res.status(502).json({ error: error instanceof Error ? error.message : 'Gagal menghitung ongkir' });
   }

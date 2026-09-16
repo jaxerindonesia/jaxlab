@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import { Eye, EyeOff, MapPin } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import ShippingDestinationSearch from "../../components/ShippingDestinationSearch";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { TagPill } from "../../components/ui/site";
@@ -10,7 +11,6 @@ import { claimGuestCart } from '../../services/cart';
 import {
   loginMember,
   registerMember,
-  searchShippingDestinations,
   type ShippingDestination,
 } from "../../services/service-api";
 
@@ -35,29 +35,9 @@ export default function MemberAuthPage() {
       "",
   });
   const [locationQuery, setLocationQuery] = useState("");
-  const [locationOptions, setLocationOptions] = useState<ShippingDestination[]>(
-    [],
-  );
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  useEffect(() => {
-    if (
-      mode !== "register" ||
-      form.shippingDestinationId ||
-      locationQuery.trim().length < 3
-    ) {
-      setLocationOptions([]);
-      return;
-    }
-    const timer = window.setTimeout(() => {
-      searchShippingDestinations(locationQuery.trim())
-        .then(setLocationOptions)
-        .catch(() => setLocationOptions([]));
-    }, 350);
-    return () => window.clearTimeout(timer);
-  }, [locationQuery, form.shippingDestinationId, mode]);
 
   const selectLocation = (location: ShippingDestination) => {
     setForm((current) => ({
@@ -69,13 +49,15 @@ export default function MemberAuthPage() {
       postalCode: location.zip_code,
     }));
     setLocationQuery(location.label);
-    setLocationOptions([]);
   };
 
   const submit = async () => {
     if (loading || uploading) return;
     if (!form.email.trim() || !form.password) { toast.error("Masukkan email dan password."); return; }
     if (mode === 'register' && form.isAffiliate && !form.affiliatePhotos.length) { toast.error('Unggah minimal satu foto pendukung affiliate.'); return; }
+    if (mode === 'register' && (!form.shippingDestinationId || !form.address.trim())) {
+      toast.error('Pilih wilayah pengiriman dan isi detail alamat lengkap.'); return;
+    }
     setLoading(true);
     try {
       const member =
@@ -210,42 +192,15 @@ export default function MemberAuthPage() {
 
               {mode === "register" && (
                 <div className="rounded-2xl border border-[#dce9df] bg-[#f5faf6] p-4">
-                  <label className="relative block">
-                    <span className="mb-1.5 flex items-center gap-2 text-[0.92rem] font-semibold text-[#304337]">
-                      <MapPin size={17} /> Cari Wilayah Pengiriman
-                    </span>
-                    <input
-                      className="w-full rounded-xl border border-[#d6dfd5] bg-white px-3.5 py-3 text-[0.95rem] !text-[#1d2e22] outline-none focus:border-[var(--secondary-green)]"
-                      value={locationQuery}
-                      onChange={(event) => {
-                        setLocationQuery(event.target.value);
-                        setForm({
-                          ...form,
-                          shippingDestinationId: 0,
-                          shippingDestination: "",
-                          province: "",
-                          city: "",
-                          postalCode: "",
-                        });
-                      }}
-                      placeholder="Kelurahan, kecamatan, kota, atau kode pos"
-                      autoComplete="off"
-                    />
-                    {locationOptions.length > 0 && (
-                      <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded-xl border border-[#d9e6dc] bg-white p-1 shadow-xl">
-                        {locationOptions.map((location) => (
-                          <button
-                            key={location.id}
-                            type="button"
-                            onClick={() => selectLocation(location)}
-                            className="block w-full rounded-lg border-0 bg-white px-3 py-2.5 text-left text-xs leading-relaxed !text-[#31483a] hover:bg-[#edf6ef]"
-                          >
-                            {location.label}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </label>
+                  <ShippingDestinationSearch
+                    value={locationQuery}
+                    selected={Boolean(form.shippingDestinationId)}
+                    onChange={(value) => {
+                      setLocationQuery(value);
+                      setForm(current => ({ ...current, shippingDestinationId: 0, shippingDestination: "", province: "", city: "", postalCode: "" }));
+                    }}
+                    onSelect={selectLocation}
+                  />
                   <div className="mt-3 grid grid-cols-3 gap-2 max-md:grid-cols-1">
                     <input
                       readOnly
@@ -266,17 +221,19 @@ export default function MemberAuthPage() {
                       className="rounded-xl border border-[#dce9df] bg-[#eef4ef] px-3 py-2.5 text-sm !text-[#405348]"
                     />
                   </div>
-                  <label className="mt-3 block">
+                  <label htmlFor="register-address" className="mt-3 block">
                     <span className="mb-1.5 block text-[0.92rem] font-semibold text-[#304337]">
                       Detail Alamat
                     </span>
                     <textarea
+                      id="register-address"
+                      aria-label="Detail Alamat"
                       className="w-full rounded-xl border border-[#d6dfd5] bg-white px-3.5 py-3 text-[0.95rem] !text-[#1d2e22] outline-none focus:border-[var(--secondary-green)]"
                       value={form.address}
                       onChange={(e) =>
                         setForm({ ...form, address: e.target.value })
                       }
-                      placeholder="Nama jalan, nomor rumah, RT/RW, patokan"
+                      placeholder="Nama tempat/usaha, jalan, nomor rumah, RT/RW, patokan"
                       rows={3}
                     />
                   </label>
@@ -329,6 +286,7 @@ export default function MemberAuthPage() {
               </label>
             </div>
 
+            {mode === 'login' && <Link to="/member/forgot-password" className="mt-3 block text-right text-sm font-semibold text-[#14552e]">Lupa password?</Link>}
             {mode === 'register' && (
               <fieldset className="mt-5 rounded-2xl border border-[#dce9df] bg-[#f5faf6] p-4 text-[#304337]" disabled={loading || uploading}>
                 <legend className="px-1 font-semibold">Ingin menjadi affiliate?</legend>

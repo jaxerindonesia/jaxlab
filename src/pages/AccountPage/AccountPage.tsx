@@ -14,7 +14,9 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import { clearMember, getMember, isMemberLoggedIn } from "../../services/auth";
+import { clearMember, getMember, isMemberLoggedIn, setMember } from "../../services/auth";
+import { getProfile } from '../../services/api/members';
+import ProfileEditor from './ProfileEditor';
 import {
   formatRupiah,
   getReferralSummary,
@@ -23,9 +25,20 @@ import {
 
 const AccountPage: React.FC = () => {
   const navigate = useNavigate();
-  const member = getMember();
+  const [member, setProfile] = useState(getMember);
+  const [editing, setEditing] = useState(false);
+  const [profileMessage, setProfileMessage] = useState('');
   const [referral, setReferral] = useState<ReferralSummary | null>(null);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!member?.id) return;
+    let active = true;
+    getProfile().then(profile => {
+      if (active) { setMember(profile); setProfile(profile); }
+    }).catch(() => { /* Keep existing profile visible; expired sessions are handled by the API client. */ });
+    return () => { active = false; };
+  }, [member?.id]);
 
   useEffect(() => {
     if (member?.id)
@@ -101,7 +114,16 @@ const AccountPage: React.FC = () => {
               </span>
             </div>
 
-            <div className="grid items-stretch gap-6 lg:grid-cols-[0.85fr_1.15fr]">
+            <div className="mb-5 flex flex-wrap items-center gap-4">
+              <button type="button" onClick={() => { setEditing(true); setProfileMessage(''); }} className="rounded-xl bg-[#14552e] px-5 py-3 font-bold text-white">Edit Profil</button>
+              <Link to="/member/forgot-password" className="text-sm font-semibold text-[#14552e]">Lupa / Ubah Password</Link>
+            </div>
+            {profileMessage && <p role="status" className="mb-4 rounded-xl bg-[#edf6ef] p-4 text-sm text-[#14552e]">{profileMessage}</p>}
+            {editing && <ProfileEditor key={member.id} member={member} onCancel={() => setEditing(false)} onSaved={(profile, pendingEmail) => {
+              setMember(profile); setProfile(profile); setEditing(false);
+              setProfileMessage(pendingEmail ? `Profil disimpan. Tautan verifikasi dikirim ke ${pendingEmail}. Email login tetap ${profile.email} sampai verifikasi selesai.` : 'Profil berhasil diperbarui.');
+            }} />}
+            <div className="mt-5 grid items-stretch gap-6 lg:grid-cols-[0.85fr_1.15fr]">
               <div className="rounded-2xl bg-[linear-gradient(145deg,#f3f8f4,#edf3ee)] p-7">
                 <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-[var(--primary-green)] text-white">
                   <User size={28} />

@@ -1,11 +1,13 @@
-import { createHash, randomBytes } from 'node:crypto';
+import { randomBytes } from 'node:crypto';
 import { Router } from 'express';
 import { prisma } from '../lib/prisma';
 import { createMemberSession, requireMember, revokeMemberSession } from '../lib/member-session';
+import { hashPassword, verifyPassword } from '../lib/password';
+import { accountRouter } from './member-account';
 
 export const router = Router();
+router.use(accountRouter);
 
-const hash = (v: string) => createHash('sha256').update(v).digest('hex');
 const hasMemberModel = () => typeof (prisma as unknown as { member?: unknown }).member !== 'undefined';
 
 router.post('/register', async (req, res) => {
@@ -40,7 +42,7 @@ router.post('/register', async (req, res) => {
   const referralCode = randomBytes(5).toString('hex').toUpperCase();
 
   const member = await prisma.member.create({
-    data: { name, email, address, phoneWa, passwordHash: hash(password), shippingDestinationId, shippingDestination, province, city, postalCode, referralCode, referredById: referrer?.id, isAffiliate, affiliatePhotos },
+    data: { name, email, address, phoneWa, passwordHash: await hashPassword(password), shippingDestinationId, shippingDestination, province, city, postalCode, referralCode, referredById: referrer?.id, isAffiliate, affiliatePhotos },
     select: { id: true, name: true, email: true, address: true, phoneWa: true, shippingDestinationId: true, shippingDestination: true, province: true, city: true, postalCode: true, referralCode: true },
   });
   const expiresAt = await createMemberSession(member.id, res);
@@ -52,7 +54,7 @@ router.post('/login', async (req, res) => {
   const email = String(req.body?.email ?? '').trim().toLowerCase();
   const password = String(req.body?.password ?? '');
   const member = await prisma.member.findUnique({ where: { email } });
-  if (!member || member.passwordHash !== hash(password)) return res.status(401).json({ error: 'Email atau password salah. Silakan periksa kembali.' });
+  if (!member || !await verifyPassword(password, member.passwordHash)) return res.status(401).json({ error: 'Email atau password salah. Silakan periksa kembali.' });
 
   const expiresAt = await createMemberSession(member.id, res);
   res.json({ id: member.id, name: member.name, email: member.email, address: member.address, phoneWa: member.phoneWa, shippingDestinationId: member.shippingDestinationId, shippingDestination: member.shippingDestination, province: member.province, city: member.city, postalCode: member.postalCode, referralCode: member.referralCode, isAffiliate: member.isAffiliate, expiresAt });

@@ -14,21 +14,19 @@ import {
   UserRound,
 } from "lucide-react";
 import { formatWeight } from "../../services/format-weight";
+import ShippingDestinationSearch from "../../components/ShippingDestinationSearch";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { AUTH_CHANGED_EVENT, getMember } from "../../services/auth";
 import { CART_CHANGED_EVENT, clearCart, getCart, setCart } from "../../services/cart";
 import {
-  checkoutOrder,
   formatRupiah,
   getAllProducts,
   getShippingCosts,
-  searchShippingDestinations,
   type ProductDto,
   type ShippingDestination,
   type ShippingOption,
 } from "../../services/service-api";
-import { savePaymentSession } from "../../services/payment-session";
 
 declare global {
   interface Window {
@@ -52,7 +50,10 @@ export default function CartPage() {
   const member = getMember();
   const [cart, setCartState] = useState(getCart());
   useEffect(() => {
-    const sync = () => setCartState(getCart());
+    const sync = () => {
+      const next = getCart();
+      setCartState(previous => JSON.stringify(previous) === JSON.stringify(next) ? previous : next);
+    };
     window.addEventListener(CART_CHANGED_EVENT, sync);
     window.addEventListener(AUTH_CHANGED_EVENT, sync);
     window.addEventListener('storage', sync);
@@ -63,11 +64,10 @@ export default function CartPage() {
     };
   }, []);
   const [products, setProducts] = useState<ProductDto[]>([]);
-  const [loadingCheckout, setLoadingCheckout] = useState(false);
   const [destinationQuery, setDestinationQuery] = useState(
     member?.shippingDestination ?? "",
   );
-  const [destinations, setDestinations] = useState<ShippingDestination[]>([]);
+  const [deliveryAddress, setDeliveryAddress] = useState("");
   const [selectedDestination, setSelectedDestination] =
     useState<ShippingDestination | null>(() =>
       member?.shippingDestinationId && member.shippingDestination
@@ -96,19 +96,6 @@ export default function CartPage() {
       .catch(() => setProducts([]));
   }, []);
 
-  useEffect(() => {
-    if (selectedDestination || destinationQuery.trim().length < 3) {
-      setDestinations([]);
-      return;
-    }
-    const timer = window.setTimeout(() => {
-      searchShippingDestinations(destinationQuery.trim())
-        .then(setDestinations)
-        .catch(() => setDestinations([]));
-    }, 350);
-    return () => window.clearTimeout(timer);
-  }, [destinationQuery, selectedDestination]);
-
   const rows = useMemo<CartRow[]>(
     () =>
       cart
@@ -130,13 +117,11 @@ export default function CartPage() {
   const total = subtotal + shippingAmount;
 
   const totalWeight = rows.reduce((sum, row) => sum + row.weightGrams, 0);
-  const weightEstimated = rows.some((row) => row.product.weightEstimated);
 
   const chooseDestination = (destination: ShippingDestination) => {
     preferredShipping.current = null;
     setSelectedDestination(destination);
     setDestinationQuery(destination.label);
-    setDestinations([]);
     setSelectedShipping(null);
   };
 
@@ -149,6 +134,7 @@ export default function CartPage() {
       return;
     }
     setLoadingShipping(true);
+    const timer = window.setTimeout(() => {
     getShippingCosts(selectedDestination.id, cart)
       .then((options) => {
         if (!active) return;
@@ -165,7 +151,8 @@ export default function CartPage() {
         if (active) alert(error.message || "Gagal mengambil ongkir");
       })
       .finally(() => { if (active) setLoadingShipping(false); });
-    return () => { active = false; };
+    }, 250);
+    return () => { active = false; window.clearTimeout(timer); };
   }, [selectedDestination, cart, rows.length, totalWeight]);
 
   const updateQty = (productId: string, qty: number) => {
@@ -189,45 +176,48 @@ export default function CartPage() {
     setCartState(next);
   };
 
-  const checkout = async () => {
-    if (!member || !cart.length || !selectedDestination || !selectedShipping || loadingShipping)
+  const checkout = () => {
+    if (!member || !deliveryAddress.trim() || !rows.length || rows.length !== cart.length || !selectedDestination || !selectedShipping || loadingShipping)
       return;
-    setLoadingCheckout(true);
-    try {
-      const res = await checkoutOrder(member.id, {
-        items: cart,
-        shipping: {
-          destinationId: selectedDestination.id,
-          destinationLabel: selectedDestination.label,
-          courierCode: selectedShipping.code,
-          service: selectedShipping.service,
-        },
-      });
-      savePaymentSession(res);
-      clearCart();
-      setCartState([]);
-      if (res.paymentProvider === "xendit" && res.redirectUrl) {
-        window.location.href = res.redirectUrl;
-        return;
-      }
-      if (!window.snap) {
-        if (res.redirectUrl) {
-          window.location.href = res.redirectUrl;
-          return;
-        }
-        alert("Snap Midtrans belum dimuat. Silakan hubungi admin.");
-        return;
-      }
-      window.snap.pay(res.snapToken, {
-        onSuccess: () => {
-          alert("Pembayaran berhasil. Pesanan akan segera diproses.");
-        },
-      });
-    } catch (e) {
-      alert((e as Error).message || "Gagal checkout");
-    } finally {
-      setLoadingCheckout(false);
-    }
+
+    const address = deliveryAddress.trim();
+    const normalizedAddress = ` ${address.toLocaleLowerCase('id').replace(/[^\p{L}\p{N}]+/gu, ' ')} `;
+    const regionParts = selectedDestination.label.split(',').map(part => part.trim()).filter(Boolean);
+    if (selectedDestination.zip_code && !regionParts.includes(selectedDestination.zip_code)) regionParts.push(selectedDestination.zip_code);
+    const fullAddress = [address, ...regionParts.filter(part =>
+      !normalizedAddress.includes(` ${part.toLocaleLowerCase('id').replace(/[^\p{L}\p{N}]+/gu, ' ')} `)
+    )].join(', ');
+    const message = [
+      "Halo JaxLab, saya ingin melanjutkan pembayaran pesanan berikut:",
+      "",
+      "*Rincian Produk*",
+      ...rows.map((row, index) =>
+        `${index + 1}. ${row.product.name}\n   ${row.qty} x ${formatRupiah(row.product.price)} = ${formatRupiah(row.subtotal)}`
+      ),
+      "",
+      "*Ringkasan Pembayaran*",
+      `Subtotal Produk: ${formatRupiah(subtotal)}`,
+      `Ongkos Kirim: ${formatRupiah(shippingAmount)}`,
+      `Total Pembayaran: ${formatRupiah(total)}`,
+      "",
+      "*Pengiriman*",
+      "Pengirim: Jaxlab Indonesia",
+      `Kurir: ${selectedShipping.code.toUpperCase()} - ${selectedShipping.service}`,
+      `Estimasi: ${selectedShipping.etd || "-"}`,
+      "",
+      "*Dikirim kepada*",
+      `Nama: ${member.name}`,
+      `Email: ${member.email}`,
+      `WhatsApp: ${member.phoneWa}`,
+      `Alamat: ${fullAddress}`,
+      "",
+      "Mohon konfirmasi pesanan dan informasi pembayarannya. Terima kasih.",
+    ].join("\n");
+
+    const whatsappUrl = `https://wa.me/628131536969?text=${encodeURIComponent(message)}`;
+    clearCart();
+    setCartState([]);
+    window.location.assign(whatsappUrl);
   };
 
   if (!member) {
@@ -404,45 +394,29 @@ export default function CartPage() {
                 <div className="mb-2 flex items-center gap-2 text-sm font-bold !text-[#25432f]">
                   <MapPin size={17} /> Tujuan pengiriman
                 </div>
-                {member.shippingDestinationId ? (
-                  <div className="rounded-xl border border-[#d5e3d8] bg-white px-3 py-3 text-xs leading-relaxed !text-[#405348]">
-                    <strong className="block !text-[#25432f]">
-                      {member.city}, {member.province} · {member.postalCode}
-                    </strong>
-                    <span>{member.shippingDestination}</span>
-                  </div>
-                ) : (
-                  <div className="relative">
-                    <input
-                      id="shipping-destination"
-                      value={destinationQuery}
-                      onChange={(event) => {
-                        setDestinationQuery(event.target.value);
-                        preferredShipping.current = null;
-                        setSelectedDestination(null);
-                        setSelectedShipping(null);
-                        setShippingOptions([]);
-                      }}
-                      placeholder="Cari kelurahan atau kode pos"
-                      autoComplete="off"
-                      className="min-h-11 w-full rounded-xl border border-[#ceddd1] bg-white px-3 text-sm !text-[#25382b] outline-none focus:border-[#14552e]"
-                    />
-                    {destinations.length > 0 && (
-                      <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-20 max-h-56 overflow-y-auto rounded-xl border border-[#d9e6dc] bg-white p-1 shadow-xl">
-                        {destinations.map((destination) => (
-                          <button
-                            key={destination.id}
-                            type="button"
-                            onClick={() => void chooseDestination(destination)}
-                            className="block w-full rounded-lg border-0 bg-white px-3 py-2.5 text-left text-xs leading-relaxed !text-[#31483a] hover:bg-[#edf6ef]"
-                          >
-                            {destination.label}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
+                <ShippingDestinationSearch
+                  value={destinationQuery}
+                  selected={Boolean(selectedDestination)}
+                  onChange={(value) => {
+                    setDestinationQuery(value);
+                    preferredShipping.current = null;
+                    setSelectedDestination(null);
+                    setSelectedShipping(null);
+                    setShippingOptions([]);
+                  }}
+                  onSelect={chooseDestination}
+                />
+                <label className="mt-3 block text-sm font-semibold !text-[#304337]">
+                  Detail Alamat
+                  <textarea
+                    aria-label="Detail Alamat"
+                    value={deliveryAddress}
+                    onChange={event => setDeliveryAddress(event.target.value)}
+                    placeholder="Nama tempat/usaha, jalan, nomor rumah, RT/RW, patokan"
+                    rows={3}
+                    className="mt-1.5 w-full rounded-xl border border-[#ceddd1] bg-white px-3 py-2 text-sm !text-[#25382b]"
+                  />
+                </label>
                 {loadingShipping && (
                   <p className="mb-0 mt-3 text-xs !text-[#68736b]">
                     Mengambil pilihan kurir...
@@ -529,10 +503,6 @@ export default function CartPage() {
               </div>
               <div className="space-y-3 text-sm !text-[#536258]">
                 <div className="flex justify-between gap-4">
-                  <span>Total Berat{weightEstimated ? " (estimasi)" : ""}</span>
-                  <strong className="!text-[#31483a]">{formatWeight(totalWeight)}</strong>
-                </div>
-                <div className="flex justify-between gap-4">
                   <span>Subtotal Produk</span>
                   <strong className="!text-[#31483a]">
                     {formatRupiah(subtotal)}
@@ -564,25 +534,25 @@ export default function CartPage() {
                   <p className="m-0 font-bold !text-[#25382b]">{member.name}</p>
                   <p className="m-0 break-all">{member.email}</p>
                   <p className="m-0">{member.phoneWa}</p>
-                  <p className="m-0">{member.address}</p>
+                  <p className="m-0">{deliveryAddress}</p>
                 </div>
               </div>
 
               <div className="my-4 flex items-start gap-2 rounded-xl bg-[#fff8e8] p-3 text-xs leading-relaxed !text-[#705a23]">
                 <ShieldCheck className="mt-0.5 shrink-0" size={17} />
                 <span>
-                  Tarif pengiriman dihitung langsung dan diverifikasi ulang saat
-                  pembayaran.
+                  Rincian pesanan akan terisi otomatis di WhatsApp. Kirim pesan
+                  untuk melanjutkan pembayaran dengan admin.
                 </span>
               </div>
 
               <button
                 className="inline-flex min-h-[54px] w-full items-center justify-center gap-2 rounded-xl border-0 bg-[#14552e] px-5 font-extrabold text-white shadow-[0_12px_28px_rgba(20,85,46,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0f4625] disabled:cursor-not-allowed disabled:opacity-55"
                 onClick={checkout}
-                disabled={!rows.length || !selectedShipping || loadingShipping || loadingCheckout}
+                disabled={!deliveryAddress.trim() || !rows.length || rows.length !== cart.length || !selectedDestination || !selectedShipping || loadingShipping}
               >
                 <CreditCard size={19} />{" "}
-                {loadingCheckout ? "Memproses..." : "Bayar Online"}
+                Bayar Online
               </button>
               {rows.length > 0 && (
                 <button

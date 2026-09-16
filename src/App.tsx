@@ -11,6 +11,7 @@ const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage/ProductDe
 const AdminPage = lazy(() => import('./pages/AdminPage/AdminPage'));
 const CartPage = lazy(() => import('./pages/CartPage/CartPage'));
 const MemberAuthPage = lazy(() => import('./pages/MemberAuth/MemberAuthPage'));
+const AccountRecoveryPage = lazy(() => import('./pages/MemberAuth/AccountRecoveryPage'));
 const PaymentSuccessPage = lazy(() => import('./pages/PaymentSuccessPage'));
 const PaymentErrorPage = lazy(() => import('./pages/PaymentErrorPage'));
 const OrderHistoryPage = lazy(() => import('./pages/OrderHistoryPage/OrderHistoryPage'));
@@ -35,6 +36,9 @@ function App() {
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/member" element={<AccountPage />} />
           <Route path="/member/auth" element={<MemberAuthPage />} />
+          <Route path="/member/forgot-password" element={<AccountRecoveryPage key="forgot" />} />
+          <Route path="/member/reset-password" element={<AccountRecoveryPage key="reset" />} />
+          <Route path="/member/verify-email" element={<AccountRecoveryPage key="verify" />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/orders/history" element={<OrderHistoryPage />} />
           <Route path="/payment/success" element={<PaymentSuccessPage />} />
