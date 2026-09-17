@@ -116,7 +116,7 @@ const AccountPage: React.FC = () => {
 
             <div className="mb-5 flex flex-wrap items-center gap-4">
               <button type="button" onClick={() => { setEditing(true); setProfileMessage(''); }} className="rounded-xl bg-[#14552e] px-5 py-3 font-bold text-white">Edit Profil</button>
-              <Link to="/member/forgot-password" className="text-sm font-semibold text-[#14552e]">Lupa / Ubah Password</Link>
+              <Link to="/member/forgot-password" className="text-sm font-medium !text-[#53685a] underline decoration-[#b7cdbb] underline-offset-4 transition-colors hover:!text-[#14552e]">Lupa / Ubah Password</Link>
             </div>
             {profileMessage && <p role="status" className="mb-4 rounded-xl bg-[#edf6ef] p-4 text-sm text-[#14552e]">{profileMessage}</p>}
             {editing && <ProfileEditor key={member.id} member={member} onCancel={() => setEditing(false)} onSaved={(profile, pendingEmail) => {

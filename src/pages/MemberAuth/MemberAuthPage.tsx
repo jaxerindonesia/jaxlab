@@ -286,7 +286,7 @@ export default function MemberAuthPage() {
               </label>
             </div>
 
-            {mode === 'login' && <Link to="/member/forgot-password" className="mt-3 block text-right text-sm font-semibold text-[#14552e]">Lupa password?</Link>}
+            {mode === 'login' && <Link to="/member/forgot-password" className="mt-3 block text-right text-sm font-medium !text-[#3f7654] underline decoration-[#b7d5bf] underline-offset-4 transition-colors hover:!text-[#14552e]">Lupa password?</Link>}
             {mode === 'register' && (
               <fieldset className="mt-5 rounded-2xl border border-[#dce9df] bg-[#f5faf6] p-4 text-[#304337]" disabled={loading || uploading}>
                 <legend className="px-1 font-semibold">Ingin menjadi affiliate?</legend>

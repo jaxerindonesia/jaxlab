@@ -29,12 +29,16 @@ async function rajaOngkir(path: string, init?: RequestInit) {
     headers: { key: apiKey(), ...init?.headers },
     signal: AbortSignal.timeout(12_000),
   });
-  const body = await response.json().catch(() => null) as { data?: unknown; meta?: { message?: string } } | null;
-  if (!response.ok || !body) throw new Error(body?.meta?.message || `RajaOngkir error ${response.status}`);
+  const body = await response.json().catch(() => null) as { data?: unknown; meta?: { code?: number; status?: string; message?: string } } | null;
+  if (!response.ok || !body || (body.meta?.code !== undefined && body.meta.code >= 400) || body.meta?.status === 'error') {
+    throw new Error(body?.meta?.message || `RajaOngkir error ${response.status}`);
+  }
   return body.data;
 }
 
 export async function calculateShipping(destinationId: number, weight: number): Promise<ShippingOption[]> {
+  if (!Number.isInteger(destinationId) || destinationId <= 0) throw new Error('Tujuan pengiriman belum valid');
+  if (!Number.isFinite(weight) || weight <= 0) throw new Error('Berat pengiriman belum valid');
   const origin = Number(process.env.RAJAONGKIR_ORIGIN_ID);
   if (!Number.isInteger(origin) || origin <= 0) throw new Error('RAJAONGKIR_ORIGIN_ID belum valid');
   const form = new URLSearchParams({
@@ -49,7 +53,11 @@ export async function calculateShipping(destinationId: number, weight: number): 
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: form,
   });
-  return Array.isArray(data) ? data as ShippingOption[] : [];
+  if (!Array.isArray(data)) throw new Error('Respons tarif RajaOngkir tidak valid');
+  if (data.some((option) => !option || typeof option !== 'object' || !Number.isFinite(Number((option as { cost?: unknown }).cost)) || Number((option as { cost?: unknown }).cost) < 0)) {
+    throw new Error('Tarif RajaOngkir tidak valid');
+  }
+  return data as ShippingOption[];
 }
 
 router.get('/destinations', async (req, res) => {
