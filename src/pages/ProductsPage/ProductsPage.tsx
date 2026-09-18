@@ -126,7 +126,6 @@ const ProductsPage: React.FC = () => {
                                             <img className="relative z-[1] max-h-[250px] !w-[min(100%,240px)] object-contain drop-shadow-[0_18px_22px_rgba(6,59,24,0.18)]" src={product.images[0]} alt={product.name} loading={index < 2 ? 'eager' : 'lazy'} decoding="async" width={240} height={250} />
                                         </div>
                                         <div className="flex min-w-0 flex-col pb-[1.8rem] pl-8 pr-8 pt-8 max-[768px]:px-5 max-[768px]:pb-[1.45rem] max-[768px]:pt-[1.35rem]">
-                                            <span className="mb-4 inline-flex min-h-[38px] w-fit items-center rounded-full border border-[rgba(6,59,24,0.18)] bg-white/25 px-4 py-[0.35rem] text-[0.82rem] font-extrabold !text-[#06451b]">{product.badge || product.category}</span>
                                             <h3 className="mb-[1.15rem] text-[clamp(1.6rem,2vw,2.15rem)] font-extrabold leading-[1.15] !text-[#061407]">{product.name}</h3>
 
                                             <ul className="mb-6 grid list-none gap-[0.85rem] p-0 text-[0.95rem] leading-[1.45] !text-[#233326]">

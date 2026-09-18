@@ -9,6 +9,7 @@ import { router as membersRouter } from './routes/members';
 import { router as ordersRouter } from './routes/orders';
 import { router as productsRouter } from './routes/products';
 import { router as shippingRouter } from './routes/shipping';
+import { prisma } from './lib/prisma';
 
 const app = express();
 
@@ -27,6 +28,15 @@ app.use('/api/content', contentRouter);
 app.use('/api/shipping', shippingRouter);
 
 const port = Number(process.env.PORT ?? 3001);
-app.listen(port, () => {
-  console.log(`[jaxlab] api listening on http://localhost:${port}`);
+
+async function start() {
+  await prisma.$connect();
+  app.listen(port, () => {
+    console.log(`[jaxlab] api listening on http://localhost:${port}`);
+  });
+}
+
+start().catch((error) => {
+  console.error('[jaxlab] failed to connect to the database', error);
+  process.exitCode = 1;
 });
