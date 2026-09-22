@@ -35,8 +35,13 @@ const ProductsPage: React.FC = () => {
         return () => { cancelled = true; };
     }, [retry]);
 
-    // Extract unique categories
-    const categories = ['Semua', ...Array.from(new Set(products.map(p => p.category)))];
+    // Extract unique categories. Brand-only categories are hidden because they
+    // duplicate the catalogue title and look like a stray "Jaxlab" filter.
+    const categories = ['Semua', ...Array.from(new Set(
+        products
+            .map((p) => p.category?.trim())
+            .filter((category): category is string => !!category && category.toLowerCase() !== 'jaxlab')
+    ))];
 
     // Filter products
     const filteredProducts = products.filter(product => {

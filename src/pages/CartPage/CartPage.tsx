@@ -127,6 +127,7 @@ export default function CartPage() {
 
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
     setSelectedShipping(null);
     setShippingOptions([]);
     if (!selectedDestination || !cart.length || rows.length !== cart.length || totalWeight <= 0) {
@@ -135,9 +136,13 @@ export default function CartPage() {
     }
     setLoadingShipping(true);
     const timer = window.setTimeout(() => {
-    getShippingCosts(selectedDestination.id, cart)
+    const startedAt = performance.now();
+    const timerLabel = `shipping-total-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    console.time(timerLabel);
+    getShippingCosts(selectedDestination.id, cart, controller.signal)
       .then((options) => {
         if (!active) return;
+        console.debug(`[shipping] frontend response ${(performance.now() - startedAt).toFixed(0)}ms`, { destinationId: selectedDestination.id, options: options.length });
         setShippingOptions(options);
         // Gunakan tarif terbaru untuk layanan yang sama setelah quantity berubah.
         const preferred = preferredShipping.current;
@@ -148,11 +153,11 @@ export default function CartPage() {
         if (!refreshed) preferredShipping.current = null;
       })
       .catch((error: Error) => {
-        if (active) alert(error.message || "Gagal mengambil ongkir");
+        if (active && !controller.signal.aborted) alert(error.message || "Gagal mengambil ongkir");
       })
-      .finally(() => { if (active) setLoadingShipping(false); });
+      .finally(() => { console.timeEnd(timerLabel); if (active) setLoadingShipping(false); });
     }, 250);
-    return () => { active = false; window.clearTimeout(timer); };
+    return () => { active = false; controller.abort(); window.clearTimeout(timer); };
   }, [selectedDestination, cart, rows.length, totalWeight]);
 
   const updateQty = (productId: string, qty: number) => {

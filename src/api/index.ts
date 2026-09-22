@@ -13,6 +13,7 @@ import { prisma } from './lib/prisma';
 
 const app = express();
 
+app.disable('etag');
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));

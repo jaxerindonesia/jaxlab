@@ -7,7 +7,13 @@ import { decodeProductImage, getCachedProductImage, withProductImageUrls } from 
 
 export const router = Router();
 
+router.use((_req, res, next) => {
+  res.set('Cache-Control', 'no-store');
+  next();
+});
+
 const detailSelect = {
+  updatedAt: true,
   description: true,
   subtitle: true,
   badge: true,
@@ -35,7 +41,7 @@ router.get('/', async (_req, res) => {
     },
   });
 
-  res.json(rows.map((r) => withProductImageUrls(toApiProduct({ ...r, detail: r.detail ?? null }))));
+  res.json(rows.map((r) => withProductImageUrls(toApiProduct({ ...r, detail: r.detail ?? null }), r.detail?.updatedAt.getTime().toString())));
 });
 
 router.get('/featured', async (_req, res) => {
@@ -78,7 +84,7 @@ router.get('/featured', async (_req, res) => {
     rows = [...rows, ...fallbackRows];
   }
 
-  res.json(rows.map((r) => withProductImageUrls(toApiProduct({ ...r, detail: r.detail ?? null }))));
+  res.json(rows.map((r) => withProductImageUrls(toApiProduct({ ...r, detail: r.detail ?? null }), r.detail?.updatedAt.getTime().toString())));
 });
 
 router.get('/:id/images/:index', async (req, res) => {
@@ -114,7 +120,7 @@ router.get('/:id', async (req, res) => {
 
   if (!row) return res.status(404).json({ error: 'not found' });
   const product = toApiProduct({ ...row, detail: row.detail ?? null });
-  res.json(req.query.images === 'inline' ? product : withProductImageUrls(product));
+  res.json(req.query.images === 'inline' ? product : withProductImageUrls(product, row.detail?.updatedAt.getTime().toString()));
 });
 
 router.post('/', async (req, res) => {

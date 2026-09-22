@@ -3,9 +3,12 @@ import { forgetMember } from '../auth';
 export async function api<T>(path: string, init?: RequestInit, timeoutMs = 20000): Promise<T> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  const signal = init?.signal
+    ? AbortSignal.any([controller.signal, init.signal])
+    : controller.signal;
 
   try {
-    const res = await fetch(path, { ...init, signal: controller.signal });
+    const res = await fetch(path, { ...init, signal });
     if (!res.ok) {
       const text = await res.text().catch(() => '');
       if (res.status === 401 && !/\/(login|register)$/.test(path) && !path.startsWith('/api/admin')) forgetMember();

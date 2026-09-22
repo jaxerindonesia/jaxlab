@@ -21,14 +21,15 @@ export default function ShippingDestinationSearch({ value, selected, onChange, o
   useEffect(() => {
     if (!enabled) return;
     let active = true;
+    const controller = new AbortController();
     const timer = window.setTimeout(() => {
-      searchShippingDestinations(query, page * 10).then(options => {
+      searchShippingDestinations(query, page * 10, controller.signal).then(options => {
         if (active) setResult({ key, options, error: '' });
       }).catch((error: unknown) => {
-        if (active) setResult({ key, options: [], error: error instanceof Error ? error.message : 'Gagal mencari wilayah.' });
+        if (active && !controller.signal.aborted) setResult({ key, options: [], error: error instanceof Error ? error.message : 'Gagal mencari wilayah.' });
       });
     }, 300);
-    return () => { active = false; window.clearTimeout(timer); };
+    return () => { active = false; controller.abort(); window.clearTimeout(timer); };
   }, [query, page, key, enabled]);
 
   return <div>
