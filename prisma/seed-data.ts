@@ -224,7 +224,7 @@ export const seedCompanyInfo = {
   description:
     'JaxLab adalah merek produk makanan sehat alami yang menghadirkan Bone Broth, minyak zaitun premium, dan produk multivitamin alami. Kami berkomitmen pada bahan minimal proses untuk mendukung gaya hidup sehat sejak dini.',
   email: 'hello@jaxlab.id',
-  phone: '+62 812-3456-7890',
+  phone: '+62 813-1536-969',
   whatsapp: '6281234567890',
   address: 'Jl. Cempaka Putih Tengah XVII No.F33, Jakarta Pusat, Indonesia',
   mapsEmbed:

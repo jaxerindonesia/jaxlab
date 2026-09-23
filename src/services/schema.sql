@@ -115,7 +115,7 @@ INSERT INTO company_info VALUES (
     'Reliable Product to Enhanced Wellness',
     'JaxLab adalah merek produk makanan sehat alami yang menghadirkan Bone Broth, minyak zaitun premium, dan produk multivitamin alami. Kami berkomitmen pada bahan minimal proses untuk mendukung gaya hidup sehat sejak dini.',
     'hello@jaxlab.id',
-    '+62 812-3456-7890',
+    '+62 813-1536-969',
     '6281234567890',
     'Jl. Cempaka Putih Tengah XVII No.F33, Jakarta Pusat, Indonesia',
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.130847862578!2d110.3695!3d-7.7956!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwNDcnNDQuMiJTIDExMMKwMjInMTAuMiJF!5e0!3m2!1sen!2sid!4v1000000000000',

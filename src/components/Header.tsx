@@ -17,7 +17,11 @@ const Header: React.FC = () => {
         || location.pathname.startsWith('/orders')
         || location.pathname.startsWith('/payment')
         || location.pathname === '/contact'
-        || location.pathname === '/cart';
+        || location.pathname === '/cart'
+        || location.pathname === '/terms-and-conditions'
+        || location.pathname === '/refund-policy'
+        || location.pathname === '/terms-of-service'
+        || location.pathname === '/privacy-policy';
 
     useEffect(() => {
         const handleScroll = () => {

@@ -15,7 +15,7 @@ const _companyInfo = {
   description:
     'JaxLab adalah merek produk makanan sehat alami yang menghadirkan Bone Broth, minyak zaitun premium, dan produk multivitamin alami. Kami berkomitmen pada bahan minimal proses untuk mendukung gaya hidup sehat sejak dini.',
   email: 'hello@jaxlab.id',
-  phone: '+62 812-3456-7890',
+  phone: '+62 813-1536-969',
   whatsapp: '6281234567890',
   address: 'Jl. Cempaka Putih Tengah XVII No.F33, Jakarta Pusat, Indonesia',
   mapsEmbed:
@@ -157,10 +157,10 @@ const Footer: React.FC = () => {
                 <Link className={footerLinkClass} to="/about">Tentang JaxLab</Link>
               </li>
               <li>
-                <a className={footerLinkClass} href="#gallery">Blog & Artikel</a>
+                <Link className={footerLinkClass} to="/blog">Blog &amp; Artikel</Link>
               </li>
               <li>
-                <a className={footerLinkClass} href="#hero">Karir</a>
+                <Link className={footerLinkClass} to="/careers">Karir</Link>
               </li>
               <li>
                 <Link className={footerLinkClass} to="/contact">Hubungi Kami</Link>
@@ -171,16 +171,16 @@ const Footer: React.FC = () => {
             <h4 className={columnTitleClass}>Bantuan</h4>
             <ul className={listClass}>
               <li>
-                <a className={footerLinkClass} href="#kenapa">FAQ</a>
+                <Link className={footerLinkClass} to="/faq">FAQ</Link>
               </li>
               <li>
-                <a className={footerLinkClass} href="#products">Cara Pemesanan</a>
+                <Link className={footerLinkClass} to="/how-to-order">Cara Pemesanan</Link>
               </li>
               <li>
-                <a className={footerLinkClass} href="#products">Pengiriman</a>
+                <Link className={footerLinkClass} to="/shipping">Pengiriman</Link>
               </li>
               <li>
-                <a className={footerLinkClass} href="#hero">Kebijakan Privasi</a>
+                <Link className={footerLinkClass} to="/privacy-policy">Kebijakan Privasi</Link>
               </li>
               <li>
                 <Link className={footerLinkClass} to="/terms-and-conditions">Syarat & Ketentuan</Link>

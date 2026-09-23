@@ -19,6 +19,12 @@ const AccountPage = lazy(() => import('./pages/AccountPage/AccountPage'));
 const PaymentResultPage = lazy(() => import('./pages/PaymentResultPage'));
 const FatFastingPage = lazy(() => import('./pages/FatFastingPage/FatFastingPage'));
 const LegalPage = lazy(() => import('./pages/LegalPage/LegalPage'));
+const BlogPage = lazy(() => import('./pages/BlogPage/BlogPage'));
+const FaqPage = lazy(() => import('./pages/FaqPage/FaqPage'));
+const CareersPage = lazy(() => import('./pages/CareersPage/CareersPage'));
+const HowToOrderPage = lazy(() => import('./pages/HowToOrderPage/HowToOrderPage'));
+const ShippingPage = lazy(() => import('./pages/ShippingPage/ShippingPage'));
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage/PrivacyPolicyPage'));
 
 function App() {
   return (
@@ -37,6 +43,12 @@ function App() {
           <Route path="/terms-and-conditions" element={<LegalPage kind="terms" />} />
           <Route path="/refund-policy" element={<LegalPage kind="refund" />} />
           <Route path="/terms-of-service" element={<LegalPage kind="service" />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/faq" element={<FaqPage />} />
+          <Route path="/careers" element={<CareersPage />} />
+          <Route path="/how-to-order" element={<HowToOrderPage />} />
+          <Route path="/shipping" element={<ShippingPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/member" element={<AccountPage />} />
           <Route path="/member/auth" element={<MemberAuthPage />} />
