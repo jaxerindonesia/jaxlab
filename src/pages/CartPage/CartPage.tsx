@@ -90,6 +90,7 @@ export default function CartPage() {
   const [loadingShipping, setLoadingShipping] = useState(false);
   const preferredShipping = useRef<Pick<ShippingOption, "code" | "service"> | null>(null);
   const shippingDrag = useRef({ pointerId: -1, startX: 0, scrollLeft: 0, moved: false });
+  const pendingCheckoutTimers = useRef<number[]>([]);
 
 
   useEffect(() => {
@@ -223,9 +224,17 @@ export default function CartPage() {
       ].join("\n");
 
       const whatsappUrl = `https://wa.me/628131536969?text=${encodeURIComponent(message)}`;
-      clearCart();
-      setCartState([]);
-      window.location.assign(whatsappUrl);
+      const timer = window.setTimeout(() => {
+        clearCart();
+        setCartState([]);
+        setDestinationQuery("");
+        setDeliveryAddress("");
+        setSelectedDestination(null);
+        setSelectedShipping(null);
+        setShippingOptions([]);
+      }, 400);
+      pendingCheckoutTimers.current.push(timer);
+      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
       return;
     }
     const message = [
@@ -256,9 +265,25 @@ export default function CartPage() {
     ].join("\n");
 
     const whatsappUrl = `https://wa.me/628131536969?text=${encodeURIComponent(message)}`;
-    clearCart();
-    setCartState([]);
-    window.location.assign(whatsappUrl);
+    const timer = window.setTimeout(() => {
+      clearCart();
+      setCartState([]);
+      setDestinationQuery(member?.shippingDestination ?? "");
+      setDeliveryAddress("");
+      setSelectedDestination(member?.shippingDestinationId && member.shippingDestination ? {
+        id: member.shippingDestinationId,
+        label: member.shippingDestination,
+        province_name: member.province ?? "",
+        city_name: member.city ?? "",
+        district_name: "",
+        subdistrict_name: "",
+        zip_code: member.postalCode ?? "",
+      } : null);
+      setSelectedShipping(null);
+      setShippingOptions([]);
+    }, 400);
+    pendingCheckoutTimers.current.push(timer);
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
   };
 
   if (!member && cart.length === 0) {

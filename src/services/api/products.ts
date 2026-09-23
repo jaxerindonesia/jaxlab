@@ -7,7 +7,10 @@ export async function getAllProducts(): Promise<ProductDto[]> {
 }
 
 export async function getProductById(id: string, inlineImages = false): Promise<ProductDto | null> {
-  return await api<ProductDto>(`/api/products/${encodeURIComponent(id)}${inlineImages ? '?images=inline' : ''}`).catch(() => null);
+  const key = inlineImages ? `product-inline:${id}` : `product:${id}`;
+  return cachedProducts(key, () => api<ProductDto>(`/api/products/${encodeURIComponent(id)}${inlineImages ? '?images=inline' : ''}`))
+    .then((value) => value ?? null)
+    .catch(() => null);
 }
 
 export async function getFeaturedProducts(): Promise<ProductDto[]> {

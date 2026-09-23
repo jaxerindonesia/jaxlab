@@ -1,5 +1,5 @@
 // Keep catalogue navigation fast without persisting prices or stock across sessions.
-const TTL_MS = 30_000;
+const TTL_MS = 10 * 60 * 1000;
 type Entry = { value?: unknown; expiresAt: number; pending?: Promise<unknown> };
 const entries = new Map<string, Entry>();
 const storagePrefix = 'jaxlab_product_cache:';
