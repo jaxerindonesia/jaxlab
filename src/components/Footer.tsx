@@ -134,16 +134,16 @@ const Footer: React.FC = () => {
             <h4 className={columnTitleClass}>Produk</h4>
             <ul className={listClass}>
               <li>
-                <a className={footerLinkClass} href="#products">Extra Virgin Olive Oil</a>
+                <Link className={footerLinkClass} to="/products/95d50dda-f1c2-48ca-b103-d71d27ac374d">Extra Virgin Olive Oil</Link>
               </li>
               <li>
-                <a className={footerLinkClass} href="#products">Cocofenol</a>
+                <Link className={footerLinkClass} to="/products/0594e7df-bdba-4f28-84c7-44c9ddfdaf7b">Cocofenol</Link>
               </li>
               <li>
-                <a className={footerLinkClass} href="#products">Ketone Imuno</a>
+                <Link className={footerLinkClass} to="/products/3bc32d3c-f32f-431f-bbe5-3e82c5823316">Ketone Imuno</Link>
               </li>
               <li>
-                <a className={footerLinkClass} href="#products">Fat Fasting Bundle</a>
+                <Link className={footerLinkClass} to="/products/4eff974c-69bd-41ee-8918-fbb50fe30c4c">Fat Fasting Bundle</Link>
               </li>
               <li>
                 <Link className={footerLinkClass} to="/products">Semua Produk</Link>
@@ -183,7 +183,13 @@ const Footer: React.FC = () => {
                 <a className={footerLinkClass} href="#hero">Kebijakan Privasi</a>
               </li>
               <li>
-                <a className={footerLinkClass} href="#hero">Syarat & Ketentuan</a>
+                <Link className={footerLinkClass} to="/terms-and-conditions">Syarat & Ketentuan</Link>
+              </li>
+              <li>
+                <Link className={footerLinkClass} to="/refund-policy">Kebijakan Pengembalian Dana</Link>
+              </li>
+              <li>
+                <Link className={footerLinkClass} to="/terms-of-service">Ketentuan Layanan</Link>
               </li>
             </ul>
           </div>

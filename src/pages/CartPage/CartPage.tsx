@@ -20,6 +20,7 @@ import Header from "../../components/Header";
 import { AUTH_CHANGED_EVENT, getMember } from "../../services/auth";
 import { CART_CHANGED_EVENT, clearCart, getCart, setCart } from "../../services/cart";
 import {
+  checkoutOrder,
   formatRupiah,
   getAllProducts,
   getShippingCosts,
@@ -48,6 +49,8 @@ type CartRow = { productId: string; qty: number; product: ProductDto; subtotal: 
 export default function CartPage() {
   const nav = useNavigate();
   const member = getMember();
+  const [guest, setGuest] = useState({ name: '', email: '', phoneWa: '' });
+  const customer = member ?? { name: guest.name, email: guest.email, phoneWa: guest.phoneWa, address: '' };
   const [cart, setCartState] = useState(getCart());
   useEffect(() => {
     const sync = () => {
@@ -181,8 +184,8 @@ export default function CartPage() {
     setCartState(next);
   };
 
-  const checkout = () => {
-    if (!member || !deliveryAddress.trim() || !rows.length || rows.length !== cart.length || !selectedDestination || !selectedShipping || loadingShipping)
+  const checkout = async () => {
+    if ((!member && (!guest.name.trim() || !guest.email.trim() || !guest.phoneWa.trim())) || !deliveryAddress.trim() || !rows.length || rows.length !== cart.length || !selectedDestination || !selectedShipping || loadingShipping)
       return;
 
     const address = deliveryAddress.trim();
@@ -192,6 +195,14 @@ export default function CartPage() {
     const fullAddress = [address, ...regionParts.filter(part =>
       !normalizedAddress.includes(` ${part.toLocaleLowerCase('id').replace(/[^\p{L}\p{N}]+/gu, ' ')} `)
     )].join(', ');
+    if (!member || !guest.name.trim() || !guest.email.trim() || !guest.phoneWa.trim()) {
+      try {
+        const response = await checkoutOrder(member?.id, { items: cart, customer: { name: customer.name, email: customer.email, phoneWa: customer.phoneWa, address: fullAddress }, shipping: { destinationId: selectedDestination.id, destinationLabel: selectedDestination.label, courierCode: selectedShipping.code, service: selectedShipping.service } });
+        clearCart(); setCartState([]);
+        if (response.redirectUrl) window.location.assign(response.redirectUrl);
+      } catch (error) { alert(error instanceof Error ? error.message : 'Gagal membuat pembayaran'); }
+      return;
+    }
     const message = [
       "Halo JaxLab, saya ingin melanjutkan pembayaran pesanan berikut:",
       "",
@@ -211,9 +222,9 @@ export default function CartPage() {
       `Estimasi: ${selectedShipping.etd || "-"}`,
       "",
       "*Dikirim kepada*",
-      `Nama: ${member.name}`,
-      `Email: ${member.email}`,
-      `WhatsApp: ${member.phoneWa}`,
+      `Nama: ${customer.name}`,
+      `Email: ${customer.email}`,
+      `WhatsApp: ${customer.phoneWa}`,
       `Alamat: ${fullAddress}`,
       "",
       "Mohon konfirmasi pesanan dan informasi pembayarannya. Terima kasih.",
@@ -225,7 +236,7 @@ export default function CartPage() {
     window.location.assign(whatsappUrl);
   };
 
-  if (!member) {
+  if (!member && cart.length === 0) {
     return (
       <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top_left,rgba(211,233,218,0.65),transparent_32%),linear-gradient(180deg,#f7f3ec_0%,#eee9e2_100%)]">
         <Header />
@@ -532,13 +543,14 @@ export default function CartPage() {
               </div>
 
               <div className="rounded-2xl border border-[#dce9df] bg-[#f5faf6] p-4">
+                {!member && <div className="mb-4 border-b border-[#dce9df] pb-4"><p className="mb-3 font-bold !text-[#25432f]">Data pembeli</p><div className="grid gap-2"><input className="rounded-xl border border-[#ceddd1] bg-white px-3 py-2.5 text-sm" placeholder="Nama lengkap" value={guest.name} onChange={(event) => setGuest({ ...guest, name: event.target.value })} /><input className="rounded-xl border border-[#ceddd1] bg-white px-3 py-2.5 text-sm" type="email" placeholder="Email" value={guest.email} onChange={(event) => setGuest({ ...guest, email: event.target.value })} /><input className="rounded-xl border border-[#ceddd1] bg-white px-3 py-2.5 text-sm" placeholder="No. WhatsApp" value={guest.phoneWa} onChange={(event) => setGuest({ ...guest, phoneWa: event.target.value })} /></div></div>}
                 <div className="mb-3 flex items-center gap-2 font-bold !text-[#25432f]">
                   <UserRound size={17} /> Dikirim kepada
                 </div>
                 <div className="space-y-1 text-sm leading-relaxed !text-[#59685e]">
-                  <p className="m-0 font-bold !text-[#25382b]">{member.name}</p>
-                  <p className="m-0 break-all">{member.email}</p>
-                  <p className="m-0">{member.phoneWa}</p>
+                  <p className="m-0 font-bold !text-[#25382b]">{customer.name}</p>
+                  <p className="m-0 break-all">{customer.email}</p>
+                  <p className="m-0">{customer.phoneWa}</p>
                   <p className="m-0">{deliveryAddress}</p>
                 </div>
               </div>
@@ -554,7 +566,7 @@ export default function CartPage() {
               <button
                 className="inline-flex min-h-[54px] w-full items-center justify-center gap-2 rounded-xl border-0 bg-[#14552e] px-5 font-extrabold text-white shadow-[0_12px_28px_rgba(20,85,46,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0f4625] disabled:cursor-not-allowed disabled:opacity-55"
                 onClick={checkout}
-                disabled={!deliveryAddress.trim() || !rows.length || rows.length !== cart.length || !selectedDestination || !selectedShipping || loadingShipping}
+                disabled={!deliveryAddress.trim() || !rows.length || rows.length !== cart.length || !selectedDestination || !selectedShipping || loadingShipping || (!member && (!guest.name.trim() || !guest.email.trim() || !guest.phoneWa.trim()))}
               >
                 <CreditCard size={19} />{" "}
                 Bayar Online

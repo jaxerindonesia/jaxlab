@@ -18,6 +18,7 @@ const OrderHistoryPage = lazy(() => import('./pages/OrderHistoryPage/OrderHistor
 const AccountPage = lazy(() => import('./pages/AccountPage/AccountPage'));
 const PaymentResultPage = lazy(() => import('./pages/PaymentResultPage'));
 const FatFastingPage = lazy(() => import('./pages/FatFastingPage/FatFastingPage'));
+const LegalPage = lazy(() => import('./pages/LegalPage/LegalPage'));
 
 function App() {
   return (
@@ -33,6 +34,9 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/fat-fasting" element={<FatFastingPage />} />
+          <Route path="/terms-and-conditions" element={<LegalPage kind="terms" />} />
+          <Route path="/refund-policy" element={<LegalPage kind="refund" />} />
+          <Route path="/terms-of-service" element={<LegalPage kind="service" />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/member" element={<AccountPage />} />
           <Route path="/member/auth" element={<MemberAuthPage />} />

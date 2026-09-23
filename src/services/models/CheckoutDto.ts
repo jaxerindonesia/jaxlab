@@ -6,6 +6,7 @@ export interface CheckoutRequestDto {
     courierCode: string;
     service: string;
   };
+  customer?: { name: string; email: string; phoneWa: string; address: string };
 }
 
 export interface CheckoutResponseDto {

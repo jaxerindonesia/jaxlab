@@ -87,14 +87,23 @@ function mapXenditStatus(status: string) {
   return 'pending';
 }
 
-router.post('/checkout', requireMember, async (req, res) => {
+router.post('/checkout', async (req, res) => {
   const memberId = String(req.header('x-member-id') ?? '').trim();
   const items = Array.isArray(req.body?.items) ? req.body.items : [];
   const shipping = req.body?.shipping;
-  if (!memberId || items.length === 0 || !shipping) return res.status(400).json({ error: 'invalid checkout' });
+  const customer = req.body?.customer;
+  if (items.length === 0 || !shipping) return res.status(400).json({ error: 'invalid checkout' });
 
-  const member = await prisma.member.findUnique({ where: { id: memberId } });
-  if (!member) return res.status(401).json({ error: 'member invalid' });
+  let member = memberId ? await prisma.member.findUnique({ where: { id: memberId } }) : null;
+  if (memberId && !member) return res.status(401).json({ error: 'member invalid' });
+  if (!member) {
+    if (!customer || typeof customer.name !== 'string' || customer.name.trim().length < 2 || typeof customer.email !== 'string' || !/^\S+@\S+\.\S+$/.test(customer.email) || typeof customer.phoneWa !== 'string' || customer.phoneWa.trim().length < 6 || typeof customer.address !== 'string' || customer.address.trim().length < 5) return res.status(400).json({ error: 'Lengkapi nama, email, WhatsApp, dan alamat pengiriman' });
+    const email = customer.email.trim().toLowerCase();
+    member = await prisma.member.create({ data: { name: customer.name.trim().slice(0, 120), email: `${Date.now()}-${email}`, address: customer.address.trim().slice(0, 500), phoneWa: customer.phoneWa.trim().slice(0, 40), passwordHash: randomUUID(), referralCode: `GUEST${randomUUID().replaceAll('-', '').slice(0, 12).toUpperCase()}` } });
+    // Keep the real guest email only for the payment invoice.
+    (member as typeof member & { checkoutEmail?: string }).checkoutEmail = email;
+  }
+  const checkoutEmail = (member as typeof member & { checkoutEmail?: string }).checkoutEmail ?? member.email;
 
   const productIds = items.map((i: { productId: string }) => i.productId);
   const products = await prisma.product.findMany({ where: { id: { in: productIds }, deletedAt: null }, select: { id: true, name: true, sellPrice: true, detail: { where: { deletedAt: null }, select: { specs: true } } } });
@@ -154,7 +163,7 @@ router.post('/checkout', requireMember, async (req, res) => {
       const invoice = await createXenditInvoice({
         orderId: order.id,
         amount: total,
-        email: member.email,
+        email: checkoutEmail,
         description: `Pembayaran pesanan JaxLab ${order.id}`,
         successRedirectUrl: `${appBaseUrl}/payment/result`,
         failureRedirectUrl: `${appBaseUrl}/payment/error`,
