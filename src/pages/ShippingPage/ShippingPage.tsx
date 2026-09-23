@@ -79,7 +79,7 @@ const ShippingPage: React.FC = () => {
                 </div>
                 <div>
                   <h2 className="mb-2 text-[1rem] font-bold text-[#193421]">{item.title}</h2>
-                  <p className="text-[0.875rem] leading-[1.75] text-[#647068]">{item.content}</p>
+                  <p className="text-[0.875rem] leading-[1.75] text-[#374151]">{item.content}</p>
                 </div>
               </div>
             ))}
@@ -104,7 +104,7 @@ const ShippingPage: React.FC = () => {
               {faqShipping.map((item) => (
                 <div key={item.q} className="p-6 max-[640px]:p-5">
                   <h3 className="mb-2 text-[0.95rem] font-bold text-[#193421]">{item.q}</h3>
-                  <p className="text-[0.875rem] leading-[1.7] text-[#647068]">{item.a}</p>
+                  <p className="text-[0.875rem] leading-[1.7] text-[#374151]">{item.a}</p>
                 </div>
               ))}
             </div>

@@ -19,7 +19,7 @@ const sections: PolicySection[] = [
     icon: <Scale size={20} />,
     title: '1. Landasan Hukum Pelindungan Data Pribadi (UU PDP No. 27/2022)',
     content: (
-      <div className="flex flex-col gap-3 text-[0.875rem] leading-[1.75] text-[#647068]">
+      <div className="flex flex-col gap-3 text-[0.875rem] leading-[1.75] text-[#374151]">
         <p>
           Kebijakan Privasi ini disusun dan diberlakukan sebagai bentuk komitmen kepatuhan JaxLab Indonesia terhadap <strong>Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP)</strong> serta Peraturan Pemerintah Nomor 71 Tahun 2019 tentang Penyelenggaraan Sistem dan Transaksi Elektronik.
         </p>
@@ -34,7 +34,7 @@ const sections: PolicySection[] = [
     icon: <Database size={20} />,
     title: '2. Kategori Data Pribadi yang Kami Kumpulkan',
     content: (
-      <div className="flex flex-col gap-3 text-[0.875rem] leading-[1.75] text-[#647068]">
+      <div className="flex flex-col gap-3 text-[0.875rem] leading-[1.75] text-[#374151]">
         <p>
           Sesuai dengan klasifikasi Pasal 4 UU PDP, jenis data pribadi yang kami kumpulkan mencakup Data Pribadi Umum:
         </p>
@@ -55,7 +55,7 @@ const sections: PolicySection[] = [
     icon: <Eye size={20} />,
     title: '3. Dasar & Tujuan Pemrosesan Data Pribadi',
     content: (
-      <div className="flex flex-col gap-3 text-[0.875rem] leading-[1.75] text-[#647068]">
+      <div className="flex flex-col gap-3 text-[0.875rem] leading-[1.75] text-[#374151]">
         <p>Kami memproses data pribadi Anda berdasarkan:</p>
         <ul className="ml-4 flex flex-col gap-1.5 list-disc">
           <li><strong>Persetujuan eksplisit</strong> yang Anda berikan saat mendaftar akun atau mencentang persetujuan syarat privasi saat checkout.</li>
@@ -77,7 +77,7 @@ const sections: PolicySection[] = [
     icon: <Shield size={20} />,
     title: '4. Hak-Hak Anda sebagai Subjek Data (Pasal 5 - 13 UU PDP)',
     content: (
-      <div className="flex flex-col gap-3 text-[0.875rem] leading-[1.75] text-[#647068]">
+      <div className="flex flex-col gap-3 text-[0.875rem] leading-[1.75] text-[#374151]">
         <p>Sebagai pemilik data pribadi, Undang-Undang PDP menjamin hak-hak Anda, antara lain:</p>
         <div className="grid gap-2.5 sm:grid-cols-2">
           <div className="rounded-xl border border-[#e8e2da] bg-[#faf8f5] p-3 text-xs">
@@ -108,7 +108,7 @@ const sections: PolicySection[] = [
     icon: <Lock size={20} />,
     title: '5. Keamanan Data & Penanganan Insiden Kebocoran',
     content: (
-      <div className="flex flex-col gap-3 text-[0.875rem] leading-[1.75] text-[#647068]">
+      <div className="flex flex-col gap-3 text-[0.875rem] leading-[1.75] text-[#374151]">
         <p>
           JaxLab menerapkan standar keamanan teknis dan organisasi yang ketat, termasuk penggunaan protokol HTTPS/TLS modern, pembatasan hak akses berbasis peran (RBAC), serta pemantauan integritas sistem secara berkelanjutan.
         </p>
@@ -123,7 +123,7 @@ const sections: PolicySection[] = [
     icon: <UserCheck size={20} />,
     title: '6. Pengungkapan Terbatas kepada Pihak Ketiga',
     content: (
-      <div className="flex flex-col gap-3 text-[0.875rem] leading-[1.75] text-[#647068]">
+      <div className="flex flex-col gap-3 text-[0.875rem] leading-[1.75] text-[#374151]">
         <p>
           JaxLab <strong>tidak pernah menjual, menyewakan, atau memperdagangkan data pribadi Anda</strong> kepada pihak ketiga manapun untuk kepentingan periklanan pihak luar. Data hanya dibagikan secara terbatas untuk operasional layanan:
         </p>
@@ -140,7 +140,7 @@ const sections: PolicySection[] = [
     icon: <Clock size={20} />,
     title: '7. Masa Retensi & Penyimpanan Data Pribadi',
     content: (
-      <div className="flex flex-col gap-3 text-[0.875rem] leading-[1.75] text-[#647068]">
+      <div className="flex flex-col gap-3 text-[0.875rem] leading-[1.75] text-[#374151]">
         <p>
           Kami menyimpan data pribadi Anda selama akun Anda berstatus aktif atau selama diperlukan untuk memenuhi tujuan pengumpulannya.
         </p>
@@ -155,7 +155,7 @@ const sections: PolicySection[] = [
     icon: <Info size={20} />,
     title: '8. Penggunaan Cookie & Penyimpanan Lokal',
     content: (
-      <p className="text-[0.875rem] leading-[1.75] text-[#647068]">
+      <p className="text-[0.875rem] leading-[1.75] text-[#374151]">
         Website JaxLab menggunakan teknologi penyimpanan lokal (localStorage dan sesi peramban) murni untuk keperluan fungsionalitas esensial, seperti mengingat isi keranjang belanja, status login member, dan pengaturan tampilan. Anda dapat menghapus data ini kapan saja melalui menu riwayat peramban web Anda.
       </p>
     ),
@@ -165,7 +165,7 @@ const sections: PolicySection[] = [
     icon: <AlertCircle size={20} />,
     title: '9. Pembaruan Kebijakan Privasi',
     content: (
-      <p className="text-[0.875rem] leading-[1.75] text-[#647068]">
+      <p className="text-[0.875rem] leading-[1.75] text-[#374151]">
         Kebijakan ini dapat kami tinjau dan perbarui sewaktu-waktu untuk menyesuaikan dengan peraturan perundang-undangan pelindungan data pribadi yang berlaku di Indonesia. Setiap perubahan penting akan kami informasikan melalui pengumuman di website ini dengan mencantumkan tanggal revisi terbaru.
       </p>
     ),
@@ -181,7 +181,7 @@ const PrivacyPolicyPage: React.FC = () => {
         <div className="mx-auto max-w-4xl">
           {/* Quick Navigation Tabs */}
           <div className="mb-6 flex flex-wrap items-center gap-2 rounded-2xl border border-[#e8e2da] bg-white/80 p-2 text-xs font-semibold backdrop-blur-[10px]">
-            <span className="px-3 py-1.5 text-[#536258]">Pilih Dokumen Legal:</span>
+            <span className="px-3 py-1.5 text-[#374151]">Pilih Dokumen Legal:</span>
             <Link
               to="/privacy-policy"
               className="rounded-xl bg-[#193421] px-3 py-1.5 text-white"
@@ -190,19 +190,19 @@ const PrivacyPolicyPage: React.FC = () => {
             </Link>
             <Link
               to="/terms-and-conditions"
-              className="rounded-xl px-3 py-1.5 text-[#536258] transition hover:bg-[#f0ece5] hover:text-[#193421]"
+              className="rounded-xl px-3 py-1.5 text-[#374151] transition hover:bg-[#f0ece5] hover:text-[#193421]"
             >
               Syarat &amp; Ketentuan
             </Link>
             <Link
               to="/refund-policy"
-              className="rounded-xl px-3 py-1.5 text-[#536258] transition hover:bg-[#f0ece5] hover:text-[#193421]"
+              className="rounded-xl px-3 py-1.5 text-[#374151] transition hover:bg-[#f0ece5] hover:text-[#193421]"
             >
               Kebijakan Pengembalian Dana
             </Link>
             <Link
               to="/terms-of-service"
-              className="rounded-xl px-3 py-1.5 text-[#536258] transition hover:bg-[#f0ece5] hover:text-[#193421]"
+              className="rounded-xl px-3 py-1.5 text-[#374151] transition hover:bg-[#f0ece5] hover:text-[#193421]"
             >
               Ketentuan Layanan
             </Link>
@@ -215,17 +215,17 @@ const PrivacyPolicyPage: React.FC = () => {
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e8f5e9] px-3 py-1 text-xs font-extrabold uppercase tracking-[0.1em] text-[#1b5e20]">
                   <CheckCircle2 size={13} /> Kepatuhan UU PDP No. 27/2022
                 </span>
-                <span className="inline-flex rounded-full bg-[#f0ece5] px-3 py-1 text-xs font-semibold text-[#536258]">
+                <span className="inline-flex rounded-full bg-[#f0ece5] px-3 py-1 text-xs font-semibold text-[#374151]">
                   Pengendali Data: JaxLab Indonesia
                 </span>
               </div>
               <h1 className="mt-3 text-3xl font-black text-[#193421] max-[640px]:text-2xl">
                 Kebijakan Privasi
               </h1>
-              <p className="mt-1 text-xs font-medium text-[#8a9490]">
+              <p className="mt-1 text-xs font-medium text-[#4b5563]">
                 Terakhir Diperbarui: {lastUpdated} &bull; Sesuai Regulasi Pelindungan Data Pribadi Republik Indonesia
               </p>
-              <p className="mt-4 leading-relaxed text-[#536258]">
+              <p className="mt-4 leading-relaxed text-[#374151]">
                 Kebijakan Privasi ini menjelaskan bagaimana JaxLab Indonesia mengumpulkan, memproses, menyimpan, dan melindungi data pribadi Anda saat menggunakan website kami, sesuai dengan standar Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP).
               </p>
             </div>

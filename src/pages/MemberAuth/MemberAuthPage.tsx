@@ -319,6 +319,20 @@ export default function MemberAuthPage() {
                   ? "Masuk Sekarang"
                   : "Daftar Sekarang"}
             </button>
+
+            <div className="my-5 flex items-center gap-3">
+              <div className="h-px flex-1 bg-[#e8e2da]"></div>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#9aa49c]">atau</span>
+              <div className="h-px flex-1 bg-[#e8e2da]"></div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => nav("/cart")}
+              className="h-12 w-full rounded-xl border border-[#ceddd1] bg-white text-[0.98rem] font-bold text-[#1a4d2e] transition hover:bg-[#f4f8f5]"
+            >
+              Lanjutkan sebagai Tamu
+            </button>
           </section>
         </div>
       </main>

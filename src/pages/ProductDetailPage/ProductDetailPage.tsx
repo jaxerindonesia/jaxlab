@@ -5,7 +5,6 @@ import Footer from '../../components/Footer';
 import { ArrowLeft, CheckCircle, ShoppingCart, Sparkles, Star } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getProductById } from '../../services/api/products';
-import { isMemberLoggedIn } from '../../services/auth';
 import { addToCart } from '../../services/cart';
 import { formatRupiah, type ProductDto } from '../../services/service-api';
 
@@ -198,10 +197,6 @@ const ProductDetailPage: React.FC = () => {
                                                     type="button"
                                                     className="relative inline-flex min-h-[58px] w-full items-center justify-center gap-2 rounded-[16px] border-0 bg-[#14552e] px-8 py-[0.95rem] text-base font-black !text-white shadow-[0_12px_26px_rgba(20,85,46,0.25)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#0f4625] hover:shadow-[0_16px_34px_rgba(20,85,46,0.3)]"
                                                     onClick={() => {
-                                                        if (!isMemberLoggedIn()) {
-                                                            navigate('/member/auth');
-                                                            return;
-                                                        }
                                                         addToCart(p.id, 1);
                                                         navigate('/cart');
                                                     }}

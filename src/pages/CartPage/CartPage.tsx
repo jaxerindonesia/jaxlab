@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   CreditCard,
-  LogIn,
   MapPin,
+  MessageCircle,
   Minus,
   Plus,
   ShieldCheck,
@@ -20,7 +20,6 @@ import Header from "../../components/Header";
 import { AUTH_CHANGED_EVENT, getMember } from "../../services/auth";
 import { CART_CHANGED_EVENT, clearCart, getCart, setCart } from "../../services/cart";
 import {
-  checkoutOrder,
   formatRupiah,
   getAllProducts,
   getShippingCosts,
@@ -195,12 +194,38 @@ export default function CartPage() {
     const fullAddress = [address, ...regionParts.filter(part =>
       !normalizedAddress.includes(` ${part.toLocaleLowerCase('id').replace(/[^\p{L}\p{N}]+/gu, ' ')} `)
     )].join(', ');
-    if (!member || !guest.name.trim() || !guest.email.trim() || !guest.phoneWa.trim()) {
-      try {
-        const response = await checkoutOrder(member?.id, { items: cart, customer: { name: customer.name, email: customer.email, phoneWa: customer.phoneWa, address: fullAddress }, shipping: { destinationId: selectedDestination.id, destinationLabel: selectedDestination.label, courierCode: selectedShipping.code, service: selectedShipping.service } });
-        clearCart(); setCartState([]);
-        if (response.redirectUrl) window.location.assign(response.redirectUrl);
-      } catch (error) { alert(error instanceof Error ? error.message : 'Gagal membuat pembayaran'); }
+    if (!member) {
+      const message = [
+        "Halo JaxLab, saya ingin melanjutkan pembayaran pesanan berikut:",
+        "",
+        "*Rincian Produk*",
+        ...rows.map((row, index) =>
+          `${index + 1}. ${row.product.name}\n   ${row.qty} x ${formatRupiah(row.product.price)} = ${formatRupiah(row.subtotal)}`
+        ),
+        "",
+        "*Ringkasan Pembayaran*",
+        `Subtotal Produk: ${formatRupiah(subtotal)}`,
+        `Ongkos Kirim: ${formatRupiah(shippingAmount)}`,
+        `Total Pembayaran: ${formatRupiah(total)}`,
+        "",
+        "*Pengiriman*",
+        "Pengirim: Jaxlab Indonesia",
+        `Kurir: ${selectedShipping.code.toUpperCase()} - ${selectedShipping.service}`,
+        `Estimasi: ${selectedShipping.etd || "-"}`,
+        "",
+        "*Dikirim kepada*",
+        `Nama: ${customer.name}`,
+        `Email: ${customer.email}`,
+        `WhatsApp: ${customer.phoneWa}`,
+        `Alamat: ${fullAddress}`,
+        "",
+        "Mohon konfirmasi pesanan dan informasi pembayarannya. Terima kasih.",
+      ].join("\n");
+
+      const whatsappUrl = `https://wa.me/628131536969?text=${encodeURIComponent(message)}`;
+      clearCart();
+      setCartState([]);
+      window.location.assign(whatsappUrl);
       return;
     }
     const message = [
@@ -250,24 +275,23 @@ export default function CartPage() {
                 Keranjang JaxLab
               </p>
               <h1 className="mb-3 mt-0 text-[clamp(1.7rem,4vw,2.25rem)] font-black !text-[#193421]">
-                Masuk untuk Melanjutkan
+                Keranjangmu Masih Kosong
               </h1>
-              <p className="mx-auto mb-7 max-w-[48ch] leading-relaxed !text-[#647068]">
-                Produk di keranjangmu tetap tersimpan. Masuk atau daftar sebagai
-                member untuk melanjutkan ke pembayaran.
+              <p className="mx-auto mb-7 max-w-[48ch] leading-relaxed !text-[#374151]">
+                Silakan lihat produk pilihanmu dan tambahkan ke keranjang untuk memulai pembelanjaan.
               </p>
               <div className="mx-auto flex max-w-[430px] gap-3 max-[520px]:flex-col">
                 <button
                   className="inline-flex min-h-[52px] flex-1 items-center justify-center gap-2 rounded-xl border-0 bg-[#14552e] px-6 font-extrabold text-white shadow-[0_12px_26px_rgba(20,85,46,0.2)] transition hover:-translate-y-0.5 hover:bg-[#0f4625]"
-                  onClick={() => nav("/member/auth")}
+                  onClick={() => nav("/products")}
                 >
-                  <LogIn size={18} /> Masuk / Daftar
+                  Lihat Produk
                 </button>
                 <button
                   className="min-h-[52px] flex-1 rounded-xl border border-[#ceddd1] bg-white px-6 font-bold !text-[#295238] transition hover:bg-[#f4f8f5]"
-                  onClick={() => nav("/products")}
+                  onClick={() => nav("/member/auth")}
                 >
-                  Lanjut Belanja
+                  Masuk / Daftar
                 </button>
               </div>
             </section>
@@ -291,7 +315,7 @@ export default function CartPage() {
               <h1 className="m-0 text-[clamp(1.8rem,3vw,2.6rem)] font-black leading-tight !text-[#15251a]">
                 Keranjang Belanja
               </h1>
-              <p className="mb-0 mt-2 !text-[#68736b]">
+              <p className="mb-0 mt-2 !text-[#374151]">
                 Periksa kembali produk sebelum melanjutkan pembayaran.
               </p>
             </div>
@@ -316,7 +340,7 @@ export default function CartPage() {
               </div>
               {rows.length === 0 ? (
                 <div className="px-6 py-16 text-center">
-                  <p className="mb-4 !text-[#657068]">
+                  <p className="mb-4 !text-[#374151]">
                     Keranjang masih kosong.
                   </p>
                   <button
@@ -347,10 +371,10 @@ export default function CartPage() {
                         <h3 className="m-0 line-clamp-2 text-base font-bold leading-snug !text-[#203126]">
                           {row.product.name}
                         </h3>
-                        <p className="mb-0 mt-2 text-sm font-semibold !text-[#607066]">
+                        <p className="mb-0 mt-2 text-sm font-semibold !text-[#374151]">
                           {formatRupiah(row.product.price)} / item
                         </p>
-                        <p className="mb-0 mt-1 text-xs leading-relaxed !text-[#68736b]">
+                        <p className="mb-0 mt-1 text-xs leading-relaxed !text-[#374151]">
                           Berat{row.product.weightEstimated ? " (estimasi)" : ""}: {formatWeight(row.product.weightGrams)} / item
                           {row.qty > 1 && <> ? Total {formatWeight(row.weightGrams)}</>}
                         </p>
@@ -434,7 +458,7 @@ export default function CartPage() {
                   />
                 </label>
                 {loadingShipping && (
-                  <p className="mb-0 mt-3 text-xs !text-[#68736b]">
+                  <p className="mb-0 mt-3 text-xs !text-[#374151]">
                     Mengambil pilihan kurir...
                   </p>
                 )}
@@ -505,7 +529,7 @@ export default function CartPage() {
                           <strong className="line-clamp-1 text-xs uppercase !text-[#25432f]">
                             {option.code} · {option.service}
                           </strong>
-                          <span className="mt-1 text-[11px] !text-[#68736b]">
+                          <span className="mt-1 text-[11px] !text-[#374151]">
                             Estimasi {option.etd || "-"}
                           </span>
                           <strong className="mt-2 text-sm !text-[#14552e]">
@@ -517,7 +541,7 @@ export default function CartPage() {
                   </div>
                 )}
               </div>
-              <div className="space-y-3 text-sm !text-[#536258]">
+              <div className="space-y-3 text-sm !text-[#374151]">
                 <div className="flex justify-between gap-4">
                   <span>Subtotal Produk</span>
                   <strong className="!text-[#31483a]">
@@ -543,11 +567,11 @@ export default function CartPage() {
               </div>
 
               <div className="rounded-2xl border border-[#dce9df] bg-[#f5faf6] p-4">
-                {!member && <div className="mb-4 border-b border-[#dce9df] pb-4"><p className="mb-3 font-bold !text-[#25432f]">Data pembeli</p><div className="grid gap-2"><input className="rounded-xl border border-[#ceddd1] bg-white px-3 py-2.5 text-sm" placeholder="Nama lengkap" value={guest.name} onChange={(event) => setGuest({ ...guest, name: event.target.value })} /><input className="rounded-xl border border-[#ceddd1] bg-white px-3 py-2.5 text-sm" type="email" placeholder="Email" value={guest.email} onChange={(event) => setGuest({ ...guest, email: event.target.value })} /><input className="rounded-xl border border-[#ceddd1] bg-white px-3 py-2.5 text-sm" placeholder="No. WhatsApp" value={guest.phoneWa} onChange={(event) => setGuest({ ...guest, phoneWa: event.target.value })} /></div></div>}
+                {!member && <div className="mb-4 border-b border-[#dce9df] pb-4"><p className="mb-3 font-bold !text-[#25432f]">Data pembeli</p><div className="grid gap-2"><input className="rounded-xl border border-[#ceddd1] bg-white px-3 py-2.5 text-sm !text-[#1d2e22] placeholder:!text-[#9aa49c] outline-none" placeholder="Nama lengkap" value={guest.name} onChange={(event) => setGuest({ ...guest, name: event.target.value })} /><input className="rounded-xl border border-[#ceddd1] bg-white px-3 py-2.5 text-sm !text-[#1d2e22] placeholder:!text-[#9aa49c] outline-none" type="email" placeholder="Email" value={guest.email} onChange={(event) => setGuest({ ...guest, email: event.target.value })} /><input className="rounded-xl border border-[#ceddd1] bg-white px-3 py-2.5 text-sm !text-[#1d2e22] placeholder:!text-[#9aa49c] outline-none" placeholder="No. WhatsApp" value={guest.phoneWa} onChange={(event) => setGuest({ ...guest, phoneWa: event.target.value })} /></div></div>}
                 <div className="mb-3 flex items-center gap-2 font-bold !text-[#25432f]">
                   <UserRound size={17} /> Dikirim kepada
                 </div>
-                <div className="space-y-1 text-sm leading-relaxed !text-[#59685e]">
+                <div className="space-y-1 text-sm leading-relaxed !text-[#374151]">
                   <p className="m-0 font-bold !text-[#25382b]">{customer.name}</p>
                   <p className="m-0 break-all">{customer.email}</p>
                   <p className="m-0">{customer.phoneWa}</p>
@@ -555,21 +579,32 @@ export default function CartPage() {
                 </div>
               </div>
 
-              <div className="my-4 flex items-start gap-2 rounded-xl bg-[#fff8e8] p-3 text-xs leading-relaxed !text-[#705a23]">
-                <ShieldCheck className="mt-0.5 shrink-0" size={17} />
-                <span>
-                  Rincian pesanan akan terisi otomatis di WhatsApp. Kirim pesan
-                  untuk melanjutkan pembayaran dengan admin.
-                </span>
-              </div>
+              {member && (
+                <div className="my-4 flex items-start gap-2 rounded-xl bg-[#fff8e8] p-3 text-xs leading-relaxed !text-[#705a23]">
+                  <ShieldCheck className="mt-0.5 shrink-0" size={17} />
+                  <span>
+                    Rincian pesanan akan terisi otomatis di WhatsApp. Kirim pesan
+                    untuk melanjutkan pembayaran dengan admin.
+                  </span>
+                </div>
+              )}
+              {!member && (
+                <div className="my-4 flex items-start gap-2 rounded-xl bg-[#fff8e8] p-3 text-xs leading-relaxed !text-[#705a23]">
+                  <MessageCircle className="mt-0.5 shrink-0" size={17} />
+                  <span>
+                    Rincian pesanan akan terisi otomatis di WhatsApp. Kirim pesan
+                    untuk melanjutkan komunikasi langsung dengan admin JaxLab.
+                  </span>
+                </div>
+              )}
 
               <button
                 className="inline-flex min-h-[54px] w-full items-center justify-center gap-2 rounded-xl border-0 bg-[#14552e] px-5 font-extrabold text-white shadow-[0_12px_28px_rgba(20,85,46,0.22)] transition hover:-translate-y-0.5 hover:bg-[#0f4625] disabled:cursor-not-allowed disabled:opacity-55"
                 onClick={checkout}
                 disabled={!deliveryAddress.trim() || !rows.length || rows.length !== cart.length || !selectedDestination || !selectedShipping || loadingShipping || (!member && (!guest.name.trim() || !guest.email.trim() || !guest.phoneWa.trim()))}
               >
-                <CreditCard size={19} />{" "}
-                Bayar Online
+                {member ? <CreditCard size={19} /> : <MessageCircle size={19} />}{" "}
+                {member ? "Bayar Online" : "Bayar Online"}
               </button>
               {rows.length > 0 && (
                 <button

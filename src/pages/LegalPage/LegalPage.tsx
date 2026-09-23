@@ -34,7 +34,7 @@ const content: Record<string, LegalPageData> = {
             <p>
               Dengan mengakses website JaxLab dan/atau melakukan pemesanan, Anda menyatakan dan menjamin bahwa:
             </p>
-            <ul className="ml-5 list-disc space-y-1.5 text-[#536258]">
+            <ul className="ml-5 list-disc space-y-1.5 text-[#374151]">
               <li>Anda telah berusia minimal <strong>21 (dua puluh satu) tahun</strong> atau telah menikah sesuai ketentuan Pasal 330 KUHPerdata, atau menggunakan layanan ini di bawah pengawasan dan persetujuan sah dari orang tua/wali.</li>
               <li>Data dan informasi diri yang Anda berikan (nama lengkap, nomor telepon aktif, email, dan alamat pengiriman) adalah akurat, benar, terkini, dan lengkap.</li>
               <li>Anda menyetujui transaksi elektronik yang dilakukan melalui website ini memiliki kekuatan hukum yang sah dan mengikat para pihak.</li>
@@ -64,7 +64,7 @@ const content: Record<string, LegalPageData> = {
       {
         title: '3. Harga, Mata Uang, dan Perpajakan',
         body: (
-          <ul className="ml-5 list-disc space-y-1.5 text-[#536258]">
+          <ul className="ml-5 list-disc space-y-1.5 text-[#374151]">
             <li>Sesuai dengan <strong>Undang-Undang Nomor 7 Tahun 2011 tentang Mata Uang</strong>, seluruh harga produk yang ditampilkan di website JaxLab menggunakan mata uang resmi <strong>Rupiah (IDR)</strong>.</li>
             <li>Harga yang tercantum adalah harga resmi yang berlaku pada saat transaksi dilakukan. JaxLab berhak memperbarui harga sewaktu-waktu tanpa pemberitahuan sebelumnya, namun tidak berlaku surut bagi transaksi yang pembayarannya telah terverifikasi.</li>
             <li>Biaya pengiriman dihitung secara transparan saat checkout berdasarkan berat paket, dimensi, dan tarif resmi kurir pihak ketiga yang terintegrasi (RajaOngkir).</li>
@@ -78,7 +78,7 @@ const content: Record<string, LegalPageData> = {
             <p>
               Pemesanan produk dilakukan melalui tahapan checkout yang transparan:
             </p>
-            <ol className="ml-5 list-decimal space-y-1.5 text-[#536258]">
+            <ol className="ml-5 list-decimal space-y-1.5 text-[#374151]">
               <li>Pelanggan memilih produk, ukuran/kemasan, dan jumlah yang diinginkan ke dalam Keranjang Belanja.</li>
               <li>Pelanggan mengisi atau memilih alamat pengiriman lengkap beserta layanan kurir yang tersedia.</li>
               <li>Pelanggan memilih metode pembayaran resmi yang disediakan oleh Payment Gateway berizin Bank Indonesia (seperti QRIS, Transfer Bank/Virtual Account, e-Wallet, atau Kartu Kredit/Debit).</li>
@@ -90,7 +90,7 @@ const content: Record<string, LegalPageData> = {
       {
         title: '5. Pengiriman dan Penerimaan Pesanan',
         body: (
-          <ul className="ml-5 list-disc space-y-1.5 text-[#536258]">
+          <ul className="ml-5 list-disc space-y-1.5 text-[#374151]">
             <li>Pesanan akan dikemas menggunakan standar keamanan kemasan pangan (bubble wrap/kardus pelindung khusus untuk produk botol kaca/cairan).</li>
             <li>Waktu operasional pengiriman adalah hari kerja (Senin - Sabtu). Pesanan yang diverifikasi pada hari Minggu atau Hari Libur Nasional akan diproses pada hari kerja berikutnya.</li>
             <li>Nomor resi pengiriman resmi akan diperbarui pada akun member dan/atau dikirimkan ke email/WhatsApp pemesan setelah paket diserahkan ke pihak ekspedisi.</li>
@@ -133,15 +133,15 @@ const content: Record<string, LegalPageData> = {
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="rounded-xl border border-[#e8e2da] bg-[#f9fbf9] p-4 text-[0.875rem]">
                 <strong className="block text-[#193421] mb-1">Layanan Konsumen JaxLab Indonesia</strong>
-                <p className="text-[#536258] mb-1">Email: itsupport@jaxergroup.com</p>
-                <p className="text-[#536258]">WhatsApp Bantuan: +62 813-1536-969</p>
-                <p className="text-[#536258] mt-1 text-xs">Jam Operasional: Senin – Sabtu, 08.00 – 17.00 WIB</p>
+                <p className="text-[#374151] mb-1">Email: itsupport@jaxergroup.com</p>
+                <p className="text-[#374151]">WhatsApp Bantuan: +62 813-1536-969</p>
+                <p className="text-[#374151] mt-1 text-xs">Jam Operasional: Senin – Sabtu, 08.00 – 17.00 WIB</p>
               </div>
               <div className="rounded-xl border border-[#e8e2da] bg-[#f9fbf9] p-4 text-[0.875rem]">
                 <strong className="block text-[#193421] mb-1">Pengaduan Konsumen Kemendag RI</strong>
-                <p className="text-[#536258] mb-1">Direktorat Jenderal PKTN Kementerian Perdagangan RI</p>
-                <p className="text-[#536258]">WhatsApp Ditjen PKTN: 0853-1111-1010</p>
-                <p className="text-[#536258] mt-1 text-xs">Website: simpktn.kemendag.go.id</p>
+                <p className="text-[#374151] mb-1">Direktorat Jenderal PKTN Kementerian Perdagangan RI</p>
+                <p className="text-[#374151]">WhatsApp Ditjen PKTN: 0853-1111-1010</p>
+                <p className="text-[#374151] mt-1 text-xs">Website: simpktn.kemendag.go.id</p>
               </div>
             </div>
           </div>
@@ -163,7 +163,7 @@ const content: Record<string, LegalPageData> = {
         body: (
           <div className="space-y-3">
             <p>Konsumen berhak mengajukan permohonan penukaran barang atau pengembalian dana apabila:</p>
-            <ul className="ml-5 list-disc space-y-1.5 text-[#536258]">
+            <ul className="ml-5 list-disc space-y-1.5 text-[#374151]">
               <li><strong>Barang Rusak / Pecah / Bocor:</strong> Produk kemasan (seperti botol kaca, kemasan cairan, atau segel) mengalami kerusakan fisik saat dalam perjalanan ekspedisi.</li>
               <li><strong>Produk Tidak Sesuai Pesanan:</strong> Varian produk, ukuran kemasan, atau jumlah unit yang diterima berbeda dengan rincian pesanan pada invoice resmi.</li>
               <li><strong>Cacat Produksi / Melewati Masa Kadaluwarsa:</strong> Produk terbukti mengalami penurunan kualitas tidak wajar atau tanggal kadaluwarsa terlampaui saat paket diterima.</li>
@@ -178,7 +178,7 @@ const content: Record<string, LegalPageData> = {
             <p>
               Untuk memastikan keabsahan klaim sesuai standar e-commerce dan ekspedisi di Indonesia, pemohon wajib memenuhi ketentuan berikut:
             </p>
-            <ol className="ml-5 list-decimal space-y-2 text-[#536258]">
+            <ol className="ml-5 list-decimal space-y-2 text-[#374151]">
               <li>
                 <strong>Batas Waktu Pelaporan:</strong> Pengajuan komplain wajib disampaikan maksimal dalam waktu <strong>2 x 24 jam</strong> sejak paket dinyatakan berstatus <em>“Delivered” / “Terkirim”</em> pada sistem lacak resi kurir.
               </li>
@@ -195,7 +195,7 @@ const content: Record<string, LegalPageData> = {
       {
         title: '3. Tanggung Jawab Ongkos Kirim Pengembalian',
         body: (
-          <ul className="ml-5 list-disc space-y-1.5 text-[#536258]">
+          <ul className="ml-5 list-disc space-y-1.5 text-[#374151]">
             <li>Jika kerusakan, cacat produk, atau kesalahan pengiriman terbukti berasal dari pihak JaxLab atau kelalaian pengemasan, seluruh <strong>biaya ongkos kirim pengembalian dan pengiriman produk pengganti ditanggung 100% oleh JaxLab</strong>.</li>
             <li>Jika pengembalian dilakukan atas permintaan sepihak pelanggan tanpa kesalahan dari pihak JaxLab (misalnya salah memilih varian oleh pemesan), biaya pengiriman menjadi tanggung jawab pelanggan.</li>
           </ul>
@@ -206,10 +206,10 @@ const content: Record<string, LegalPageData> = {
         body: (
           <div className="space-y-3">
             <p>
-              Setelah barang retur diterima di fasilitas logistik JaxLab dan selesai diverifikasi tim Quality Assurance (maksimal 1-2 hari kerja):
+              Setelah barang retur diterima di fasilitas logistik JaxLab and selesai diverifikasi tim Quality Assurance (maksimal 1-2 hari kerja):
             </p>
             <div className="overflow-x-auto rounded-xl border border-[#e8e2da]">
-              <table className="w-full text-left text-sm text-[#536258]">
+              <table className="w-full text-left text-sm text-[#374151]">
                 <thead className="bg-[#f0ece5] text-xs font-bold uppercase text-[#193421]">
                   <tr>
                     <th className="px-4 py-3">Metode Pembayaran Awal</th>
@@ -242,7 +242,7 @@ const content: Record<string, LegalPageData> = {
       {
         title: '5. Kondisi yang Tidak Memenuhi Syarat Refund',
         body: (
-          <ul className="ml-5 list-disc space-y-1.5 text-[#536258]">
+          <ul className="ml-5 list-disc space-y-1.5 text-[#374151]">
             <li>Laporan disampaikan melewati batas waktu 2 x 24 jam sejak barang diterima.</li>
             <li>Tidak menyertakan bukti video unboxing utuh sebagaimana diwajibkan pada poin 2.</li>
             <li>Kerusakan produk disebabkan oleh kelalaian penyimpanan oleh konsumen (misalnya produk beku dibiarkan di suhu ruang melebihi batas toleransi, terkena sinar matahari langsung, atau kemasan telah dikonsumsi sebagian besar).</li>
@@ -280,7 +280,7 @@ const content: Record<string, LegalPageData> = {
       {
         title: '1. Ruang Lingkup Layanan Sistem Elektronik',
         body: (
-          <p className="leading-relaxed text-[#536258]">
+          <p className="leading-relaxed text-[#374151]">
             Website JaxLab (jaxlab.co.id / platform terkait) adalah portal sistem elektronik yang menyediakan informasi produk pangan sehat alami, artikel edukasi nutrisi, katalog produk, kalkulasi ongkos kirim resmi, pemrosesan transaksi belanja online, serta pengelolaan akun keanggotaan (member).
           </p>
         ),
@@ -288,7 +288,7 @@ const content: Record<string, LegalPageData> = {
       {
         title: '2. Akun Pengguna & Keamanan Kredensial',
         body: (
-          <ul className="ml-5 list-disc space-y-1.5 text-[#536258]">
+          <ul className="ml-5 list-disc space-y-1.5 text-[#374151]">
             <li>Pengguna bertanggung jawab penuh untuk menjaga kerahasiaan kata sandi (password), kode verifikasi (OTP), dan akses akun masing-masing.</li>
             <li>Segala aktivitas transaksi dan pertukaran data yang dilakukan melalui akun Anda dianggap sebagai tindakan sah dari pemilik akun yang bersangkutan.</li>
             <li>Anda wajib segera memberitahukan kepada JaxLab jika mendapati adanya penggunaan akun tanpa izin atau indikasi pembobolan keamanan.</li>
@@ -303,7 +303,7 @@ const content: Record<string, LegalPageData> = {
             <p>
               Seluruh konten, materi, dan aset yang ada pada website ini dilindungi oleh undang-undang di Republik Indonesia:
             </p>
-            <ul className="ml-5 list-disc space-y-1.5 text-[#536258]">
+            <ul className="ml-5 list-disc space-y-1.5 text-[#374151]">
               <li><strong>Merek Dagang:</strong> Nama “JaxLab”, logo JaxLab, slogan, dan tanda visual lainnya merupakan merek dagang sah yang dilindungi oleh <strong>Undang-Undang Nomor 20 Tahun 2016 tentang Merek dan Indikasi Geografis</strong>.</li>
               <li><strong>Hak Cipta:</strong> Seluruh teks, susunan artikel, grafis, tata letak antarmuka (UI/UX), foto produk resmi, video materi edukasi, dan kode sumber sistem dilindungi oleh <strong>Undang-Undang Nomor 28 Tahun 2014 tentang Hak Cipta</strong>.</li>
               <li>Dilarang keras menyalin, mereproduksi, mendistribusikan ulang, memodifikasi, atau mempublikasikan konten JaxLab untuk kepentingan komersial pihak ketiga tanpa izin tertulis dari JaxLab.</li>
@@ -316,7 +316,7 @@ const content: Record<string, LegalPageData> = {
         body: (
           <div className="space-y-3">
             <p>Sesuai dengan ketentuan <strong>UU ITE</strong>, pengguna dilarang:</p>
-            <ul className="ml-5 list-disc space-y-1.5 text-[#536258]">
+            <ul className="ml-5 list-disc space-y-1.5 text-[#374151]">
               <li>Melakukan rekayasa balik (reverse engineering), dekompilasi, atau mencoba membobol kode sumber sistemJaxLab.</li>
               <li>Menggunakan bot otomatis, scraper, crawler, spider, atau teknologi ekstraksi data otomatis tanpa izin tertulis resmi.</li>
               <li>Menyebarkan virus, malware, script berbahaya, atau melakukan serangan penolakan layanan (DDoS) terhadap infrastruktur JaxLab.</li>
@@ -328,7 +328,7 @@ const content: Record<string, LegalPageData> = {
       {
         title: '5. Ketersediaan Sistem & Keadaan Kahar (Force Majeure)',
         body: (
-          <p className="leading-relaxed text-[#536258]">
+          <p className="leading-relaxed text-[#374151]">
             JaxLab berupaya semaksimal mungkin memastikan layanan website dapat diakses 24 jam sehari. Namun, JaxLab dibebaskan dari tanggung jawab atas kegagalan atau keterlambatan pemenuhan kewajiban yang diakibatkan oleh keadaan di luar kendali wajar (Keadaan Kahar / Force Majeure), termasuk namun tidak terbatas pada bencana alam, pandemi, gangguan massal pada jaringan telekomunikasi/ISP, pemadaman listrik nasional, pemeliharaan mendesak infrastruktur perbankan/payment gateway mitra, serta kebijakan pemerintah baru yang mengikat.
           </p>
         ),
@@ -336,7 +336,7 @@ const content: Record<string, LegalPageData> = {
       {
         title: '6. Perubahan Ketentuan Layanan',
         body: (
-          <p className="leading-relaxed text-[#536258]">
+          <p className="leading-relaxed text-[#374151]">
             JaxLab berhak meninjau dan memperbarui Ketentuan Layanan ini secara berkala untuk mematuhi perkembangan regulasi perundang-undangan Republik Indonesia. Perubahan berlaku efektif segera setelah dipublikasikan pada halaman ini. Penggunaan berkelanjutan Anda atas layanan JaxLab menandakan persetujuan Anda terhadap ketentuan yang telah diperbarui.
           </p>
         ),
@@ -344,7 +344,7 @@ const content: Record<string, LegalPageData> = {
       {
         title: '7. Kontak Hukum dan Operasional',
         body: (
-          <p className="leading-relaxed text-[#536258]">
+          <p className="leading-relaxed text-[#374151]">
             Untuk pertanyaan atau komunikasi resmi terkait Ketentuan Layanan dan kepatuhan hukum, silakan hubungi tim hukum kami melalui email di <strong>itsupport@jaxergroup.com</strong> dengan subjek “Legal &amp; Compliance Inquiry”.
           </p>
         ),
@@ -365,28 +365,28 @@ export default function LegalPage({ kind }: { kind: keyof typeof content }) {
         <div className="mx-auto max-w-4xl">
           {/* Quick Navigation Tabs for the 4 Legal Documents */}
           <div className="mb-6 flex flex-wrap items-center gap-2 rounded-2xl border border-[#e8e2da] bg-white/80 p-2 text-xs font-semibold backdrop-blur-[10px]">
-            <span className="px-3 py-1.5 text-[#536258]">Pilih Dokumen Legal:</span>
+            <span className="px-3 py-1.5 text-[#374151]">Pilih Dokumen Legal:</span>
             <Link
               to="/privacy-policy"
-              className="rounded-xl px-3 py-1.5 text-[#536258] transition hover:bg-[#f0ece5] hover:text-[#193421]"
+              className="rounded-xl px-3 py-1.5 text-[#374151] transition hover:bg-[#f0ece5] hover:text-[#193421]"
             >
               Kebijakan Privasi
             </Link>
             <Link
               to="/terms-and-conditions"
-              className={`rounded-xl px-3 py-1.5 transition ${kind === 'terms' ? 'bg-[#193421] text-white' : 'text-[#536258] hover:bg-[#f0ece5] hover:text-[#193421]'}`}
+              className={`rounded-xl px-3 py-1.5 transition ${kind === 'terms' ? 'bg-[#193421] text-white' : 'text-[#374151] hover:bg-[#f0ece5] hover:text-[#193421]'}`}
             >
               Syarat &amp; Ketentuan
             </Link>
             <Link
               to="/refund-policy"
-              className={`rounded-xl px-3 py-1.5 transition ${kind === 'refund' ? 'bg-[#193421] text-white' : 'text-[#536258] hover:bg-[#f0ece5] hover:text-[#193421]'}`}
+              className={`rounded-xl px-3 py-1.5 transition ${kind === 'refund' ? 'bg-[#193421] text-white' : 'text-[#374151] hover:bg-[#f0ece5] hover:text-[#193421]'}`}
             >
               Kebijakan Pengembalian Dana
             </Link>
             <Link
               to="/terms-of-service"
-              className={`rounded-xl px-3 py-1.5 transition ${kind === 'service' ? 'bg-[#193421] text-white' : 'text-[#536258] hover:bg-[#f0ece5] hover:text-[#193421]'}`}
+              className={`rounded-xl px-3 py-1.5 transition ${kind === 'service' ? 'bg-[#193421] text-white' : 'text-[#374151] hover:bg-[#f0ece5] hover:text-[#193421]'}`}
             >
               Ketentuan Layanan
             </Link>
@@ -399,17 +399,17 @@ export default function LegalPage({ kind }: { kind: keyof typeof content }) {
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-[#e8f5e9] px-3 py-1 text-xs font-extrabold uppercase tracking-[0.1em] text-[#1b5e20]">
                   <CheckCircle2 size={13} /> {page.badge}
                 </span>
-                <span className="inline-flex rounded-full bg-[#f0ece5] px-3 py-1 text-xs font-semibold text-[#536258]">
+                <span className="inline-flex rounded-full bg-[#f0ece5] px-3 py-1 text-xs font-semibold text-[#374151]">
                   Dasar Hukum: {page.lawReference}
                 </span>
               </div>
               <h1 className="mt-3 text-3xl font-black text-[#193421] max-[640px]:text-2xl">
                 {page.title}
               </h1>
-              <p className="mt-1 text-xs font-medium text-[#8a9490]">
+              <p className="mt-1 text-xs font-medium text-[#4b5563]">
                 Terakhir Diperbarui: {page.lastUpdated} &bull; Berlaku untuk Wilayah Hukum Republik Indonesia
               </p>
-              <p className="mt-4 leading-relaxed text-[#536258]">
+              <p className="mt-4 leading-relaxed text-[#374151]">
                 {page.intro}
               </p>
             </div>
@@ -421,7 +421,7 @@ export default function LegalPage({ kind }: { kind: keyof typeof content }) {
                   <h2 className="mb-3 text-[1.1rem] font-black text-[#193421]">
                     {section.title}
                   </h2>
-                  <div className="text-[0.93rem] leading-7 text-[#536258]">
+                  <div className="text-[0.93rem] leading-7 text-[#374151]">
                     {section.body}
                   </div>
                 </section>
