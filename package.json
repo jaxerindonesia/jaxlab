@@ -17,7 +17,8 @@
     "prisma:generate": "prisma generate",
     "prisma:studio": "prisma studio",
     "db:migrate": "prisma migrate dev",
-    "db:seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "sync:local-products": "tsx scripts/sync-local-products.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.16.1",

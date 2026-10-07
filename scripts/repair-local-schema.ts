@@ -1,0 +1,10 @@
+import { PrismaClient } from '@prisma/client';
+const db = new PrismaClient();
+await db.$executeRawUnsafe('ALTER TABLE "members" ADD COLUMN IF NOT EXISTS "is_affiliate" BOOLEAN NOT NULL DEFAULT false');
+await db.$executeRawUnsafe('ALTER TABLE "members" ADD COLUMN IF NOT EXISTS "affiliate_photos" JSONB NOT NULL DEFAULT \'[]\'');
+await db.$executeRawUnsafe('ALTER TABLE "members" ADD COLUMN IF NOT EXISTS "cart" JSONB NOT NULL DEFAULT \'[]\'');
+await db.$executeRawUnsafe('CREATE TABLE IF NOT EXISTS "member_sessions" ("token_hash" TEXT PRIMARY KEY, "member_id" TEXT NOT NULL REFERENCES "members"("id") ON DELETE CASCADE, "expires_at" TIMESTAMP(3) NOT NULL)');
+await db.$executeRawUnsafe('CREATE INDEX IF NOT EXISTS "member_sessions_member_id_idx" ON "member_sessions"("member_id")');
+await db.$executeRawUnsafe('CREATE INDEX IF NOT EXISTS "member_sessions_expires_at_idx" ON "member_sessions"("expires_at")');
+console.log('Local member/session schema repaired without dropping data.');
+await db.$disconnect();
