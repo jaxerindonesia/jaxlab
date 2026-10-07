@@ -67,7 +67,10 @@ export default function MemberAuthPage() {
       setMember(member);
       await claimGuestCart();
       toast.success(mode === 'login' ? 'Berhasil masuk.' : 'Akun berhasil didaftarkan.');
-      nav("/products");
+      const redirect = new URLSearchParams(window.location.search).get('redirect');
+      const pendingCheckout = sessionStorage.getItem('jaxlab_pending_checkout') === '1';
+      sessionStorage.removeItem('jaxlab_pending_checkout');
+      nav(redirect || (pendingCheckout ? '/cart' : '/products'));
     } catch (e) {
       const message = (e as Error).message;
       toast.error(

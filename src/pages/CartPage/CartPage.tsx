@@ -185,6 +185,11 @@ export default function CartPage() {
   };
 
   const checkout = async () => {
+    if (!member) {
+      sessionStorage.setItem("jaxlab_pending_checkout", "1");
+      nav("/member/auth?redirect=/cart");
+      return;
+    }
     if ((!member && (!guest.name.trim() || !guest.email.trim() || !guest.phoneWa.trim())) || !deliveryAddress.trim() || !rows.length || rows.length !== cart.length || !selectedDestination || !selectedShipping || loadingShipping)
       return;
 
