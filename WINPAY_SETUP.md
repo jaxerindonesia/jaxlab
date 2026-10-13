@@ -12,14 +12,15 @@ Tambahkan nilai berikut ke `.env` server (jangan commit secret):
 
 ```env
 WINPAY_ENABLED=false
-WINPAY_API_BASE_URL=
+WINPAY_API_BASE_URL_SANDBOX=https://sandbox-checkout.winpay.id
+WINPAY_API_BASE_URL_PRODUCTION=https://checkout.winpay.id
 WINPAY_MERCHANT_KEY=
 WINPAY_SECRET_KEY=
-WINPAY_CALLBACK_TOKEN=
+WINPAY_INVOICE_INTERVAL_MINUTES=120
 WINPAY_CALLBACK_URL=https://jaxlabofficial.id/api/orders/winpay/callback
 ```
 
-`WINPAY_API_BASE_URL`, `WINPAY_MERCHANT_KEY`, dan `WINPAY_SECRET_KEY` diisi sesuai mode dan kredensial yang diberikan Winpay. Nilai `WINPAY_CALLBACK_TOKEN` hanya diisi jika dashboard Winpay mendukung header token bersama; header yang diterima aplikasi adalah `X-Callback-Token` atau `X-Winpay-Token`.
+`WINPAY_MERCHANT_KEY` dan `WINPAY_SECRET_KEY` diisi sesuai kredensial Winpay. Aplikasi memilih URL sandbox saat `NODE_ENV` bukan `production`, dan URL production saat `NODE_ENV=production`.
 
 ## Isi di dashboard Winpay
 
@@ -36,4 +37,4 @@ npm run build
 pm2 restart jaxlab-api --update-env
 ```
 
-Integrasi pembuatan transaksi Winpay belum diaktifkan otomatis karena endpoint pembayaran, format signature, dan field wajib berbeda menurut produk Winpay yang diaktifkan di akun merchant. Callback sudah aman ditambahkan dan tidak mengubah alur Midtrans/Xendit yang ada. Setelah Winpay memberikan spesifikasi API produk yang dipakai, fungsi pembuatan transaksi dapat dihubungkan ke checkout menggunakan variabel di atas.
+Saat `WINPAY_ENABLED=true`, checkout membuat invoice melalui `POST /api/create`, menandatangani timestamp dengan HMAC-SHA256, menyimpan referensi order, lalu mengembalikan `redirect_url` Checkout Page Winpay. Alur Midtrans/Xendit tetap menjadi fallback saat Winpay dimatikan.

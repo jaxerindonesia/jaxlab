@@ -1,6 +1,5 @@
-import { createHash, randomUUID, timingSafeEqual } from 'node:crypto';
+import { createHash, createHmac, randomUUID } from 'node:crypto';
 import { Router } from 'express';
-import type { Request } from 'express';
 import { prisma } from '../lib/prisma';
 import { calculateShipping } from './shipping';
 import { getProductWeight } from '../lib/product-weight';
@@ -88,42 +87,71 @@ function mapXenditStatus(status: string) {
   return 'pending';
 }
 
-function mapWinpayStatus(status: unknown) {
-  const value = String(status ?? '').trim().toUpperCase();
-  if (['SUCCESS', 'PAID', 'SETTLED', '00', '200'].includes(value)) return 'paid';
-  if (['EXPIRED', 'TIMEOUT'].includes(value)) return 'expired';
-  if (['CANCEL', 'CANCELLED', 'VOID'].includes(value)) return 'cancelled';
-  if (['FAILED', 'FAIL', 'DENIED', '02', '03'].includes(value)) return 'failed';
-  return 'pending';
+function getWinpayApiBaseUrl() {
+  return process.env.NODE_ENV === 'production'
+    ? (process.env.WINPAY_API_BASE_URL_PRODUCTION ?? 'https://checkout.winpay.id')
+    : (process.env.WINPAY_API_BASE_URL_SANDBOX ?? 'https://sandbox-checkout.winpay.id');
 }
 
-function validWinpayToken(req: Request) {
-  const expected = process.env.WINPAY_CALLBACK_TOKEN ?? '';
-  if (!expected) return true;
-  const received = String(req.header('x-callback-token') ?? req.header('x-winpay-token') ?? '');
-  const left = Buffer.from(received);
-  const right = Buffer.from(expected);
-  return left.length === right.length && timingSafeEqual(left, right);
+function jakartaTimestamp() {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23',
+  }).formatToParts(new Date()).reduce<Record<string, string>>((result, part) => {
+    result[part.type] = part.value;
+    return result;
+  }, {});
+  return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}:${parts.second}+07:00`;
 }
 
-// Winpay notification URL: POST /api/orders/winpay/callback
-// Configure the optional WINPAY_CALLBACK_TOKEN when the Winpay dashboard supports a shared callback token.
-router.post('/winpay/callback', async (req, res) => {
-  if (!validWinpayToken(req)) return res.status(401).json({ responseCode: '401', responseMessage: 'Unauthorized' });
-  const body = req.body as Record<string, unknown>;
-  const orderReference = String(
-    body.order_id ?? body.orderId ?? body.external_id ?? body.externalId ?? body.partnerReferenceNo ?? body.referenceNo ?? body.trxId ?? req.header('x-external-id') ?? '',
-  ).trim();
-  const status = mapWinpayStatus(body.status ?? body.transactionStatus ?? body.paymentStatus ?? body.responseCode ?? body.resultCode);
-  if (!orderReference) return res.status(400).json({ responseCode: '400', responseMessage: 'Missing order reference' });
-
-  const updated = await prisma.order.updateMany({
-    where: { OR: [{ id: orderReference }, { paymentRef: orderReference }] },
-    data: { paymentStatus: status, paymentProvider: 'winpay' },
+async function createWinpayInvoice(params: {
+  orderId: string;
+  amount: number;
+  customer: { name: string; email: string; phone: string };
+  products: { name: string; qty: number; price: number }[];
+  backUrl: string;
+}) {
+  const key = process.env.WINPAY_MERCHANT_KEY ?? '';
+  const secret = process.env.WINPAY_SECRET_KEY ?? '';
+  if (!key || !secret) throw new Error('WINPAY_MERCHANT_KEY atau WINPAY_SECRET_KEY belum di-set');
+  const timestamp = jakartaTimestamp();
+  const signature = createHmac('sha256', secret).update(timestamp).digest('hex');
+  const response = await fetch(`${getWinpayApiBaseUrl()}/api/create`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Winpay-Timestamp': timestamp,
+      'X-Winpay-Signature': signature,
+      'X-Winpay-Key': key,
+    },
+    body: JSON.stringify({
+      customer: params.customer,
+      invoice: { ref: params.orderId, products: params.products },
+      back_url: params.backUrl,
+      interval: Number(process.env.WINPAY_INVOICE_INTERVAL_MINUTES ?? 120),
+    }),
   });
-  if (!updated.count) return res.status(404).json({ responseCode: '404', responseMessage: 'Order not found' });
-  // Winpay retries notifications until a successful 2xx response is returned.
-  return res.status(200).json({ responseCode: '200', responseMessage: 'Success' });
+  const payload = await response.json() as { responseMessage?: string; responseData?: { id?: string; ref?: string; redirect_url?: string } };
+  if (!response.ok || !payload.responseData?.redirect_url) {
+    throw new Error(`Winpay error: ${payload.responseMessage ?? `HTTP ${response.status}`}`);
+  }
+  return payload.responseData;
+}
+
+// Winpay Checkout Page callback: POST /api/orders/winpay/callback.
+// Winpay's Checkout Page documentation requires the literal response "ACCEPTED".
+router.post('/winpay/callback', async (req, res) => {
+  const body = req.body as Record<string, unknown>;
+  const invoice = (body.invoice ?? {}) as Record<string, unknown>;
+  const orderReference = String(body.ref ?? invoice.ref ?? '').trim();
+  const amount = Number(body.amount ?? 0);
+  if (!orderReference || !Number.isFinite(amount)) return res.status(400).send('INVALID');
+  const order = await prisma.order.findFirst({ where: { OR: [{ id: orderReference }, { paymentRef: orderReference }] } });
+  if (!order || order.paymentProvider !== 'winpay' || order.totalAmount !== amount) return res.status(400).send('INVALID');
+  if (order.paymentStatus !== 'paid') {
+    await prisma.order.update({ where: { id: order.id }, data: { paymentStatus: 'paid' } });
+  }
+  return res.status(200).type('text/plain').send('ACCEPTED');
 });
 
 router.post('/checkout', async (req, res) => {
@@ -196,6 +224,28 @@ router.post('/checkout', async (req, res) => {
 
   const publicBaseUrl = (process.env.PUBLIC_BASE_URL ?? '').replace(/\/$/, '');
   const appBaseUrl = publicBaseUrl || `${req.protocol}://${req.get('host')}`;
+
+  if (process.env.WINPAY_ENABLED === 'true') {
+    try {
+      const paymentRef = order.id;
+      const winpayProducts = normalized.map((item: { productId: string; qty: number }) => {
+        const product = map.get(item.productId)!;
+        return { name: product.name.slice(0, 120), qty: item.qty, price: product.sellPrice };
+      });
+      if (shippingAmount > 0) winpayProducts.push({ name: `Ongkos kirim ${selectedShipping.service}`.slice(0, 120), qty: 1, price: shippingAmount });
+      const invoice = await createWinpayInvoice({
+        orderId: paymentRef,
+        amount: total,
+        customer: { name: member.name, email: checkoutEmail, phone: member.phoneWa },
+        products: winpayProducts,
+        backUrl: `${appBaseUrl}/payment/result`,
+      });
+      await prisma.order.update({ where: { id: order.id }, data: { paymentRef, paymentProvider: 'winpay' } });
+      return res.json({ orderId: order.id, paymentRef, snapToken: '', redirectUrl: invoice.redirect_url, paymentProvider: 'winpay', subtotal, ppnAmount, shippingAmount, grossAmount: total });
+    } catch (error) {
+      return res.status(502).json({ error: error instanceof Error ? error.message : 'Gagal membuat invoice Winpay' });
+    }
+  }
 
   if (process.env.XENDIT_SECRET_KEY) {
     try {
