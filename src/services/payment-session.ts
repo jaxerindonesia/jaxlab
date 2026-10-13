@@ -7,7 +7,7 @@ export type PaymentSession = {
   paymentRef: string;
   snapToken: string;
   redirectUrl?: string;
-  paymentProvider?: 'xendit' | 'midtrans';
+  paymentProvider?: 'xendit' | 'midtrans' | 'winpay';
   createdAt: string;
 };
 

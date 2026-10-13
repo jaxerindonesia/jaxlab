@@ -14,7 +14,7 @@ export interface CheckoutResponseDto {
   paymentRef: string;
   snapToken: string;
   redirectUrl?: string;
-  paymentProvider?: 'xendit' | 'midtrans';
+  paymentProvider?: 'xendit' | 'midtrans' | 'winpay';
   grossAmount: number;
   ppnAmount: number;
   subtotal: number;

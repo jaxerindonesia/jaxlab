@@ -1,5 +1,6 @@
-import { createHash, randomUUID } from 'node:crypto';
+import { createHash, randomUUID, timingSafeEqual } from 'node:crypto';
 import { Router } from 'express';
+import type { Request } from 'express';
 import { prisma } from '../lib/prisma';
 import { calculateShipping } from './shipping';
 import { getProductWeight } from '../lib/product-weight';
@@ -86,6 +87,44 @@ function mapXenditStatus(status: string) {
   if (normalized === 'EXPIRED') return 'expired';
   return 'pending';
 }
+
+function mapWinpayStatus(status: unknown) {
+  const value = String(status ?? '').trim().toUpperCase();
+  if (['SUCCESS', 'PAID', 'SETTLED', '00', '200'].includes(value)) return 'paid';
+  if (['EXPIRED', 'TIMEOUT'].includes(value)) return 'expired';
+  if (['CANCEL', 'CANCELLED', 'VOID'].includes(value)) return 'cancelled';
+  if (['FAILED', 'FAIL', 'DENIED', '02', '03'].includes(value)) return 'failed';
+  return 'pending';
+}
+
+function validWinpayToken(req: Request) {
+  const expected = process.env.WINPAY_CALLBACK_TOKEN ?? '';
+  if (!expected) return true;
+  const received = String(req.header('x-callback-token') ?? req.header('x-winpay-token') ?? '');
+  const left = Buffer.from(received);
+  const right = Buffer.from(expected);
+  return left.length === right.length && timingSafeEqual(left, right);
+}
+
+// Winpay notification URL: POST /api/orders/winpay/callback
+// Configure the optional WINPAY_CALLBACK_TOKEN when the Winpay dashboard supports a shared callback token.
+router.post('/winpay/callback', async (req, res) => {
+  if (!validWinpayToken(req)) return res.status(401).json({ responseCode: '401', responseMessage: 'Unauthorized' });
+  const body = req.body as Record<string, unknown>;
+  const orderReference = String(
+    body.order_id ?? body.orderId ?? body.external_id ?? body.externalId ?? body.partnerReferenceNo ?? body.referenceNo ?? body.trxId ?? req.header('x-external-id') ?? '',
+  ).trim();
+  const status = mapWinpayStatus(body.status ?? body.transactionStatus ?? body.paymentStatus ?? body.responseCode ?? body.resultCode);
+  if (!orderReference) return res.status(400).json({ responseCode: '400', responseMessage: 'Missing order reference' });
+
+  const updated = await prisma.order.updateMany({
+    where: { OR: [{ id: orderReference }, { paymentRef: orderReference }] },
+    data: { paymentStatus: status, paymentProvider: 'winpay' },
+  });
+  if (!updated.count) return res.status(404).json({ responseCode: '404', responseMessage: 'Order not found' });
+  // Winpay retries notifications until a successful 2xx response is returned.
+  return res.status(200).json({ responseCode: '200', responseMessage: 'Success' });
+});
 
 router.post('/checkout', async (req, res) => {
   const memberId = String(req.header('x-member-id') ?? '').trim();
