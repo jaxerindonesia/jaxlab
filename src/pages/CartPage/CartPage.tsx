@@ -19,7 +19,9 @@ import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { AUTH_CHANGED_EVENT, getMember } from "../../services/auth";
 import { CART_CHANGED_EVENT, clearCart, getCart, setCart } from "../../services/cart";
+import { savePaymentSession } from "../../services/payment-session";
 import {
+  checkoutOrder,
   formatRupiah,
   getAllProducts,
   getShippingCosts,
@@ -88,6 +90,7 @@ export default function CartPage() {
   const [selectedShipping, setSelectedShipping] =
     useState<ShippingOption | null>(null);
   const [loadingShipping, setLoadingShipping] = useState(false);
+  const [creatingPayment, setCreatingPayment] = useState(false);
   const preferredShipping = useRef<Pick<ShippingOption, "code" | "service"> | null>(null);
   const shippingDrag = useRef({ pointerId: -1, startX: 0, scrollLeft: 0, moved: false });
   const pendingCheckoutTimers = useRef<number[]>([]);
@@ -242,6 +245,40 @@ export default function CartPage() {
       window.open(whatsappUrl, "_blank", "noopener,noreferrer");
       return;
     }
+
+    setCreatingPayment(true);
+    try {
+      const payment = await checkoutOrder(member.id, {
+        items: cart.map(item => ({ productId: item.productId, qty: item.qty })),
+        shipping: {
+          destinationId: selectedDestination.id,
+          destinationLabel: selectedDestination.label,
+          courierCode: selectedShipping.code,
+          service: selectedShipping.service,
+        },
+        customer: {
+          name: customer.name,
+          email: customer.email,
+          phoneWa: customer.phoneWa,
+          address: fullAddress,
+        },
+      });
+      savePaymentSession(payment);
+      if (payment.redirectUrl) {
+        window.location.assign(payment.redirectUrl);
+        return;
+      }
+      if (payment.snapToken && window.snap) {
+        window.snap.pay(payment.snapToken);
+        return;
+      }
+      throw new Error('URL pembayaran tidak diterima dari server.');
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : 'Pembayaran gagal dibuat.');
+    } finally {
+      setCreatingPayment(false);
+    }
+
     const message = [
       "Halo JaxLab, saya ingin melanjutkan pembayaran pesanan berikut:",
       "",
@@ -634,7 +671,7 @@ export default function CartPage() {
                 disabled={!deliveryAddress.trim() || !rows.length || rows.length !== cart.length || !selectedDestination || !selectedShipping || loadingShipping || (!member && (!guest.name.trim() || !guest.email.trim() || !guest.phoneWa.trim()))}
               >
                 {member ? <CreditCard size={19} /> : <MessageCircle size={19} />}{" "}
-                {member ? "Bayar Online" : "Bayar Online"}
+                {creatingPayment ? "Menyiapkan pembayaran..." : "Bayar Online"}
               </button>
               {rows.length > 0 && (
                 <button
