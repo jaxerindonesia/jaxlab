@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { forgetMember } from '../../services/auth';
@@ -12,6 +13,8 @@ export default function AccountRecoveryPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -43,8 +46,22 @@ export default function AccountRecoveryPage() {
           <fieldset disabled={busy} className="space-y-4">
             {mode === 'request' && <label className="block text-sm font-semibold">Email akun<input className={inputClass} type="email" required maxLength={254} autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} /></label>}
             {mode === 'reset' && <>
-              <label className="block text-sm font-semibold">Password baru<input className={inputClass} type="password" required minLength={8} maxLength={128} autoComplete="new-password" value={password} onChange={e => setPassword(e.target.value)} /></label>
-              <label className="block text-sm font-semibold">Konfirmasi password<input className={inputClass} type="password" required minLength={8} maxLength={128} autoComplete="new-password" value={confirmation} onChange={e => setConfirmation(e.target.value)} /></label>
+              <label className="block text-sm font-bold !text-[#193421]">Password baru
+                <span className="relative mt-1 block">
+                  <input className={`${inputClass} pr-12`} type={showPassword ? 'text' : 'password'} required minLength={8} maxLength={128} autoComplete="new-password" value={password} onChange={e => setPassword(e.target.value)} />
+                  <button type="button" aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'} onClick={() => setShowPassword(value => !value)} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-2 !text-[#295238] hover:bg-[#edf6ef]">
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </span>
+              </label>
+              <label className="block text-sm font-bold !text-[#193421]">Konfirmasi password
+                <span className="relative mt-1 block">
+                  <input className={`${inputClass} pr-12`} type={showConfirmation ? 'text' : 'password'} required minLength={8} maxLength={128} autoComplete="new-password" value={confirmation} onChange={e => setConfirmation(e.target.value)} />
+                  <button type="button" aria-label={showConfirmation ? 'Sembunyikan konfirmasi password' : 'Tampilkan konfirmasi password'} onClick={() => setShowConfirmation(value => !value)} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-2 !text-[#295238] hover:bg-[#edf6ef]">
+                    {showConfirmation ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </span>
+              </label>
             </>}
             {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
             <button type="submit" className="w-full rounded-xl bg-[#14552e] px-5 py-3 font-bold text-white">{busy ? 'Memproses...' : mode === 'request' ? 'Kirim Tautan Verifikasi' : mode === 'reset' ? 'Simpan Password Baru' : 'Verifikasi Email'}</button>
