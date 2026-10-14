@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from './components/ui/sonner';
 import MemberSession from './components/MemberSession';
 
@@ -26,9 +26,22 @@ const HowToOrderPage = lazy(() => import('./pages/HowToOrderPage/HowToOrderPage'
 const ShippingPage = lazy(() => import('./pages/ShippingPage/ShippingPage'));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage/PrivacyPolicyPage'));
 
+function ScrollToTop() {
+  const { pathname, search } = useLocation();
+
+  useEffect(() => {
+    // Route changes must begin at the page header. Without this, the browser
+    // can retain the previous route's scroll position and show the footer first.
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [pathname, search]);
+
+  return null;
+}
+
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <MemberSession />
       <Toaster />
       <div className="flex min-h-screen flex-col">
