@@ -6,5 +6,8 @@ await db.$executeRawUnsafe('ALTER TABLE "members" ADD COLUMN IF NOT EXISTS "cart
 await db.$executeRawUnsafe('CREATE TABLE IF NOT EXISTS "member_sessions" ("token_hash" TEXT PRIMARY KEY, "member_id" TEXT NOT NULL REFERENCES "members"("id") ON DELETE CASCADE, "expires_at" TIMESTAMP(3) NOT NULL)');
 await db.$executeRawUnsafe('CREATE INDEX IF NOT EXISTS "member_sessions_member_id_idx" ON "member_sessions"("member_id")');
 await db.$executeRawUnsafe('CREATE INDEX IF NOT EXISTS "member_sessions_expires_at_idx" ON "member_sessions"("expires_at")');
+await db.$executeRawUnsafe('CREATE TABLE IF NOT EXISTS "member_action_tokens" ("token_hash" TEXT PRIMARY KEY, "member_id" TEXT NOT NULL REFERENCES "members"("id") ON DELETE CASCADE, "purpose" TEXT NOT NULL, "email" TEXT NOT NULL, "expires_at" TIMESTAMP(3) NOT NULL, "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP)');
+await db.$executeRawUnsafe('CREATE UNIQUE INDEX IF NOT EXISTS "member_action_tokens_member_id_purpose_key" ON "member_action_tokens"("member_id", "purpose")');
+await db.$executeRawUnsafe('CREATE INDEX IF NOT EXISTS "member_action_tokens_expires_at_idx" ON "member_action_tokens"("expires_at")');
 console.log('Local member/session schema repaired without dropping data.');
 await db.$disconnect();
