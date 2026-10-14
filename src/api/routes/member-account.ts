@@ -95,11 +95,15 @@ accountRouter.post('/forgot-password', limitRequests, async (req, res) => {
   catch { return res.status(503).json({ error: 'Layanan email belum dikonfigurasi. Silakan hubungi admin.' }); }
   try {
     const member = await prisma.member.findUnique({ where: { email }, select: { id: true } });
-    // Respond before SMTP delivery so response timing does not reveal registered accounts.
-    res.status(202).json(genericReset);
-    if (member) void issueToken(member.id, email, 'reset_password').catch(() => {
-      console.error('[account-email] Password reset delivery failed. Check SMTP configuration.');
-    });
+    if (member) {
+      try {
+        await issueToken(member.id, email, 'reset_password');
+      } catch (error) {
+        console.error('[account-email] Password reset delivery failed:', error);
+        return res.status(503).json({ error: 'Email belum dapat dikirim. Periksa konfigurasi SMTP server atau coba lagi nanti.' });
+      }
+    }
+    return res.status(202).json(genericReset);
   } catch { return res.status(503).json({ error: 'Permintaan belum dapat diproses. Silakan coba lagi.' }); }
 });
 
