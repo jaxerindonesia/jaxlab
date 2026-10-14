@@ -13,6 +13,18 @@ export function decodeProductImage(source: string): ImageAsset | null {
 
 export function getCachedProductImage(key: string) { return assets.get(key); }
 
+export function cacheProductImage(key: string, asset: ImageAsset) {
+  if (assets.has(key) || asset.bytes.length > MAX_BYTES) return;
+  while (size + asset.bytes.length > MAX_BYTES && assets.size) {
+    const oldest = assets.keys().next().value;
+    if (!oldest) break;
+    size -= assets.get(oldest)!.bytes.length;
+    assets.delete(oldest);
+  }
+  assets.set(key, asset);
+  size += asset.bytes.length;
+}
+
 export function withProductImageUrls(product: ApiProduct, version?: string): ApiProduct {
   return { ...product, images: product.images.map((source, index) => {
     if (!source.startsWith('data:image/')) return source;
@@ -23,13 +35,7 @@ export function withProductImageUrls(product: ApiProduct, version?: string): Api
       const asset = decodeProductImage(source);
       if (!asset) return source;
       if (asset.bytes.length <= MAX_BYTES) {
-        while (size + asset.bytes.length > MAX_BYTES && assets.size) {
-          const oldest = assets.keys().next().value!;
-          size -= assets.get(oldest)!.bytes.length;
-          assets.delete(oldest);
-        }
-        assets.set(key, asset);
-        size += asset.bytes.length;
+        cacheProductImage(key, asset);
       }
     }
     return `/api/products/${encodeURIComponent(product.id)}/images/${index}?v=${hash}`;

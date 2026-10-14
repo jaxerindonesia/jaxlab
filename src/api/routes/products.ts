@@ -3,7 +3,7 @@ import type { ApiProduct } from '../contexts/product';
 import { toApiProduct } from '../lib/product-mapper';
 import { prisma } from '../lib/prisma';
 import { ensureCategoryIdByName } from '../lib/services';
-import { decodeProductImage, getCachedProductImage, withProductImageUrls } from '../lib/product-images';
+import { cacheProductImage, decodeProductImage, getCachedProductImage, withProductImageUrls } from '../lib/product-images';
 
 export const router = Router();
 
@@ -98,9 +98,10 @@ router.get('/:id/images/:index', async (req, res) => {
     const source = Array.isArray(images) ? images[index] : null;
     if (typeof source !== 'string') return res.sendStatus(404);
     asset = decodeProductImage(source) ?? undefined;
+    if (asset) cacheProductImage(`${id}/${index}/${String(req.query.v ?? '')}`, asset);
   }
   if (!asset) return res.sendStatus(404);
-  res.set({ 'Content-Type': asset.mime, 'Cache-Control': 'public, max-age=300', 'X-Content-Type-Options': 'nosniff' });
+  res.set({ 'Content-Type': asset.mime, 'Cache-Control': 'public, max-age=31536000, immutable', 'X-Content-Type-Options': 'nosniff' });
   return res.send(asset.bytes);
 });
 
