@@ -18,6 +18,8 @@ Deploy perubahan source dan hasil `npm run build`. Jalankan backend dengan `npm 
 
 Web server harus menyajikan `dist` dan meneruskan `/api/` ke backend (default port 3001). Proxy Vite hanya berlaku untuk development. Timeout proxy harus mengakomodasi permintaan checkout (60 detik).
 
+Contoh konfigurasi Nginx tersedia di `deploy/nginx/jaxlab.conf`. Sesuaikan `root` dengan direktori deployment server. Jangan mengarahkan `/api/` ke SPA fallback karena itu akan menghasilkan 404 `Endpoint API tidak ditemukan`.
+
 Verifikasi dengan mencari kelurahan/kode pos di checkout, memilih layanan, dan mengubah jumlah produk. Tarif harus dimuat ulang; kegagalan API harus menampilkan pesan dan pembayaran harus tetap terkunci tanpa layanan valid.
 
 ## Pengujian
