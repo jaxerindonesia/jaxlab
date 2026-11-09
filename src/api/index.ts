@@ -9,12 +9,14 @@ import { router as membersRouter } from './routes/members';
 import { router as ordersRouter } from './routes/orders';
 import { router as productsRouter } from './routes/products';
 import { router as shippingRouter } from './routes/shipping';
+import jaxpayRouter from './routes/jaxpay';
 import { prisma } from './lib/prisma';
 
 const app = express();
 
 app.disable('etag');
 app.use(cors());
+app.use('/api/payments/jaxpay', jaxpayRouter);
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
